@@ -381,6 +381,16 @@ class Users extends CI_Model
 		return $this->db->insert($this->profile_table_name);
 	}
 
+	/*
+	Vlado 
+	update profile
+	*/
+	 function update_profile($user_id, $data)
+	{
+		$this->db->where('user_id', $user_id)
+				 ->update($this->profile_table_name, $data);
+	}
+
 	/**
 	 * Delete user profile
 	 *

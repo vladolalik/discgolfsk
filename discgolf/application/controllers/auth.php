@@ -130,6 +130,9 @@ class Auth extends CI_Controller
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
+			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
 
@@ -145,15 +148,24 @@ class Auth extends CI_Controller
 			$data['errors'] = array();
 
 			$email_activation = $this->config->item('email_activation', 'tank_auth');
+			/* edit by Vlado profile attributes for user*/
+			$user_info = array(
+				'first_name' =>  $this->input->post('first_name'),
+				'last_name'  => $this->input->post('last_name'),
+				'birth_date' => $this->input->post('birth_date')
+			);
+
 
 			if ($this->form_validation->run()) {								// validation ok
 				if (!is_null($data = $this->tank_auth->create_user(
 						$use_username ? $this->form_validation->set_value('username') : '',
 						$this->form_validation->set_value('email'),
 						$this->form_validation->set_value('password'),
-						$email_activation))) {									// success
-
+						$email_activation,$user_info))) {									// success
+					//$this->form_validation->set_value('first_name');
 					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
+
+
 
 					if ($email_activation) {									// send "activate" email
 						$data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
@@ -186,6 +198,7 @@ class Auth extends CI_Controller
 				}
 			}
 			$data['use_username'] = $use_username;
+			$data['first_name'] = $this->input->post('first_name');
 			$data['captcha_registration'] = $captcha_registration;
 			$data['use_recaptcha'] = $use_recaptcha;
 			$this->load->view('auth/register_form', $data);
