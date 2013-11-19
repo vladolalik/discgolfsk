@@ -67,7 +67,19 @@ class Auth extends CI_Controller
 						$this->form_validation->set_value('password'),
 						$this->form_validation->set_value('remember'),
 						$data['login_by_username'],
-						$data['login_by_email'])) {								// success
+						$data['login_by_email'])) {	// success
+
+					//create user seesion		
+					$user_session = $this->users->get_user_by_login($this->form_validation->set_value('login'));
+					$email = $user_session->email;
+					$id = $user_session->id;
+					$role = $user_session->role;
+					$user_profile = $this->users->get_user_profile($id);
+					$user_profile['id'] = $id;
+					$user_profile['email'] = $email;
+					$user_profile['role'] = $role;
+					unset($user_session);		
+					$this->session->set_userdata($user_profile);
 					redirect('');
 
 				} else {
@@ -162,7 +174,7 @@ class Auth extends CI_Controller
 						$this->form_validation->set_value('email'),
 						$this->form_validation->set_value('password'),
 						$email_activation,$user_info))) {									// success
-					//$this->form_validation->set_value('first_name');
+
 					$data['site_name'] = $this->config->item('website_name', 'tank_auth');
 
 

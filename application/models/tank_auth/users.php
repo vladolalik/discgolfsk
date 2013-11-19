@@ -42,6 +42,21 @@ class Users extends CI_Model
 	}
 
 	/**
+	 * Get user profile record by Id
+	 *
+	 * @param	int
+	 * @return	array
+	 */
+	function get_user_profile($user_id)
+	{
+		$this->db->where('user_id', $user_id);
+
+		$query = $this->db->get($this->profile_table_name);
+		if ($query->num_rows() == 1) return $query->row_array();
+		return NULL;
+	}
+
+	/**
 	 * Get user record by login (username or email)
 	 *
 	 * @param	string
@@ -128,7 +143,8 @@ class Users extends CI_Model
 	function create_user($data, $activated = TRUE)
 	{
 		$data['created'] = date('Y-m-d H:i:s');
-		$data['activated'] = $activated ? 1 : 0;
+		//$data['activated'] = $activated ? 1 : 0;
+		$data['activated'] = FALSE;
 
 		if ($this->db->insert($this->table_name, $data)) {
 			$user_id = $this->db->insert_id();
