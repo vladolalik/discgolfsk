@@ -24,6 +24,54 @@ class Users extends CI_Model
 		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 	}
 
+	
+
+	function get_inactive_users(){
+		$query = $this->db->query( "SELECT * FROM users, user_profiles 
+									WHERE users.activated = 0 AND users.id = user_profiles.user_id");
+		if ($query->num_rows > 0) return $query->result_array();
+	}
+
+	/** 
+	* Activate player
+	*
+	* @param int
+	* @param string
+	* @return boolean
+	*/
+
+	function __activate_player($id){
+		$where = array ('id' => $id);
+		$data = array ('activated' => '1');
+
+		$this->db->	where($where)
+				 ->update($this->table_name, $data);
+				 
+		if ($this->db->affected_rows()==1){
+			return true;
+		}
+		return false;
+
+	}
+
+	function __create_auto_profile($first_name, $last_name, $gender, $club, $birth_date)
+	{
+		$data = array ('activated' => 2,
+						'created' => Date("Y-m-d H:i:s"));
+
+		$query = $this->db->insert($this->table_name, $data);
+		
+		$data_profile = array ('first_name'=> $first_name,
+							   'last_name' => $last_name,
+							   'gender' => $gender,
+							   'club' => $club,
+							   'birth_date' => $birth_date,
+							   'user_id' => $this->db->insert_id()
+		 					  );
+		$query = $this->db->insert($this->profile_table_name, $data_profile);
+		print_r($this->db->insert_id());
+	}
+
 	/**
 	 * Get user record by Id
 	 *
@@ -31,6 +79,7 @@ class Users extends CI_Model
 	 * @param	bool
 	 * @return	object
 	 */
+
 	function get_user_by_id($user_id, $activated)
 	{
 		$this->db->where('id', $user_id);
@@ -143,8 +192,8 @@ class Users extends CI_Model
 	function create_user($data, $activated = TRUE)
 	{
 		$data['created'] = date('Y-m-d H:i:s');
-		//$data['activated'] = $activated ? 1 : 0;
-		$data['activated'] = FALSE;
+		$data['activated'] = $activated ? 1 : 0;
+	
 
 		if ($this->db->insert($this->table_name, $data)) {
 			$user_id = $this->db->insert_id();

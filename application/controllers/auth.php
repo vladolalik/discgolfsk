@@ -11,6 +11,7 @@ class Auth extends CI_Controller
 		$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
+		$this->load->model('tank_auth/users');
 	}
 
 	function index()
@@ -21,6 +22,56 @@ class Auth extends CI_Controller
 			redirect('/auth/login/');
 		}
 	}
+
+	/** 
+	* View list of inactive_players profiles
+	*
+	* @return void
+	*/
+
+	function inactive_players()
+	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+		$players['players'] = $this->users->get_inactive_users();
+		$this->load->view('activate_players', $players);
+	}
+
+	/**
+	* Activate player
+	*
+	* @return boolean
+	*/
+
+	function activate_player()
+	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+		$id = $this->uri->segment(3);
+	
+		if ($this->users->__activate_player($id))
+		{
+			$this->session->set_flashdata('message', '<p class="succes"> Activation succed</p>');
+		} else {
+			$this->session->set_flashdata('message', '<p class="fail"> Activation failed</p>');
+		}
+		redirect('auth/inactive_players');
+	}
+
+	/** 
+	* Create profile after import
+	*  @param string
+	*/
+
+	function create_auto_profile($first_name, $last_name, $gender=NULL, $club=NULL, $birth_date=NULL)
+	{
+		$this->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
+	}
+
 
 	/**
 	 * Login user on the site
@@ -34,7 +85,6 @@ class Auth extends CI_Controller
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			redirect('/auth/send_again/');
-
 		} else {
 			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 					$this->config->item('use_username', 'tank_auth'));
@@ -88,7 +138,7 @@ class Auth extends CI_Controller
 						$this->_show_message($this->lang->line('auth_message_banned').' '.$errors['banned']);
 
 					} elseif (isset($errors['not_activated'])) {				// not activated user
-						redirect('/auth/send_again/');
+						//redirect('/auth/send_again/');
 
 					} else {													// fail
 						foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
@@ -189,10 +239,10 @@ class Auth extends CI_Controller
 						$this->_show_message($this->lang->line('auth_message_registration_completed_1'));
 
 					} else {
-						if ($this->config->item('email_account_details', 'tank_auth')) {	// send "welcome" email
+						//if ($this->config->item('email_account_details', 'tank_auth')) {	// send "welcome" email
 
-							$this->_send_email('welcome', $data['email'], $data);
-						}
+					///		$this->_send_email('welcome', $data['email'], $data);
+					//	}
 						unset($data['password']); // Clear password (just for any case)
 
 						$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
