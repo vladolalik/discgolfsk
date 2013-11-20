@@ -40,6 +40,18 @@ class Auth extends CI_Controller
 	}
 
 	/**
+	* Get auto-created profiles from import
+	*
+	* @return void
+	*/
+
+	function get_autocreated_profile()
+	{
+		$players = $this->users->get_autocreated_profile();
+
+	}
+
+	/**
 	* Activate player
 	*
 	* @return boolean

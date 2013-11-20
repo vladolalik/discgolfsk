@@ -32,6 +32,16 @@ class Users extends CI_Model
 		if ($query->num_rows > 0) return $query->result_array();
 	}
 
+
+	function get_autocreated_profiles()
+	{
+
+		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date  FROM users, user_profiles 
+									WHERE users.activated = 0 AND users.id = user_profiles.user_id");
+		if ($query->num_rows > 0) return $query->result_array();
+
+	}
+
 	/** 
 	* Activate player
 	*
