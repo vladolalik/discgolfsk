@@ -23,6 +23,26 @@ class Auth extends CI_Controller
 		}
 	}
 
+
+	/**
+	* Function return id of user if his profile exits, else null
+	*
+	* @param string
+	* @param string
+	* @return int
+	* 
+	*/
+	function exists_profile($first_name="fro", $last_name="taraba")
+	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+		//return
+		var_dump($this->users->__exists_profile($first_name, $last_name));
+		die();
+	}
+
 	/** 
 	* View list of inactive_players profiles
 	*
@@ -47,7 +67,12 @@ class Auth extends CI_Controller
 
 	function get_autocreated_profile()
 	{
-		$players = $this->users->get_autocreated_profile();
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+		$data['players'] = $this->users->get_autocreated_profiles();
+		$this->load->view('autocreated_profiles', $data);
 
 	}
 
@@ -79,8 +104,12 @@ class Auth extends CI_Controller
 	*  @param string
 	*/
 
-	function create_auto_profile($first_name, $last_name, $gender=NULL, $club=NULL, $birth_date=NULL)
+	function create_auto_profile($first_name="dezo", $last_name="berky", $gender=NULL, $club=NULL, $birth_date=NULL)
 	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
 		$this->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
 	}
 
