@@ -200,6 +200,42 @@ class Tank_auth
 		return NULL;
 	}
 
+	function create_auto($id, $username, $email, $password, $email_activation, $user_info)
+	{
+		if ((strlen($username) > 0) AND !$this->ci->users->is_username_available($username)) {
+			$this->error = array('username' => 'auth_username_in_use');
+
+		} elseif (!$this->ci->users->is_email_available($email)) {
+			$this->error = array('email' => 'auth_email_in_use');
+
+		} else {
+			// Hash password using phpass
+			$hasher = new PasswordHash(
+					$this->ci->config->item('phpass_hash_strength', 'tank_auth'),
+					$this->ci->config->item('phpass_hash_portable', 'tank_auth'));
+			$hashed_password = $hasher->HashPassword($password);
+
+			$data = array(
+				'username'	=> $username,
+				'password'	=> $hashed_password,
+				'email'		=> $email,
+				'last_ip'	=> $this->ci->input->ip_address(),
+			);
+
+
+			if ($email_activation) {
+				$data['new_email_key'] = md5(rand().microtime());
+			}
+			if (!is_null($res = $this->ci->users->update_auto_profile($id ,$data, !$email_activation, $user_info))) {
+				$data['user_id'] = $res['user_id'];
+				$data['password'] = $password;
+				unset($data['last_ip']);
+				return $data;
+			}
+		}
+		return NULL;
+	}
+
 	/**
 	 * Check if username available for registering.
 	 * Can be called for instant form validation.

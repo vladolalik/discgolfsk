@@ -24,27 +24,6 @@ class Auth extends CI_Controller
 	}
 
 
-	
-
-	/**
-	* Function return id of user if his profile exits, else null
-	*
-	* @param string
-	* @param string
-	* @return int
-	* 
-	*/
-	function exists_profile($first_name="fro", $last_name="taraba")
-	{
-		if (!$this->help_functions->is_admin())
-		{
-			redirect();
-		}
-		
-		return $this->users->__exists_profile($first_name, $last_name);
-		//die();
-	}
-
 	/** 
 	* View list of inactive_players profiles
 	*
@@ -100,6 +79,120 @@ class Auth extends CI_Controller
 		}
 		redirect('auth/inactive_players');
 	}
+
+
+	/**
+	* Function for registring existing profile
+	*
+	*
+	*
+	*/
+	function register_existing_profile(){
+		$id = $this->uri->segment(3);
+		if ($this->tank_auth->is_logged_in()) {									// logged in
+			redirect('');
+
+		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
+			redirect('/auth/send_again/');
+
+		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
+			$this->_show_message($this->lang->line('auth_message_registration_disabled'));
+		} elseif (!($this->help_functions->is_auto_profile($id))) { // it must be autocreated profile
+			redirect('');
+		} else {
+			$use_username = $this->config->item('use_username', 'tank_auth');
+			if ($use_username) {
+				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
+			}
+
+			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
+			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
+			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
+			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
+
+			$captcha_registration	= $this->config->item('captcha_registration', 'tank_auth');
+			$use_recaptcha			= $this->config->item('use_recaptcha', 'tank_auth');
+			if ($captcha_registration) {
+				if ($use_recaptcha) {
+					$this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
+				} else {
+					$this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
+				}
+			}
+			$data['errors'] = array();
+
+			$email_activation = $this->config->item('email_activation', 'tank_auth');
+			/* edit by Vlado profile attributes for user*/
+			$user_info = array(
+				'first_name' =>  $this->input->post('first_name'),
+				'last_name'  => $this->input->post('last_name'),
+				'birth_date' => $this->input->post('birth_date'),
+				'gender' => $this->input->post('gender'),
+				'club' => $this->input->post('club')
+			);	
+
+			$user_data = array(
+				'password' => $this->form_validation->set_value('password'),
+				'email' => $this->form_validation->set_value('password'),
+				'activated' => '1'
+			);
+
+			
+			if ($this->form_validation->run()){
+		
+			//update profile
+			//echo "update profile";
+			//if($this->users->update_auto_profile($id, $user_info, $user_data)){
+				if (!is_null($data = $this->tank_auth->create_auto($id, 
+						$use_username ? $this->form_validation->set_value('username') : '',
+						$this->form_validation->set_value('email'),
+						$this->form_validation->set_value('password'),
+						$email_activation, $user_info))) {
+
+				if ($email_activation) {									// send "activate" email
+						$data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
+
+						$this->_send_email('activate', $data['email'], $data);
+
+						unset($data['password']); // Clear password (just for any case)
+
+						$this->_show_message($this->lang->line('auth_message_registration_completed_1'));
+
+					} else {
+						//if ($this->config->item('email_account_details', 'tank_auth')) {	// send "welcome" email
+
+					///		$this->_send_email('welcome', $data['email'], $data);
+					//	}
+						unset($data['password']); // Clear password (just for any case)
+
+						$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+					}
+				} else {
+					$errors = $this->tank_auth->get_error_message();
+					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+				}
+			}
+			if ($captcha_registration) {
+				if ($use_recaptcha) {
+					$data['recaptcha_html'] = $this->_create_recaptcha();
+				} else {
+					$data['captcha_html'] = $this->_create_captcha();
+				}
+			}
+		} 
+		print_r($id);
+		$data = $this->users->get_user_profile($id);
+		$data['use_username'] = $use_username;
+		$data['captcha_registration'] = $captcha_registration;
+		$data['use_recaptcha'] = $use_recaptcha;
+		$this->load->view('auth/register_exist_prof_form', $data);
+}
+		
+	
 
 
 	/**
@@ -220,6 +313,9 @@ class Auth extends CI_Controller
 			if ($use_username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
+
+			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
+			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
 			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
@@ -243,7 +339,9 @@ class Auth extends CI_Controller
 			$user_info = array(
 				'first_name' =>  $this->input->post('first_name'),
 				'last_name'  => $this->input->post('last_name'),
-				'birth_date' => $this->input->post('birth_date')
+				'birth_date' => $this->input->post('birth_date'),
+				'gender' => $this->input->post('gender'),
+				'club' => $this->input->post('club')
 			);
 
 

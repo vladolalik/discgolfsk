@@ -24,6 +24,16 @@ class Users extends CI_Model
 		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 	}
 
+
+	function is_auto_profile($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->where('activated', '2');
+
+		$query = $this->db->get($this->table_name);
+		if ($query->num_rows() == 1) return TRUE;
+		return FALSE;
+	}
 	
 
 	function get_inactive_users(){
@@ -110,7 +120,11 @@ class Users extends CI_Model
 	function get_user_by_id($user_id, $activated)
 	{
 		$this->db->where('id', $user_id);
-		$this->db->where('activated', $activated ? 1 : 0);
+		if ($activated === 2) {
+			$this->db->where('activated','2');	
+		} else {
+			$this->db->where('activated', $activated ? 1 : 0);
+		}
 
 		$query = $this->db->get($this->table_name);
 		if ($query->num_rows() == 1) return $query->row();
@@ -481,6 +495,28 @@ class Users extends CI_Model
 	{
 		$this->db->where('user_id', $user_id)
 				 ->update($this->profile_table_name, $data);
+	}
+
+	function update_auto_profile($user_id, $user_data, $activated = TRUE, $profile_data)
+	{
+
+		$user_data['created'] = date('Y-m-d H:i:s');
+		$user_data['activated'] = $activated ? 1 : 0;
+	
+		if (!$this->help_functions->is_auto_profile($user_id)){
+			return NULL;
+		}
+		$this->db->where('user_id', $user_id)
+				 ->where('first_name', $profile_data['first_name'])
+				 ->update($this->profile_table_name, $profile_data);
+		if ($this->db->affected_rows()==1){
+			$this->db->where('id',$user_id)
+				     ->update($this->table_name, $user_data);
+			if ($this->db->affected_rows()==1){
+				return (array('user_id' => $user_id));
+			}
+		}	
+		return NULL;
 	}
 
 	/**

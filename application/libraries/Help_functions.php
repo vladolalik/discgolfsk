@@ -59,4 +59,12 @@ class Help_functions{
 		
 	}
 
+	function is_auto_profile($id)
+	{
+		$this->ci = & get_instance();
+		$this->ci->load->model('tank_auth/users');
+		if ($this->ci->users->is_auto_profile($id)) return TRUE;
+		return FALSE;
+	}
+
 }

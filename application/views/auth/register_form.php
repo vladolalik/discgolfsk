@@ -53,6 +53,23 @@ $captcha = array(
 	'id'	=> 'captcha',
 	'maxlength'	=> 8,
 );
+
+$gender = array(
+	'name' => 'gender',
+	'id' => 'gender'
+);
+
+$options_gender = array(
+	'male' => 'male',
+	'female' => 'female'
+);
+
+$club = array(
+	'id' => 'club',
+	'name' => 'club',
+	'value' => set_value('club')
+);
+
 echo $this->input->post('first_name');
 ?>
 <?php echo form_open($this->uri->uri_string()); ?>
@@ -78,6 +95,16 @@ echo $this->input->post('first_name');
 		<td><?php echo form_label('Day of birth', $birth['id']); ?></td>
 		<td><input type="date" name="birth_date" value="<?php echo set_value('birth_date')?>" id="birth_date"></td>
 		<td style="color: red;"><?php echo form_error($birth['name']); ?><?php echo isset($errors[$birth['name']])?$errors[$birth ['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('Gender', $gender['id']); ?></td>
+		<td><?php echo form_dropdown($gender['name'], $options_gender, $options_gender['male'], 'id="gender"')?></td>
+		<td style="color: red;"><?php echo form_error($gender['name']); ?><?php echo isset($errors[$gender['name']])?$errors[$gender ['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('Club', $club['id']); ?></td>
+		<td><?php echo form_input($club); ?></td>
+		<td style="color: red;"><?php echo form_error($club['name']); ?><?php echo isset($errors[$club['name']])?$errors[$club['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Email Address', $email['id']); ?></td>
