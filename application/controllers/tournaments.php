@@ -53,36 +53,49 @@ class Tournaments extends CI_Controller {
 		$dataString =  file_get_contents('./uploads/'.IMPORTED_TMP_FILE_NAME.'.csv', true);
 		debug($dataString);
 		$lines = explode("\n",$dataString);
-		
-		/*begin - debug*/
-		echo '<br/>'.'<br/>'.'<br/>';
-		foreach ($lines as $row) {
-			debug($row);
-			echo '<br/>';
-		}
-		/*end - debug*/
-
 		foreach ($lines as $row) {
 			$values = explode(":",$row);
-			foreach ($values as $value){
-				debug('hodnota: '.$value.'<br/>');
-			}
-			debug('-----------------------------novy riadok-----------'.'<br/>');
+			if( strlen( $values[0] ) > 0 ){
+				if(  ( (string) $values[0] !== "n" ) && ( (string)$values[0] !== "f" ) ){ //ak je to riadok s menom, priezviskom...
+					$name 			= $values[0];					//ulozime
+					$surName 		= $values[1];
+					$nationality 	= $values[2];
+					$category 		= $values[3];
+					// treba zvalidovat
+					// zistit ci existuje ak neexistue vytvorit
 
-			/* PSEUDO - ukladanie dat
-			if( zacinaju_udaje_o_novom_hracovi() && nie_je_prvy() && je_koniec_suboru() ){
-				if(skontroluj_ci_uz_existuhe()){
-					insertni_jeho_data();
-				}else{
-					vytvor_hraca();
-					insertni_jeho_data();
-				}
-				vycisti_data_o_aktualnom_hracovi();
-			}else{
-				ukladaj_data_o_aktualnom_hracovi();
+					debug('Meno: ' . $name . ' priezvisko: ' . ' narodnost: ' . $nationality . ' kategoria ' . $category );
+				}else if( $values[0] === "n" ){			//ak je riadok normalne kolo
+					$laps = array();
+					for($i = 1; $i < count($values); $i++){		// prechadzame vysledky a ukladame do pola
+						$holeCount = 0;
+						if( is_numeric( $values[$i] ) ){
+							$laps[$i] =  $values[$i];
+							$holeCount++;
+						}
+					}
+					// v poli $laps je kolo aktualneho hraca
+					debug($laps);
+					//skontrolovat validnost
+					// ulozit aktualnemu hracovi
+				} else if( $values[0] === "f"  ){
+					$final_laps = array();
+					for($i = 1; $i < count($values); $i++){		// prechadzame vysledky a ukladame do pola
+						$holeCount = 0;
+						if( is_numeric( $values[$i] ) ){
+							$final_laps[$i] =  $values[$i];
+							$holeCount++;
+						}	
+					}
+					// v poli $final_laps je kolo aktualneho hraca
+					debug('finale');
+					debug($final_laps);
+					//skontrolovat validnost
+					// ulozit aktualnemu hracovi
+					
+				}	
 			}
-			*/
-				
+			debug('<br/>'.'-----------------------------novy riadok-----------'.'<br/>');
 		}
 	}
 }

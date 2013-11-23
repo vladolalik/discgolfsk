@@ -1,5 +1,7 @@
 <?php
 
 function debug($input){
-	return '<pre>'.print_r($input).'</pre>';
+	echo "<pre>";
+	print_r($input);
+	echo "</pre>";
 }
