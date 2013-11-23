@@ -38,9 +38,9 @@ class Auth extends CI_Controller
 		{
 			redirect();
 		}
-		//return
-		var_dump($this->users->__exists_profile($first_name, $last_name));
-		die();
+		
+		return $this->users->__exists_profile($first_name, $last_name);
+		//die();
 	}
 
 	/** 
@@ -97,20 +97,6 @@ class Auth extends CI_Controller
 			$this->session->set_flashdata('message', '<p class="fail"> Activation failed</p>');
 		}
 		redirect('auth/inactive_players');
-	}
-
-	/** 
-	* Create profile after import
-	*  @param string
-	*/
-
-	function create_auto_profile($first_name="dezo", $last_name="berky", $gender=NULL, $club=NULL, $birth_date=NULL)
-	{
-		if (!$this->help_functions->is_admin())
-		{
-			redirect();
-		}
-		$this->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
 	}
 
 
