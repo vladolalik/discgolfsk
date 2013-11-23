@@ -22,7 +22,7 @@ class Tournaments extends CI_Controller {
 	}
 
 	function import(){
-		$this->load->view('tournaments/import');
+		$this->load->view('tournaments_import');
 	}
 	
 
