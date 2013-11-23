@@ -24,6 +24,8 @@ class Auth extends CI_Controller
 	}
 
 
+	
+
 	/**
 	* Function return id of user if his profile exits, else null
 	*
