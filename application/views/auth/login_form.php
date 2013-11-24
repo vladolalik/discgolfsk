@@ -30,6 +30,7 @@ $captcha = array(
 	'id'	=> 'captcha',
 	'maxlength'	=> 8,
 );
+echo $this->session->flashdata('message');
 ?>
 <?php echo form_open($this->uri->uri_string()); ?>
 <table>

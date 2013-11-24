@@ -23,6 +23,70 @@ class Auth extends CI_Controller
 		}
 	}
 
+	/**
+	* Function for provide changes in auto created profiles
+	*
+	* @return boolean
+	*/
+	function update_auto_profile()
+	{
+		$id = $this->uri->segment(3);
+		if (!($this->help_functions->is_admin()) || !($this->help_functions->is_auto_profile($id)))
+		{
+			redirect();
+		}
+		
+		$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender', 'Gender', 'trim|xss_clean');
+		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|xss_clean');
+
+		if ($this->form_validation->run()){
+			$data = array(
+					'first_name' => $this->form_validation->set_value('first_name'),
+					'last_name' => $this->form_validation->set_value('last_name'),
+					'club' => $this->form_validation->set_value('club'),
+					'gender' => $this->form_validation->set_value('gender'),
+					'birth_date' => $this->form_validation->set_value('birth_date')
+				);
+			$this->users->update_profile($id, $data);
+			$this->session->set_flashdata('message', '<p>Update was succesfull</p>');
+			redirect('auth/admin_get_autocreated_profile');
+
+		} else {
+	
+			$data = $this->users->get_user_profile($id);
+			$this->load->view('auth/update_auto_profile', $data);
+		}
+
+
+	}
+
+
+	/**
+	* Function for delete user and all his data
+	*
+	*
+	*
+	*/
+	function delete_player()
+	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+		$id = $this->uri->segment(3);
+		if ($this->users->delete_user($id))
+		{
+			$this->session->set_flashdata('message', '<p class="succes"> User was succesfully deleted!</p>');
+		} else {
+			$this->session->set_flashdata('message', '<p class="fail"> User was not deleted.</p>');
+		}
+		redirect('auth/inactive_players');
+			
+	}
+
 
 	/** 
 	* View list of inactive_players profiles
@@ -60,9 +124,9 @@ class Auth extends CI_Controller
 		{
 			redirect();
 		}
-		
+
 		$data['players'] = $this->users->get_autocreated_profiles();
-		$this->load->view('admin/admin_auto_cr_prof', $data);
+		$this->load->view('auth/admin_auto_cr_prof', $data);
 
 	}	
 
@@ -217,7 +281,7 @@ class Auth extends CI_Controller
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			$this->session->set_flashdata('message', '<p>Your profile is inactive. Contact admin.</p>');
-			redirect('/auth');
+			redirect('/auth/logout');
 			//redirect('/auth/send_again/');
 		} else {
 			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND

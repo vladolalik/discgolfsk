@@ -37,7 +37,7 @@ class Users extends CI_Model
 	
 
 	function get_inactive_users(){
-		$query = $this->db->query( "SELECT * FROM users, user_profiles 
+		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email FROM users, user_profiles 
 									WHERE users.activated = 0 AND users.id = user_profiles.user_id");
 		if ($query->num_rows > 0) return $query->result_array();
 	}
@@ -300,11 +300,13 @@ class Users extends CI_Model
 	 */
 	function delete_user($user_id)
 	{
-		$this->db->where('id', $user_id);
-		$this->db->delete($this->table_name);
-		if ($this->db->affected_rows() > 0) {
-			$this->delete_profile($user_id);
-			return TRUE;
+		if ($this->delete_profile($user_id))
+		{
+			$this->db->where('id', $user_id);
+			$this->db->delete($this->table_name);
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 		return FALSE;
 	}
@@ -532,6 +534,20 @@ class Users extends CI_Model
 	{
 		$this->db->where('user_id', $user_id);
 		$this->db->delete($this->profile_table_name);
+		if ($this->db->affected_rows() > 0) {	
+			// delete user data
+			// register for toournament		
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('registered_players');
+			// results
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('baskets');
+
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('player_has_tournaments');
+			return TRUE;
+		}
+		return FALSE;
 	}
 }
 

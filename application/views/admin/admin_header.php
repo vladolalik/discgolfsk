@@ -7,6 +7,10 @@
 			<ul> 
 				<li><?php echo anchor('auth/inactive_players', 'Activate new players', 'title="Activate new players"'); ?> </li>
 				<li><?php echo anchor('auth/admin_get_autocreated_profile', 'Autocreated profiles', 'title="Auto created profiles"'); ?> </li>
+			</ul>
 		</li>
-	</ul>
+		<li><?php echo anchor('auth/logout', 'Logout', 'title="Logout"');?> </li>
+	</ul>		
+
 </nav>
+<?php echo $this->session->flashdata('message'); ?>
