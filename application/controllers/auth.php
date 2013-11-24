@@ -48,14 +48,23 @@ class Auth extends CI_Controller
 
 	function get_autocreated_profile()
 	{
-		if (!$this->help_functions->is_admin())
-		{
-			redirect();
-		}
+	
 		$data['players'] = $this->users->get_autocreated_profiles();
 		$this->load->view('autocreated_profiles', $data);
 
 	}
+
+	function admin_get_autocreated_profile()
+	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+		
+		$data['players'] = $this->users->get_autocreated_profiles();
+		$this->load->view('admin/admin_auto_cr_prof', $data);
+
+	}	
 
 	/**
 	* Activate player
@@ -176,16 +185,17 @@ class Auth extends CI_Controller
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}
 			}
-			if ($captcha_registration) {
+			
+		} 
+		print_r($id);
+		$data = $this->users->get_user_profile($id);
+		if ($captcha_registration) {
 				if ($use_recaptcha) {
 					$data['recaptcha_html'] = $this->_create_recaptcha();
 				} else {
 					$data['captcha_html'] = $this->_create_captcha();
 				}
-			}
-		} 
-		print_r($id);
-		$data = $this->users->get_user_profile($id);
+		}
 		$data['use_username'] = $use_username;
 		$data['captcha_registration'] = $captcha_registration;
 		$data['use_recaptcha'] = $use_recaptcha;
@@ -206,7 +216,9 @@ class Auth extends CI_Controller
 			redirect('');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
-			redirect('/auth/send_again/');
+			$this->session->set_flashdata('message', '<p>Your profile is inactive. Contact admin.</p>');
+			redirect('/auth');
+			//redirect('/auth/send_again/');
 		} else {
 			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 					$this->config->item('use_username', 'tank_auth'));

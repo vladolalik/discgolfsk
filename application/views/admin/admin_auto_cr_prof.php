@@ -1,6 +1,7 @@
 <?php 
 
 //print_r($players);
+$this->load->view('admin/admin_header');
 echo $this->session->flashdata('message');
 if ($players ==NULL)
 {

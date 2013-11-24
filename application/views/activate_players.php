@@ -1,4 +1,5 @@
 <?php 
+$this->load->view('admin/admin_header');
 
 //print_r($players);
 echo $this->session->flashdata('message');

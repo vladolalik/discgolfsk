@@ -233,9 +233,10 @@ class Users extends CI_Model
 	function create_user($data, $activated = TRUE)
 	{
 		$data['created'] = date('Y-m-d H:i:s');
-		$data['activated'] = $activated ? 1 : 0;
-	
-
+		//$data['activated'] = $activated ? 1 : 0;
+		$admin_activation = $this->config->item('activate_by_admin', 'tank_auth');
+		$data['activated'] = $admin_activation ? 0 : 1;
+		
 		if ($this->db->insert($this->table_name, $data)) {
 			$user_id = $this->db->insert_id();
 			if ($activated)	$this->create_profile($user_id);
@@ -501,7 +502,9 @@ class Users extends CI_Model
 	{
 
 		$user_data['created'] = date('Y-m-d H:i:s');
-		$user_data['activated'] = $activated ? 1 : 0;
+		//$user_data['activated'] = $activated ? 1 : 0; // activation by email
+		$admin_activation = $this->config->item('activate_by_admin', 'tank_auth'); // activation by admin
+		$data['activated'] = $admin_activation ? 0 : 1;
 	
 		if (!$this->help_functions->is_auto_profile($user_id)){
 			return NULL;
