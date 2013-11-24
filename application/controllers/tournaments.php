@@ -41,7 +41,7 @@ class Tournaments extends CI_Controller {
 
 		if ( ! $this->upload->do_upload("userfile")){
 			$error = array('error' => $this->upload->display_errors());
-			$this->load->view('tournaments/import',$error);
+			$this->load->view('tournaments_import',$error);
 		}
 		else{
 			$data = array('upload_data' => $this->upload->data());
@@ -51,27 +51,52 @@ class Tournaments extends CI_Controller {
 
 	function parse_imported_data(){
 		$dataString =  file_get_contents('./uploads/'.IMPORTED_TMP_FILE_NAME.'.csv', true);
-		debug($dataString);
+		$validation_errors = "";
 		$lines = explode("\n",$dataString);
 		foreach ($lines as $row) {
 			$values = explode(":",$row);
 			if( strlen( $values[0] ) > 0 ){
 				if(  ( (string) $values[0] !== "n" ) && ( (string)$values[0] !== "f" ) ){ //ak je to riadok s menom, priezviskom...
-					$name 			= $values[0];					//ulozime
-					$surName 		= $values[1];
-					$nationality 	= $values[2];
-					$category 		= $values[3];
-					// treba zvalidovat
-					// zistit ci existuje ak neexistue vytvorit
+
+					// vyplname kvoli vstavanej validacii, aby sme mohli vyuzit napr xss_clean
+					$_POST['name'] 			= $values[0];					//ulozime
+					$_POST['surname']		= $values[1];
+					$_POST['nationality'] 	= $values[2];
+					$_POST['category']		= $values[3];
+
+					$name					= $values[0];					//ulozime
+					$surname				= $values[1];
+					$nationality 			= $values[2];
+					$category				= $values[3];
+
+					// validacia zisteneho hraca
+					$this->load->library('form_validation');
+					$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
+					$this->form_validation->set_rules('surname', '', 'trim|required|xss_clean|htmlspecialchars');
+					$this->form_validation->set_rules('nationality', '', 'trim|required|xss_clean|htmlspecialchars');
+					$this->form_validation->set_rules('category', '', 'trim|required|xss_clean|htmlspecialchars');
+					
+
+					if ($this->form_validation->run())
+					{
+						echo"ok";
+						// zistit ci existuje ak neexistue vytvorit
+					}else{
+						echo"zleje";
+						//
+					}
 
 					debug('Meno: ' . $name . ' priezvisko: ' . ' narodnost: ' . $nationality . ' kategoria ' . $category );
-				}else if( $values[0] === "n" ){			//ak je riadok normalne kolo
+				}else if( $values[0] === "n" ){					//ak je riadok normalne kolo
 					$laps = array();
+					$correct_row = TRUE;
 					for($i = 1; $i < count($values); $i++){		// prechadzame vysledky a ukladame do pola
 						$holeCount = 0;
 						if( is_numeric( $values[$i] ) ){
 							$laps[$i] =  $values[$i];
 							$holeCount++;
+						}else{
+							$correct_row = FALSE;
 						}
 					}
 					// v poli $laps je kolo aktualneho hraca
@@ -80,11 +105,14 @@ class Tournaments extends CI_Controller {
 					// ulozit aktualnemu hracovi
 				} else if( $values[0] === "f"  ){
 					$final_laps = array();
+					$correct_row = TRUE;
 					for($i = 1; $i < count($values); $i++){		// prechadzame vysledky a ukladame do pola
 						$holeCount = 0;
 						if( is_numeric( $values[$i] ) ){
 							$final_laps[$i] =  $values[$i];
 							$holeCount++;
+						}else{
+							$correct_row = FALSE;
 						}	
 					}
 					// v poli $final_laps je kolo aktualneho hraca
@@ -92,7 +120,6 @@ class Tournaments extends CI_Controller {
 					debug($final_laps);
 					//skontrolovat validnost
 					// ulozit aktualnemu hracovi
-					
 				}	
 			}
 			debug('<br/>'.'-----------------------------novy riadok-----------'.'<br/>');
