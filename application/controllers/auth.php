@@ -16,10 +16,95 @@ class Auth extends CI_Controller
 
 	function index()
 	{
+		$this->help_functions->__create_auto_profile();
 		if ($message = $this->session->flashdata('message')) {
 			$this->load->view('auth/general_message', array('message' => $message));
 		} else {
 			redirect('/auth/login/');
+		}
+	}
+
+
+	/**
+	* Function reject request for activation
+	* auto created will be set to default and others will be deleted
+	*
+	*
+	*/
+	function admin_reject_activation()
+	{
+		$id = $this->uri->segment(3);
+		if (!($this->help_functions->is_admin()))
+		{
+			redirect();
+		}
+		if ($this->help_functions->is_auto_profile($id))
+		{
+			if ($this->users->__reject_activation($id))
+			{
+				$this->session->set_flashdata('message', '<p>Request for activation rejected</p>');
+			} 
+			else 
+			{
+				$this->session->set_flashdata('message', '<p>Reqeust was not rejected</p>');
+			}
+			redirect('auth/admin_inactive_players');	
+		}
+		 else
+		{
+			redirect('auth/admin_delete_player/'.$id);
+		}
+	}
+
+
+	/**
+	* Function for update user's profile
+	*
+	*
+	* @return void
+	*/
+
+	function update_profile()
+	{
+		if ($this->tank_auth->is_logged_in(TRUE)) // ak je prihlaseny
+		{
+			$id = $this->session->userdata('id');
+			$data = $this->users->get_user_profile($id);
+			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
+			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
+			
+
+			if ($this->form_validation->run())  // update profile
+			{	
+				$profile_data = array(
+					'first_name' => $this->form_validation->set_value('first_name'),
+					'last_name' => $this->form_validation->set_value('last_name'),
+					'club' => $this->form_validation->set_value('club'),
+					'gender' => $this->form_validation->set_value('gender'),
+					'birth_date' => $this->form_validation->set_value('birth_date')
+					);
+				if ($this->users->update_profile($id, $profile_data))
+				{
+					$this->session->set_flashdata('message', '<p> Update was succesfull!</p>');
+				} 
+				else 
+				{
+					$this->session->set_flashdata('message', '<p> Update has failed!</p>');
+				}
+				redirect();
+
+			} 
+			else
+			{
+				$this->load->view('auth/update_profile', $data);// load update view
+			} 
+		} 
+		else 
+		{
+			redirect();
 		}
 	}
 
@@ -77,13 +162,13 @@ class Auth extends CI_Controller
 			redirect();
 		}
 		$id = $this->uri->segment(3);
-		if ($this->users->delete_user($id))
+		if ($this->users->__delete_user($id))
 		{
 			$this->session->set_flashdata('message', '<p class="succes"> User was succesfully deleted!</p>');
 		} else {
 			$this->session->set_flashdata('message', '<p class="fail"> User was not deleted.</p>');
 		}
-		redirect('auth/inactive_players');
+		redirect('auth/admin_get_all_players');
 			
 	}
 
@@ -165,7 +250,7 @@ class Auth extends CI_Controller
 		} else {
 			$this->session->set_flashdata('message', '<p class="fail"> Activation failed</p>');
 		}
-		redirect('auth/inactive_players');
+		redirect('auth/admin_inactive_players');
 	}
 
 
@@ -177,16 +262,20 @@ class Auth extends CI_Controller
 	*/
 	function register_existing_profile(){
 		$id = $this->uri->segment(3);
-		if ($this->tank_auth->is_logged_in()) {									// logged in
+		if ($this->tank_auth->is_logged_in()) {	
+											// logged in
 			redirect('');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
+			
 			redirect('/auth/send_again/');
 
 		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
 			$this->_show_message($this->lang->line('auth_message_registration_disabled'));
 		} elseif (!($this->help_functions->is_auto_profile($id))) { // it must be autocreated profile
+			
 			redirect('');
+
 		} else {
 			$use_username = $this->config->item('use_username', 'tank_auth');
 			if ($use_username) {
@@ -297,7 +386,7 @@ class Auth extends CI_Controller
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			$this->session->set_flashdata('message', '<p>Your profile is inactive. Contact admin.</p>');
 			redirect('/auth/logout');
-			//redirect('/auth/send_again/');
+			//redirect('/auth/send_again/');  // uncomment for email activation
 		} else {
 			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 					$this->config->item('use_username', 'tank_auth'));
@@ -394,8 +483,9 @@ class Auth extends CI_Controller
 			redirect('');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
-			redirect('/auth/send_again/');
-
+			//redirect('/auth/send_again/'); // uncomment for email activation
+			$this->session->set_flashdata('message', '<p>Your profile is inactive. Contact admin.</p>');
+			redirect('/auth/logout');
 		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
 			$this->_show_message($this->lang->line('auth_message_registration_disabled'));
 
@@ -673,8 +763,8 @@ class Auth extends CI_Controller
 
 			$data['errors'] = array();
 
-			if ($this->form_validation->run()) {								// validation ok
-				if (!is_null($data = $this->tank_auth->set_new_email(
+			if ($this->form_validation->run()) {								// validation ok , uncomment for email sending
+				/*if (!is_null($data = $this->tank_auth->set_new_email(
 						$this->form_validation->set_value('email'),
 						$this->form_validation->set_value('password')))) {			// success
 
@@ -688,7 +778,9 @@ class Auth extends CI_Controller
 				} else {
 					$errors = $this->tank_auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
-				}
+				}*/ 
+				$this->users->set_new_email($this->session->userdata('id'), $this->form_validation->set_value('email'), '', '1' );
+				redirect();
 			}
 			$this->load->view('auth/change_email_form', $data);
 		}
@@ -721,7 +813,7 @@ class Auth extends CI_Controller
 	 *
 	 * @return void
 	 */
-	function unregister()
+	function __unregister()
 	{
 		if (!$this->tank_auth->is_logged_in()) {								// not logged in or not activated
 			redirect('/auth/login/');
@@ -732,7 +824,7 @@ class Auth extends CI_Controller
 			$data['errors'] = array();
 
 			if ($this->form_validation->run()) {								// validation ok
-				if ($this->tank_auth->delete_user(
+				if ($this->tank_auth->__delete_user(
 						$this->form_validation->set_value('password'))) {		// success
 					$this->_show_message($this->lang->line('auth_message_unregistered'));
 

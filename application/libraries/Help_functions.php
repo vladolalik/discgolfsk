@@ -26,7 +26,7 @@ class Help_functions{
 	*  @param string
 	*/
 
-	function create_auto_profile($first_name, $last_name, $gender=NULL, $club=NULL, $birth_date=NULL)
+	function __create_auto_profile($first_name="jozo", $last_name="deges", $gender=NULL, $club=NULL, $birth_date=NULL)
 	{
 		$this->ci = & get_instance();
 		$this->ci->load->model('tank_auth/users');

@@ -1,7 +1,5 @@
 <?php 
 
-//print_r($players);
-
 if ($players ==NULL)
 {
 	echo '<p> No auto created profiles profiles</p>';

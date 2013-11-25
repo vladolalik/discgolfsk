@@ -27,10 +27,16 @@ class Users extends CI_Model
 
 	function is_auto_profile($id)
 	{
-		$this->db->where('id', $id);
-		$this->db->where('activated', '2');
+		/*$this->db->where('id =', $id)
+				 ->where('activated =', '2');
+				 ->or_where('username =', 'auto');
 
 		$query = $this->db->get($this->table_name);
+		*/
+		$query = $this->db->query("SELECT users.id 
+								   FROM users 
+								   WHERE (users.id = $id AND (users.username='auto' OR users.activated='2'))");
+		
 		if ($query->num_rows() == 1) return TRUE;
 		return FALSE;
 	}
@@ -38,7 +44,7 @@ class Users extends CI_Model
 
 	function get_inactive_users()
 	{
-		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
+		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, users.username, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
 									FROM users, user_profiles 
 									WHERE users.activated = 0 AND users.id = user_profiles.user_id
 									ORDER BY user_profiles.last_name");
@@ -96,7 +102,7 @@ class Users extends CI_Model
 	function __activate_player($id)
 	{
 		$where = array ('id' => $id);
-		$data = array ('activated' => '1');
+		$data = array ('activated' => '1', 'username' => '');
 
 		$this->db->	where($where)
 				 ->update($this->table_name, $data);
@@ -111,7 +117,9 @@ class Users extends CI_Model
 	function __create_auto_profile($first_name, $last_name, $gender, $club, $birth_date)
 	{
 		$data = array ('activated' => 2,
-						'created' => Date("Y-m-d H:i:s"));
+						'created' => Date("Y-m-d H:i:s"),
+						'username' => 'auto');
+
 
 		$query = $this->db->insert($this->table_name, $data);
 		
@@ -315,9 +323,9 @@ class Users extends CI_Model
 	 * @param	int
 	 * @return	bool
 	 */
-	function delete_user($user_id)
+	function __delete_user($user_id)
 	{
-		if ($this->delete_profile($user_id))
+		if ($this->__delete_profile($user_id))
 		{
 			$this->db->where('id', $user_id);
 			$this->db->delete($this->table_name);
@@ -415,8 +423,9 @@ class Users extends CI_Model
 	 */
 	function set_new_email($user_id, $new_email, $new_email_key, $activated)
 	{
-		$this->db->set($activated ? 'new_email' : 'email', $new_email);
-		$this->db->set('new_email_key', $new_email_key);
+		//$this->db->set($activated ? 'new_email' : 'email', $new_email);
+		//$this->db->set('new_email_key', $new_email_key);
+		$this->db->set('email', $new_email);
 		$this->db->where('id', $user_id);
 		$this->db->where('activated', $activated ? 1 : 0);
 
@@ -507,14 +516,40 @@ class Users extends CI_Model
 		return $this->db->insert($this->profile_table_name);
 	}
 
-	/*
-	Vlado 
-	update profile
+	/**
+	*
+	*
+	*
+	*/
+	function __reject_activation($id)
+	{
+		if (!($this->help_functions->is_admin()) || !($this->help_functions->is_auto_profile($id)))
+		{
+			redirect();
+		}
+		$data = array('password' => '',
+					  'email' => '',
+					  'activated' => '2'
+		);
+
+		$this->db->where('id', $id)
+				 ->update($this->table_name, $data);
+	}
+
+	/**
+	* 
+	* Update profile
+	*
+	* @return boolean
 	*/
 	 function update_profile($user_id, $data)
 	{
 		$this->db->where('user_id', $user_id)
 				 ->update($this->profile_table_name, $data);
+		if ($this->db->affected_rows()==1){
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	function update_auto_profile($user_id, $user_data, $activated = TRUE, $profile_data)
@@ -524,6 +559,7 @@ class Users extends CI_Model
 		//$user_data['activated'] = $activated ? 1 : 0; // activation by email
 		$admin_activation = $this->config->item('activate_by_admin', 'tank_auth'); // activation by admin
 		$user_data['activated'] = $admin_activation ? 0 : 1;
+		$user_data['username'] = 'auto';
 	
 		if (!$this->help_functions->is_auto_profile($user_id)){
 			return NULL;
@@ -547,7 +583,7 @@ class Users extends CI_Model
 	 * @param	int
 	 * @return	void
 	 */
-	private function delete_profile($user_id)
+	private function __delete_profile($user_id)
 	{
 		$this->db->where('user_id', $user_id);
 		$this->db->delete($this->profile_table_name);
@@ -561,7 +597,7 @@ class Users extends CI_Model
 			$this->db->delete('baskets');
 
 			$this->db->where('user_id', $user_id);
-			$this->db->delete('player_has_tournaments');
+			$this->db->delete('players_has_tournaments');
 			return TRUE;
 		}
 		return FALSE;
