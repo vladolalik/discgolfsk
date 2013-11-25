@@ -11,12 +11,11 @@ class Auth extends CI_Controller
 		$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
-		$this->load->model('tank_auth/users');
+		//$this->load->model('tank_auth/users');
 	}
 
 	function index()
 	{
-		$this->help_functions->__create_auto_profile();
 		if ($message = $this->session->flashdata('message')) {
 			$this->load->view('auth/general_message', array('message' => $message));
 		} else {

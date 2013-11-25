@@ -101,7 +101,8 @@ class Users extends CI_Model
 		$query = $this->db->query("SELECT users.id as user_id FROM users, user_profiles WHERE users.id = user_profiles.user_id AND user_profiles.first_name = '".$first_name."' AND user_profiles.last_name = '".$last_name."'");
 		if ($query->num_rows == 1)
 		{
-			return $query->row_array()['user_id'];
+			$data = $query->row_array();
+			return $data['user_id'];
 		}
 		return NULL;
 	}

@@ -31,10 +31,10 @@ class Help_functions{
 	{
 		$this->ci = & get_instance();
 		$this->ci->load->model('tank_auth/users');
-		if (!$this->is_admin())
-		{
-			redirect();
-		}
+		// if (!$this->is_admin())
+		// {
+		// 	redirect();
+		// }
 		return $this->ci->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
 
 	}
@@ -49,12 +49,13 @@ class Help_functions{
 	*/
 	function exists_profile($first_name, $last_name)
 	{
-		$this->ci = & get_instance();
+
+		$this->ci =&get_instance();
 		$this->ci->load->model('tank_auth/users');
-		if (!$this->is_admin())
-		{
-			redirect();
-		}
+		// if (!$this->is_admin())
+		// {
+		// 	redirect();
+		// }
 		
 		return $this->ci->users->__exists_profile($first_name, $last_name);
 		
