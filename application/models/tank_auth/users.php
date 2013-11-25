@@ -24,6 +24,21 @@ class Users extends CI_Model
 		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 	}
 
+	/**
+	* Upload profile photo
+	*
+	*
+	* @return void
+	*/
+
+	function update_photo($user_id, $filename, $thumb){
+		$this->db->where('user_id', $user_id);
+		$arr = array(
+			'photo'=> $filename,
+			'thumb' => $thumb
+		);
+		$this->db->update($this->profile_table_name, $arr);
+	}
 
 	function is_auto_profile($id)
 	{
@@ -36,7 +51,7 @@ class Users extends CI_Model
 		$query = $this->db->query("SELECT users.id 
 								   FROM users 
 								   WHERE (users.id = $id AND (users.username='auto' OR users.activated='2'))");
-		
+
 		if ($query->num_rows() == 1) return TRUE;
 		return FALSE;
 	}
@@ -131,7 +146,7 @@ class Users extends CI_Model
 							   'user_id' => $this->db->insert_id()
 		 					  );
 		$query = $this->db->insert($this->profile_table_name, $data_profile);
-		print_r($this->db->insert_id());
+		return $this->db->insert_id();
 	}
 
 	/**

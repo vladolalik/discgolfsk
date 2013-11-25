@@ -24,6 +24,7 @@ class Help_functions{
 	/** 
 	* Create profile after import
 	*  @param string
+	* @return int
 	*/
 
 	function __create_auto_profile($first_name="jozo", $last_name="deges", $gender=NULL, $club=NULL, $birth_date=NULL)
@@ -34,7 +35,7 @@ class Help_functions{
 		{
 			redirect();
 		}
-		$this->ci->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
+		return $this->ci->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
 
 	}
 
