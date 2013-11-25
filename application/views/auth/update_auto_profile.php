@@ -36,7 +36,7 @@ $club = array(
 );
 
 ?>
-<?php echo form_open('auth/update_auto_profile/'.$user_id); ?>
+<?php echo form_open('auth/admin_update_auto_profile/'.$user_id); ?>
 <table>
 	
 	<tr>

@@ -28,7 +28,7 @@ class Auth extends CI_Controller
 	*
 	* @return boolean
 	*/
-	function update_auto_profile()
+	function admin_update_auto_profile()
 	{
 		$id = $this->uri->segment(3);
 		if (!($this->help_functions->is_admin()) || !($this->help_functions->is_auto_profile($id)))
@@ -70,7 +70,7 @@ class Auth extends CI_Controller
 	*
 	*
 	*/
-	function delete_player()
+	function admin_delete_player()
 	{
 		if (!$this->help_functions->is_admin())
 		{
@@ -94,7 +94,7 @@ class Auth extends CI_Controller
 	* @return void
 	*/
 
-	function inactive_players()
+	function admin_inactive_players()
 	{
 		if (!$this->help_functions->is_admin())
 		{
@@ -118,6 +118,21 @@ class Auth extends CI_Controller
 
 	}
 
+
+	/**
+	* Function display all players
+	*
+	* @return void
+	*
+	*/
+	function admin_get_all_players()
+	{
+	
+		$data['players'] = $this->users->__get_all_users();
+		$this->load->view('auth/admin_all_profiles', $data);
+
+	}
+
 	function admin_get_autocreated_profile()
 	{
 		if (!$this->help_functions->is_admin())
@@ -136,7 +151,7 @@ class Auth extends CI_Controller
 	* @return boolean
 	*/
 
-	function activate_player()
+	function admin_activate_player()
 	{
 		if (!$this->help_functions->is_admin())
 		{

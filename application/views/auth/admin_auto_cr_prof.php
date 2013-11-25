@@ -2,7 +2,7 @@
 
 $this->load->view('admin/admin_header');
 
-if ($players ==NULL)
+if ($players == NULL)
 {
 	echo '<p> No auto created profiles profiles</p>';
 } 

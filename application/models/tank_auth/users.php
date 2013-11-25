@@ -36,18 +36,34 @@ class Users extends CI_Model
 	}
 	
 
-	function get_inactive_users(){
-		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email FROM users, user_profiles 
-									WHERE users.activated = 0 AND users.id = user_profiles.user_id");
+	function get_inactive_users()
+	{
+		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
+									FROM users, user_profiles 
+									WHERE users.activated = 0 AND users.id = user_profiles.user_id
+									ORDER BY user_profiles.last_name");
 		if ($query->num_rows > 0) return $query->result_array();
+	}
+
+	function __get_all_users()
+	{
+		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email, users.activated, 
+									users.created
+									FROM users, user_profiles 
+									WHERE users.id = user_profiles.user_id AND users.role!='admin'
+									ORDER BY user_profiles.last_name, users.activated");
+		if ($query->num_rows() > 0) return $query->result_array();
+		return NULL;
 	}
 
 
 	function get_autocreated_profiles()
 	{
 
-		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date  FROM users, user_profiles 
-									WHERE users.activated = 2 AND users.id = user_profiles.user_id");
+		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date  
+									FROM users, user_profiles 
+									WHERE users.activated = 2 AND users.id = user_profiles.user_id
+									ORDER BY user_profiles.last_name");
 		if ($query->num_rows > 0) return $query->result_array();
 
 	}
@@ -77,7 +93,8 @@ class Users extends CI_Model
 	* @return boolean
 	*/
 
-	function __activate_player($id){
+	function __activate_player($id)
+	{
 		$where = array ('id' => $id);
 		$data = array ('activated' => '1');
 
@@ -506,20 +523,20 @@ class Users extends CI_Model
 		$user_data['created'] = date('Y-m-d H:i:s');
 		//$user_data['activated'] = $activated ? 1 : 0; // activation by email
 		$admin_activation = $this->config->item('activate_by_admin', 'tank_auth'); // activation by admin
-		$data['activated'] = $admin_activation ? 0 : 1;
+		$user_data['activated'] = $admin_activation ? 0 : 1;
 	
 		if (!$this->help_functions->is_auto_profile($user_id)){
 			return NULL;
 		}
+		
 		$this->db->where('user_id', $user_id)
 				 ->where('first_name', $profile_data['first_name'])
 				 ->update($this->profile_table_name, $profile_data);
+		//if ($this->db->affected_rows()==1){
+		$this->db->where('id',$user_id)
+			     ->update($this->table_name, $user_data);
 		if ($this->db->affected_rows()==1){
-			$this->db->where('id',$user_id)
-				     ->update($this->table_name, $user_data);
-			if ($this->db->affected_rows()==1){
-				return (array('user_id' => $user_id));
-			}
+			return (array('user_id' => $user_id));
 		}	
 		return NULL;
 	}
