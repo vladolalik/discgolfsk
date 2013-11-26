@@ -1,4 +1,6 @@
+<?php $this->load->view('header', array('title' => 'Login', 'caption' => 'Login')) ?>
 <?php
+
 $login = array(
 	'name'	=> 'login',
 	'id'	=> 'login',

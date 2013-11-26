@@ -16,7 +16,7 @@ class Auth extends CI_Controller
 
 	function index()
 	{
-		
+		//$this->help_functions->__create_auto_profile();
 		if ($message = $this->session->flashdata('message')) {
 			$this->load->view('auth/general_message', array('message' => $message));
 		} else {
@@ -169,13 +169,13 @@ class Auth extends CI_Controller
 		{
 			if ($this->users->__reject_activation($id))
 			{
-				$this->session->set_flashdata('message', '<p>Request for activation rejected</p>');
+				$this->session->set_flashdata('message', '<p class="success">Request for activation rejected</p>');
 			} 
 			else 
 			{
 				$this->session->set_flashdata('message', '<p>Reqeust was not rejected</p>');
 			}
-			redirect('auth/admin_inactive_players');	
+			redirect('auth/admin_get_inactive_players');	
 		}
 		 else
 		{
@@ -218,11 +218,11 @@ class Auth extends CI_Controller
 				if ($this->users->update_profile($id, $profile_data))
 				{	
 					$this->session->set_userdata( $profile_data );
-					$this->session->set_flashdata('message', '<p> Update was succesfull!</p>');
+					$this->session->set_flashdata('message', '<p class="success"> Update was succesfull!</p>');
 				} 
 				else 
 				{
-					$this->session->set_flashdata('message', '<p> Update has failed!</p>');
+					$this->session->set_flashdata('message', '<p class="fail"> Update has failed!</p>');
 				}
 				redirect();
 
@@ -266,7 +266,7 @@ class Auth extends CI_Controller
 					'birth_date' => $this->form_validation->set_value('birth_date')
 				);
 			$this->users->update_profile($id, $data);
-			$this->session->set_flashdata('message', '<p>Update was succesfull</p>');
+			$this->session->set_flashdata('message', '<p class="success">Update was succesfull</p>');
 			redirect('auth/admin_get_autocreated_profile');
 
 		} else {
@@ -309,13 +309,44 @@ class Auth extends CI_Controller
 	* @return void
 	*/
 
-	function admin_inactive_players()
+	function admin_get_inactive_players()
 	{
 		if (!$this->help_functions->is_admin())
 		{
 			redirect();
 		}
-		$players['players'] = $this->users->get_inactive_users();
+
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'index.php/auth/admin_get_inactive_players/'	;
+		$config['total_rows'] = $this->users->get_nmbr_activated(0);
+		$config['per_page'] = 1; 
+		$config['full_tag_open'] = '<div id="pagination">';
+		$config['full_tag_close'] = '</div>';
+				
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+				
+		$config['next_tag_open'] = '<span class="next">';
+		$config['next_tag_close'] = '</span>';
+				
+		$config['prev_tag_open'] = '<span class="prev">';
+		$config['prev_tag_close']= '</span>';
+		
+		//print_r($config);
+		//die();	
+		//$config['display_pages'] = FALSE;
+				
+		$this->pagination->initialize($config); 
+		if ($this->uri->segment(3) == NULL)
+		{
+			$number = 0;
+		} 
+		else 
+		{
+			$number= $this->uri->segment(3);
+		}
+
+		$players['players'] = $this->users->get_inactive_users($number, $config['per_page']);
 		$this->load->view('activate_players', $players);
 	}
 
@@ -328,7 +359,7 @@ class Auth extends CI_Controller
 	function get_autocreated_profile()
 	{
 	
-		$data['players'] = $this->users->get_autocreated_profiles();
+		$data['players'] = $this->users->get_autocreated_profiles($number, $config['per_page']);
 		$this->load->view('autocreated_profiles', $data);
 
 	}
@@ -343,7 +374,37 @@ class Auth extends CI_Controller
 	function admin_get_all_players()
 	{
 	
-		$data['players'] = $this->users->__get_all_users();
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'index.php/auth/admin_get_all_players/'	;
+		$config['total_rows'] = $this->users->get_nmbr_all();
+		$config['per_page'] = 3; 
+		$config['full_tag_open'] = '<div id="pagination">';
+		$config['full_tag_close'] = '</div>';
+				
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+				
+		$config['next_tag_open'] = '<span class="next">';
+		$config['next_tag_close'] = '</span>';
+				
+		$config['prev_tag_open'] = '<span class="prev">';
+		$config['prev_tag_close']= '</span>';
+		
+		print_r($config);
+		//die();	
+		//$config['display_pages'] = FALSE;
+				
+		$this->pagination->initialize($config); 
+		if ($this->uri->segment(3) == NULL)
+		{
+			$number = 0;
+		} 
+		else 
+		{
+			$number= $this->uri->segment(3);
+		}
+
+		$data['players'] = $this->users->__get_all_users($number, $config['per_page']);
 		$this->load->view('auth/admin_all_profiles', $data);
 
 	}
@@ -355,7 +416,37 @@ class Auth extends CI_Controller
 			redirect();
 		}
 
-		$data['players'] = $this->users->get_autocreated_profiles();
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'index.php/auth/admin_get_autocreated_profile/'	;
+		$config['total_rows'] = $this->users->get_nmbr_activated(2);
+		$config['per_page'] = 3; 
+		$config['full_tag_open'] = '<div id="pagination">';
+		$config['full_tag_close'] = '</div>';
+				
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+				
+		$config['next_tag_open'] = '<span class="next">';
+		$config['next_tag_close'] = '</span>';
+				
+		$config['prev_tag_open'] = '<span class="prev">';
+		$config['prev_tag_close']= '</span>';
+		
+		//print_r($config);
+		//die();	
+		//$config['display_pages'] = FALSE;
+				
+		$this->pagination->initialize($config); 
+		if ($this->uri->segment(3) == NULL)
+		{
+			$number = 0;
+		} 
+		else 
+		{
+			$number= $this->uri->segment(3);
+		}
+
+		$data['players'] = $this->users->get_autocreated_profiles($number, $config['per_page']);
 		$this->load->view('auth/admin_auto_cr_prof', $data);
 
 	}	
@@ -380,7 +471,7 @@ class Auth extends CI_Controller
 		} else {
 			$this->session->set_flashdata('message', '<p class="fail"> Activation failed</p>');
 		}
-		redirect('auth/admin_inactive_players');
+		redirect('auth/admin_get_inactive_players');
 	}
 
 
@@ -516,7 +607,7 @@ class Auth extends CI_Controller
 			redirect('');
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
-			$this->session->set_flashdata('message', '<p>Your profile is inactive. Contact admin.</p>');
+			$this->session->set_flashdata('message', '<p class="fail">Your profile is inactive. Contact admin.</p>');
 			redirect('/auth/logout');
 			//redirect('/auth/send_again/');  // uncomment for email activation
 		} else {
@@ -620,7 +711,7 @@ class Auth extends CI_Controller
 
 		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
 			//redirect('/auth/send_again/'); // uncomment for email activation
-			$this->session->set_flashdata('message', '<p>Your profile is inactive. Contact admin.</p>');
+			$this->session->set_flashdata('message', '<p class="fail">Your profile is inactive. Contact admin.</p>');
 			redirect('/auth/logout');
 		} elseif (!$this->config->item('allow_registration', 'tank_auth')) {	// registration is off
 			$this->_show_message($this->lang->line('auth_message_registration_disabled'));
@@ -874,7 +965,9 @@ class Auth extends CI_Controller
 				if ($this->tank_auth->change_password(
 						$this->form_validation->set_value('old_password'),
 						$this->form_validation->set_value('new_password'))) {	// success
-					$this->_show_message($this->lang->line('auth_message_password_changed'));
+					$this->session->set_flashdata('message', '<p class="succes">Your password has been successfully changed.</p>');
+					redirect('');
+					//$this->_show_message($this->lang->line('auth_message_password_changed'));
 
 				} else {														// fail
 					$errors = $this->tank_auth->get_error_message();
@@ -917,8 +1010,23 @@ class Auth extends CI_Controller
 					$errors = $this->tank_auth->get_error_message();
 					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
 				}*/ 
-				$this->users->set_new_email($this->session->userdata('id'), $this->form_validation->set_value('email'), '', '1' );
-				redirect();
+				if (!is_null($data = $this->tank_auth->set_new_email(
+						$this->form_validation->set_value('email'),
+						$this->form_validation->set_value('password')))) 
+				{
+					$this->users->set_new_email($this->session->userdata('id'), $this->form_validation->set_value('email'), '', '1' );
+					$array = array(
+						'email' => $this->form_validation->set_value('email')
+					);
+					
+					$this->session->set_userdata( $array );
+					redirect();
+				}
+				 else 
+				{
+					$errors = $this->tank_auth->get_error_message();
+					foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+				}
 			}
 			$this->load->view('auth/change_email_form', $data);
 		}

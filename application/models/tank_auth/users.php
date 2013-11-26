@@ -24,6 +24,32 @@ class Users extends CI_Model
 		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 	}
 
+	/** 
+	* Function return number of all profiles
+	*
+	* @return int
+	*/
+	function get_nmbr_all()
+	{
+		$select = $this->db->get($this->table_name);
+		return $select->num_rows();
+	}
+
+	/** 
+	* Function return number of all profiles
+	*
+	* @param int
+	* @return int
+	*/
+	function get_nmbr_activated($activated)
+	{
+			$select = $this->db->where('activated', $activated)
+							   ->get($this->table_name);
+			return $select->num_rows();
+	}
+
+
+
 	/**
 	* Upload profile photo
 	*
@@ -71,35 +97,38 @@ class Users extends CI_Model
 	}
 	
 
-	function get_inactive_users()
+	function get_inactive_users($from = 0, $count = 0)
 	{
 		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, users.username, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
 									FROM users, user_profiles 
 									WHERE users.activated = 0 AND users.id = user_profiles.user_id
-									ORDER BY user_profiles.last_name");
+									ORDER BY user_profiles.last_name
+									LIMIT $from,$count");
 		if ($query->num_rows > 0) return $query->result_array();
 	}
 
-	function __get_all_users()
+	function __get_all_users($from = 0, $count = 0)
 	{
 		$query = $this->db->query( "SELECT users.id as user_id, 
 									user_profiles.first_name, user_profiles.thumb, user_profiles.photo, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email, users.activated, 
 									users.created
 									FROM users, user_profiles 
 									WHERE users.id = user_profiles.user_id /*AND users.role!='admin'*/
-									ORDER BY user_profiles.last_name, users.activated");
+									ORDER BY user_profiles.last_name, users.activated
+									LIMIT $from,$count");
 		if ($query->num_rows() > 0) return $query->result_array();
 		return NULL;
 	}
 
 
-	function get_autocreated_profiles()
+	function get_autocreated_profiles($from = 0, $count = 0)
 	{
 
 		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date  
 									FROM users, user_profiles 
 									WHERE users.activated = 2 AND users.id = user_profiles.user_id
-									ORDER BY user_profiles.last_name");
+									ORDER BY user_profiles.last_name
+									LIMIT $from,$count");
 		if ($query->num_rows > 0) return $query->result_array();
 
 	}
@@ -358,7 +387,8 @@ class Users extends CI_Model
 	{
 		if ($this->__delete_profile($user_id))
 		{
-			$this->db->where('id', $user_id);
+			$this->db->where('id', $user_id)
+					 ->where('role !=', 'admin');
 			$this->db->delete($this->table_name);
 			if ($this->db->affected_rows() > 0) {
 				return TRUE;
@@ -616,20 +646,25 @@ class Users extends CI_Model
 	 */
 	private function __delete_profile($user_id)
 	{
-		$this->db->where('user_id', $user_id);
-		$this->db->delete($this->profile_table_name);
-		if ($this->db->affected_rows() > 0) {	
-			// delete user data
-			// register for toournament		
-			$this->db->where('user_id', $user_id);
-			$this->db->delete('registered_players');
-			// results
-			$this->db->where('user_id', $user_id);
-			$this->db->delete('baskets');
 
+		$data = $this->get_user_by_id($user_id);
+		if ($data->role != 'admin') 
+		{	
 			$this->db->where('user_id', $user_id);
-			$this->db->delete('players_has_tournaments');
-			return TRUE;
+			$this->db->delete($this->profile_table_name);
+			if ($this->db->affected_rows() > 0) {	
+				// delete user data
+				// register for toournament		
+				$this->db->where('user_id', $user_id);
+				$this->db->delete('registered_players');
+				// results
+				$this->db->where('user_id', $user_id);
+				$this->db->delete('baskets');
+
+				$this->db->where('user_id', $user_id);
+				$this->db->delete('players_has_tournaments');
+				return TRUE;
+			}
 		}
 		return FALSE;
 	}

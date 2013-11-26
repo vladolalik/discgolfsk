@@ -1,3 +1,5 @@
+
+<?php $this->load->view('header', array('title' => 'Change email', 'caption' => 'Chagne email')) ?>
 <?php
 $password = array(
 	'name'	=> 'password',
@@ -25,5 +27,5 @@ $email = array(
 		<td style="color: red;"><?php echo form_error($email['name']); ?><?php echo isset($errors[$email['name']])?$errors[$email['name']]:''; ?></td>
 	</tr>
 </table>
-<?php echo form_submit('change', 'Send confirmation email'); ?>
+<?php echo form_submit('change', 'Change email'); ?>
 <?php echo form_close(); ?>

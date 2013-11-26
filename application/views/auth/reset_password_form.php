@@ -1,3 +1,4 @@
+<?php $this->load->view('header', array('title' => 'REset password', 'caption' => 'Reset password')) ?>
 <?php
 $new_password = array(
 	'name'	=> 'new_password',

@@ -1,3 +1,4 @@
+<?php 	$this->load->view('header', array('title' => 'Change password', 'caption' => 'Change password')) ?>
 <?php
 $old_password = array(
 	'name'	=> 'old_password',

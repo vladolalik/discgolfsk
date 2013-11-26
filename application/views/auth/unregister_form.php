@@ -1,3 +1,4 @@
+<?php $this->load->view('header', array('title' => 'Unregister', 'caption' => 'Unregister')) ?>
 <?php
 $password = array(
 	'name'	=> 'password',

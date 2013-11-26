@@ -1,3 +1,4 @@
+<?php $this->load->view('header', array('title' => 'Change email', 'caption' => 'Update profile')) ?>
 <?php
 
 $first_name = array(

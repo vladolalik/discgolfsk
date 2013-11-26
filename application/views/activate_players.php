@@ -1,6 +1,6 @@
 <?php 
-$this->load->view('admin/admin_header');
 
+$this->load->view('admin/admin_header', array('title'=>'Users waiting for activation' , 'caption'=>'Users waiting for activation'));
 
 if ($players ==NULL)
 {
@@ -36,5 +36,6 @@ else
 				<td><form action="/discgolf/index.php/auth/admin_reject_activation/'.$player['user_id'].'"> <input type="submit" value="Reject Activation" onclick="return confirm(\'Are you sure you want to reject request for activation from this user with email: '.$player['email'].'?\')" /></form></td></tr>';
 	}
 	echo '</table>';
+	echo $this->pagination->create_links();
 }
 ?>

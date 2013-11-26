@@ -1,3 +1,4 @@
+<?php $this->load->view('header', array('title' => 'Register', 'caption' => 'Register')) ?>
 <?php
 if ($use_username) {
 	$username = array(
@@ -60,8 +61,8 @@ $gender = array(
 );
 
 $options_gender = array(
-	'male' => 'male',
-	'female' => 'female'
+	'Male' => 'Male',
+	'Female' => 'Female'
 );
 
 $club = array(
@@ -95,7 +96,7 @@ echo $this->input->post('first_name');
 	<tr>
 		<td><?php echo form_label('Last Name', $last_name['id']); ?></td>
 		<td><?php echo form_input($last_name); ?></td>
-		<td style="color: red;"><?php echo form_error($birth['name']); ?><?php echo isset($errors[$birth['name']])?$errors[$birth['name']]:''; ?></td>
+		<td style="color: red;"><?php echo form_error($last_name['name']); ?><?php echo isset($errors[$last_name['name']])?$errors[$last_name['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Day of birth', $birth['id']); ?></td>
@@ -104,7 +105,7 @@ echo $this->input->post('first_name');
 	</tr>
 	<tr>
 		<td><?php echo form_label('Gender', $gender['id']); ?></td>
-		<td><?php echo form_dropdown($gender['name'], $options_gender, $options_gender['male'], 'id="gender"')?></td>
+		<td><?php echo form_dropdown($gender['name'], $options_gender, $options_gender['Male'], 'id="gender"')?></td>
 		<td style="color: red;"><?php echo form_error($gender['name']); ?><?php echo isset($errors[$gender['name']])?$errors[$gender ['name']]:''; ?></td>
 	</tr>
 	<tr>

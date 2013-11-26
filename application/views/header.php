@@ -2,7 +2,7 @@
 <html>
 	<HEAD>
 	      <TITLE><?php echo $title; ?></TITLE>
-	   </HEAD>
+	</HEAD>
 	<body>
 		<nav>
 			<ul>
@@ -21,9 +21,18 @@
 							echo '<li>'.anchor('/auth/admin_get_all_players', 'Administration', 'title="Administration"').'</li>';
 						}
 						echo  '<li>'.anchor('/auth/logout', 'Logout', 'title="Logout"');	
+					} 
+					else 
+					{
+						echo '<li>'.anchor('/auth/login', 'Login', 'title="login"').'</li>
+							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>';
 					}
 			?>
 			</ul>
 		</nav>
-		<?php echo $this->session->flashdata('message');
+
+		<?php 	echo '<div id="content">';
+			  	echo $this->session->flashdata('message');
+			  	echo '<h1>'.$caption.'</h1>';
+		?>
 	

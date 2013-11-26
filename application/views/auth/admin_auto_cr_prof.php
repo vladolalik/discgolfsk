@@ -1,6 +1,6 @@
 <?php 
 
-$this->load->view('admin/admin_header');
+$this->load->view('admin/admin_header', array('title'=>'Auto-created profiles', 'caption'=>'Auto-created profiles'));
 
 if ($players == NULL)
 {
@@ -29,5 +29,6 @@ else
 			 </tr>';
 	}
 	echo '</table>';
+	echo $this->pagination->create_links();
 }
 ?>

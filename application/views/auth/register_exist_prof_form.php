@@ -1,3 +1,4 @@
+<?php $this->load->view('header', array('title' => 'Register existing auto-created profile', 'caption' => 'Register existing auto-created profile')) ?>
 <?php
 if ($use_username) {
 	$username = array(
@@ -56,14 +57,14 @@ $captcha = array(
 	'maxlength'	=> 8,
 );
 
-$gender = array(
+$genderA = array(
 	'name' => 'gender',
 	'id' => 'gender'
 );
 
 $options_gender = array(
-	'male' => 'male',
-	'female' => 'female'
+	'Male' => 'Male',
+	'Female' => 'Female'
 );
 
 $club = array(
@@ -104,9 +105,14 @@ echo $this->input->post('first_name');
 		<td style="color: red;"><?php echo form_error($birth['name']); ?><?php echo isset($errors[$birth['name']])?$errors[$birth ['name']]:''; ?></td>
 	</tr>
 	<tr>
-		<td><?php echo form_label('Gender', $gender['id']); ?></td>
-		<td><?php echo form_dropdown($gender['name'], $options_gender, $options_gender['male'], 'id="gender"')?></td>
-		<td style="color: red;"><?php echo form_error($gender['name']); ?><?php echo isset($errors[$gender['name']])?$errors[$gender ['name']]:''; ?></td>
+		<td><?php echo form_label('Gender', $genderA['id']); ?></td>
+		<td>
+		<select name="gender" id="gender">
+			<option value="Male" <?php echo set_select('gender', 'Male', $gender == 'Male'? TRUE : FALSE); ?> >Male</option>
+			<option value="Female" <?php echo set_select('gender', 'Female', $gender =='Female'? TRUE : FALSE); ?> >Female</option>
+		</select>
+	</td>
+		<td style="color: red;"><?php echo form_error($genderA['name']); ?><?php echo isset($errors[$genderA['name']])?$errors[$genderA ['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Club', $club['id']); ?></td>

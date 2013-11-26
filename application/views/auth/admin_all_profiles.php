@@ -1,6 +1,6 @@
 <?php 
 
-$this->load->view('admin/admin_header');
+$this->load->view('admin/admin_header', array('title'=>'All profiles', 'caption'=>'All profiles'));
 
 if ($players == NULL)
 {
@@ -55,5 +55,6 @@ else
 
 	}
 	echo '</table>';
+	echo $this->pagination->create_links();
 }
 ?>
