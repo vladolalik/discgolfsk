@@ -16,6 +16,7 @@ class Auth extends CI_Controller
 
 	function index()
 	{
+		
 		if ($message = $this->session->flashdata('message')) {
 			$this->load->view('auth/general_message', array('message' => $message));
 		} else {
@@ -67,7 +68,7 @@ class Auth extends CI_Controller
  
 	/* Pass everything into the views */
 	//$this->load->view('templates/header', $data);
-	$this->load->view('auth/upload_picture', $data);
+	$this->load->view('auth/upload_picture', $error);
 	//$this->load->view('upload_form', $error);
 	//$this->load->view('templates/footer', $data);
  

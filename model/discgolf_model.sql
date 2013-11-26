@@ -11,7 +11,7 @@ USE `discgolf` ;
 DROP TABLE IF EXISTS `discgolf`.`tournaments` ;
 
 CREATE  TABLE IF NOT EXISTS `discgolf`.`tournaments` (
-  `tournament_id` INT(11) NOT NULL ,
+  `tournament_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NULL ,
   `date` DATE NULL DEFAULT NULL ,
   `location` VARCHAR(45) NULL DEFAULT NULL ,
@@ -27,7 +27,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `discgolf`.`laps` ;
 
 CREATE  TABLE IF NOT EXISTS `discgolf`.`laps` (
-  `lap_id` INT(11) NOT NULL ,
+  `lap_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `nmbr_of_bskts` INT(11) NULL ,
   `order` VARCHAR(45) NULL DEFAULT NULL ,
   `tournament_id` INT(11) NOT NULL ,
@@ -82,7 +82,8 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`user_profiles` (
   `first_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `last_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `birth_date` DATE NULL DEFAULT NULL ,
-  `photo` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `photo` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'default.png' ,
+  `thumb` MEDIUMTEXT NULL DEFAULT 'default-thumb.png' ,
   `gender` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `club` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `user_id` INT(11) NOT NULL ,
@@ -105,7 +106,7 @@ COLLATE = utf8_bin;
 DROP TABLE IF EXISTS `discgolf`.`baskets` ;
 
 CREATE  TABLE IF NOT EXISTS `discgolf`.`baskets` (
-  `basket_id` INT(11) NOT NULL ,
+  `basket_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `order` INT(11) NULL ,
   `points` VARCHAR(45) NULL DEFAULT NULL ,
   `lap_id` INT(11) NOT NULL ,
@@ -132,7 +133,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `discgolf`.`categories` ;
 
 CREATE  TABLE IF NOT EXISTS `discgolf`.`categories` (
-  `category_id` INT(11) NOT NULL ,
+  `category_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `category` VARCHAR(45) NULL ,
   PRIMARY KEY (`category_id`) )
 ENGINE = InnoDB;

@@ -68,10 +68,11 @@ class Users extends CI_Model
 
 	function __get_all_users()
 	{
-		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email, users.activated, 
+		$query = $this->db->query( "SELECT users.id as user_id, 
+									user_profiles.first_name, user_profiles.thumb, user_profiles.photo, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email, users.activated, 
 									users.created
 									FROM users, user_profiles 
-									WHERE users.id = user_profiles.user_id AND users.role!='admin'
+									WHERE users.id = user_profiles.user_id /*AND users.role!='admin'*/
 									ORDER BY user_profiles.last_name, users.activated");
 		if ($query->num_rows() > 0) return $query->result_array();
 		return NULL;

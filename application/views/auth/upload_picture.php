@@ -1,4 +1,4 @@
-<?php $this->load->view('upload_picture', array('title' => 'Upload picture' )); ?>
+<?php $this->load->view('header', array('title' => 'Upload picture' )); ?>
 <h1>Change Profile Picture</h1>
 	<?php echo $error;?>
 	<?php echo form_open_multipart('auth/do_upload');?>
