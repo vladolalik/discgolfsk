@@ -83,7 +83,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`user_profiles` (
   `last_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `birth_date` DATE NULL DEFAULT NULL ,
   `photo` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'default.png' ,
-  `thumb` MEDIUMTEXT NULL DEFAULT 'default-thumb.png' ,
+  `thumb` VARCHAR(255) NULL DEFAULT 'default-thumb.png' ,
   `gender` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `club` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `user_id` INT(11) NOT NULL ,
