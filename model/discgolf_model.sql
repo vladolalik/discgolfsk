@@ -86,6 +86,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`user_profiles` (
   `thumb` VARCHAR(255) NULL DEFAULT 'default-thumb.png' ,
   `gender` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
   `club` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+  `about` TEXT NULL ,
   `user_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`, `user_id`) ,
   INDEX `fk_user_profiles_users1` (`user_id` ASC) ,
