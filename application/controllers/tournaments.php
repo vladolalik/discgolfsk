@@ -22,7 +22,58 @@ class Tournaments extends CI_Controller {
 	}
 
 	function import(){
-		$this->load->view('tournaments_import');
+		$data['tournamets'] = $this->tournament->get_all_tournaments();
+
+		debug($_POST);
+
+		$this->load->library('form_validation');
+
+		if( isset($_POST['create']) ){ // ak nie je zaskrtnute ako novy tak validujeme
+			debug('novy');
+			$data['create_checked'] = TRUE; // zapametanie checkboxu
+			$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
+			$this->form_validation->set_rules('date', '', 'trim|required|xss_clean|htmlspecialchars');
+			$this->form_validation->set_rules('location', '', 'trim|required|xss_clean|htmlspecialchars');
+		}else{
+			$data['create_checked'] = FALSE; // zapametanie checkboxu
+		}
+		
+		if ( $this->form_validation->run() || !isset($_POST['create']) ){  //ak je zvalidovane alebo netreba validovat
+			$config['upload_path'] = './uploads/';
+			$config['allowed_types'] = 'csv';
+			$config["file_name"] = IMPORTED_TMP_FILE_NAME; // ulozene v config/constants
+			$config["overwrite"] = TRUE;
+
+			$this->load->library('upload', $config);
+
+			if (  $this->upload->do_upload("userfile") ){ // po uspesnom uploadnuti sa idu parsovat data
+				$data = array('upload_data' => $this->upload->data());
+
+				if( isset($_POST['create'] ) ){ // ak je zakliknute ze chceme novy, tak ho vytvorime
+					$tournament_data = array(
+						'name'		=> $_POST['name'],
+						'date'		=> $_POST['date'],
+						'location'	=> $_POST['location'],
+					);
+					if ($this->tournament->add_tournament($tournament_data) ){
+						debug('ulozilo');
+						$data['tournament_id'] = $this->tournament->get_tournament_id($_POST['name'], $_POST['date']);
+					}
+				}else{ //inak si zapamatame idcko vybraneho
+					$data['tournament_id'] = $_POST['existing_tournament_id'];
+				}
+				// vytvorit novy tournament alebo poslat idecko 
+				//redirect('tournaments/parse_imported_data');
+				//$this->parse_imported_data( $data );
+			}
+			else{
+				
+				$data['upload_error'] = array('error' => $this->upload->display_errors());
+				$this->load->view('tournaments_import',$data);
+			}
+		}else{
+			$this->load->view('tournaments_import',$data);	
+		}
 	}
 	
 
@@ -32,21 +83,12 @@ class Tournaments extends CI_Controller {
 	* @return string
 	*/
 	function do_upload(){
-		$config['upload_path'] = './uploads/';
-		$config['allowed_types'] = 'csv';
-		$config["file_name"] = IMPORTED_TMP_FILE_NAME; // ulozene v config/constants
-		$config["overwrite"] = TRUE;
 
-		$this->load->library('upload', $config);
+		
+	}
 
-		if ( ! $this->upload->do_upload("userfile")){
-			$error = array('error' => $this->upload->display_errors());
-			$this->load->view('tournaments_import',$error);
-		}
-		else{
-			$data = array('upload_data' => $this->upload->data());
-			redirect('tournaments/parse_imported_data');
-		}
+	function __tournament_exist(){
+
 	}
 
 
@@ -84,7 +126,7 @@ class Tournaments extends CI_Controller {
 	}
 
 
-	function parse_imported_data(){
+	function parse_imported_data( $data = NULL ){
 		$dataString =  file_get_contents('./uploads/'.IMPORTED_TMP_FILE_NAME.'.csv', true);
 		$v_errors = ""; 				// string do ktoreho sa postupne nabaluju validacne errory
 		$player_number = 0;						// cislo kolko mien mame zo suboru prejdenych
@@ -182,7 +224,7 @@ class Tournaments extends CI_Controller {
 	function __saveData($players = array(), $laps_data = array(), $final_laps_data = array()){
 		$creating_errors = "";
 		$creating_sucesses = "";
-		
+
 		foreach ($players as $key => $player) {
 			if( $this->help_functions->exists_profile($player['name'],$player['surname']) ){
 				$creating_errors .= "<div>Hrac:".$player['name']." ".$player['surname']." uz existuje ".$key.". v poradi v svn subore </div>";
@@ -194,6 +236,7 @@ class Tournaments extends CI_Controller {
 			//debug($key);
 		}
 		debug($creating_errors);
+		//$this->load->view('dsds');	
 	}
 }
 ?>
