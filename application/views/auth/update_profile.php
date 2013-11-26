@@ -19,9 +19,9 @@ $birth = array(
 	'id'   => 'birth_date',
 	'value'=> set_value('birth_date', $birth_date),
 );
-$gender = array(
+$genderA = array(
 	'name' => 'gender',
-	'id' => 'gender'
+	'id' => 'gender',
 );
 
 $options_gender = array(
@@ -33,6 +33,11 @@ $club = array(
 	'id' => 'club',
 	'name' => 'club',
 	'value' => set_value('club', $club)
+);
+$about = array (
+	'id' => 'about',
+	'name' => 'about',
+	'value' => set_value('about', $about)
 );
 
 ?>
@@ -55,14 +60,24 @@ $club = array(
 		<td style="color: red;"><?php echo form_error($birth['name']); ?><?php echo isset($errors[$birth['name']])?$errors[$birth ['name']]:''; ?></td>
 	</tr>
 	<tr>
-		<td><?php echo form_label('Gender', $gender['id']); ?></td>
-		<td><?php echo form_dropdown($gender['name'], $options_gender, $options_gender['male'], 'id="gender"')?></td>
-		<td style="color: red;"><?php echo form_error($gender['name']); ?><?php echo isset($errors[$gender['name']])?$errors[$gender ['name']]:''; ?></td>
+		<td><?php echo form_label('Gender', $genderA['id']); ?></td>
+		<td>
+		<select name="gender" id="gender">
+			<option value="Male" <?php echo set_select('gender', 'Male', $gender == 'Male'? TRUE : FALSE); ?> >Male</option>
+			<option value="Female" <?php echo set_select('gender', 'Female', $gender =='Female'? TRUE : FALSE); ?> >Female</option>
+		</select>
+	</td>
+		<td style="color: red;"><?php echo form_error($genderA['name']); ?><?php echo isset($errors[$genderA['name']])?$errors[$genderA ['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Club', $club['id']); ?></td>
 		<td><?php echo form_input($club); ?></td>
 		<td style="color: red;"><?php echo form_error($club['name']); ?><?php echo isset($errors[$club['name']])?$errors[$club['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('About', $about['id']); ?></td>
+		<td><?php echo form_textarea($about); ?></td>
+		<td style="color: red;"><?php echo form_error($about['name']); ?><?php echo isset($errors[$about['name']])?$errors[$about['name']]:''; ?></td>
 	</tr>
 </table>
 <?php echo form_submit('update', 'Update'); ?>

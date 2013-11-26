@@ -25,6 +25,22 @@ class Auth extends CI_Controller
 	}
 
 	/**
+	*
+	*
+	*
+	*
+	*/
+	function my_profile()
+	{
+		if (!$this->tank_auth->is_logged_in())
+		{
+			redirect();
+		}
+		$profile_data = $this->users->get_user_profile($this->tank_auth->get_user_id());
+		$this->load->view('my_profile', $profile_data);
+	}
+
+	/**
 	* Function provide upload of profile 
 	*
 	*
@@ -34,7 +50,7 @@ class Auth extends CI_Controller
 	function do_upload() {	
  
 	/* Upload Settings */
-	$config['upload_path'] = './uploads/';
+	$config['upload_path'] = './uploads/images';
 	$config['allowed_types'] = 'gif|jpg|png';
 	$config['max_size']	= '1024';
 	$config['max_width']  = '1024';
@@ -50,77 +66,88 @@ class Auth extends CI_Controller
 	... and if not, shows the upload form and any errors (if they exist) */
 	if (!$this->upload->do_upload()){
  
-	/* Loads the model (predefined database instructions, see below) ...
-	... and assigns it a nickname, I went with 'foo' */
-	//$this->load->model('tank_auth/users','foo');
- 
-	/* Makes the logged-in user's id a nice, clean variable */
-	$user_id = $this->tank_auth->get_user_id();
- 
-	/* Use the model to gather all user profile information for that user_id */
-	$profile_data =  $this->users->get_user_profile($user_id);
- 
-	/* Pass that data into the data variable (for the views) */
-	$data = $profile_data;
- 
-	/* Process errors if they exist */
-	$error = array('error' => $this->upload->display_errors());
- 
-	/* Pass everything into the views */
-	//$this->load->view('templates/header', $data);
-	$this->load->view('auth/upload_picture', $error);
-	//$this->load->view('upload_form', $error);
-	//$this->load->view('templates/footer', $data);
- 
-	/* ... if the file passes validation ... */ 
+		/* Loads the model (predefined database instructions, see below) ...
+		... and assigns it a nickname, I went with 'foo' */
+		//$this->load->model('tank_auth/users','foo');
+	 
+		/* Makes the logged-in user's id a nice, clean variable */
+		$user_id = $this->tank_auth->get_user_id();
+	 
+		/* Use the model to gather all user profile information for that user_id */
+		$profile_data =  $this->users->get_user_profile($user_id);
+	 
+		/* Pass that data into the data variable (for the views) */
+		$data = $profile_data;
+	 
+		/* Process errors if they exist */
+		$error = array('error' => $this->upload->display_errors());
+	 
+		/* Pass everything into the views */
+		//$this->load->view('templates/header', $data);
+		$this->load->view('auth/upload_picture', $error);
+		//$this->load->view('upload_form', $error);
+		//$this->load->view('templates/footer', $data);
+	 
+		/* ... if the file passes validation ... */ 
 	} else { 
- 
-	/* Load the users model, assign it alias 'foo' (or whatever you want) */
-	$this->load->model('tank_auth/users','foo');
- 
-	/* Assign logged-in user ID to a nice, clean variable */
-	$user_id = $this->tank_auth->get_user_id();
- 
-	/* Assign the upload's metadata (size, dimensions, destination, etc.) ...
-	... to an array with another nice, clean variable */
-	$upload = (array) $this->upload->data();
- 
-	/* Assign's the user's profile data to yet another nice, clean variable */
-	$profile_data = (array) $this->foo->get_user_profile($user_id);
- 
-	/* Uses two upload library features to assemble the file name (the name, and extension) */
-	$filename = $upload['raw_name'].$upload['file_ext'];
- 
-	/* Same with the thumbnail we'll generate, but with the suffix '_thumb' */
-	$thumb = $upload['raw_name']."_thumb".$upload['file_ext'];
- 
-	/* Set the rules for the upload */
-	$config['image_library'] = 'gd2';
-	$config['source_image']	= "./uploads/".$filename;
-	$config['create_thumb'] = TRUE;
-	$config['maintain_ratio'] = TRUE;
-	$config['width']	 = 128;
-	$config['height']	= 128;
- 
-	/* Load "image manipulation library", see CodeIgniter user guide */
-	$this->load->library('image_lib', $config);
- 
-	/* Resize the image! */
-	$this->image_lib->resize();
- 
-	/* Assign upload_data to $data variable */
-	$data['upload_data'] = $this->upload->data();
- 
-	/* Assign profile_data to $data variable */
-	$data['profile_data'] = $profile_data;
- 
-	/* Runs the users model (update_photo function, see below) and ...
-	... loads the location of the photo new photo into user's profile */
-	$this->users->update_photo($user_id, $filename, $thumb);
- 
-	/* Load "success" view with all the data! */
-	$this->load->view('auth/upload_success', $data);
- 
+	 
+		/* Load the users model, assign it alias 'foo' (or whatever you want) */
+		$this->load->model('tank_auth/users','foo');
+	 
+		/* Assign logged-in user ID to a nice, clean variable */
+		$user_id = $this->tank_auth->get_user_id();
+	 
+		/* Assign the upload's metadata (size, dimensions, destination, etc.) ...
+		... to an array with another nice, clean variable */
+		$upload = (array) $this->upload->data();
+	 
+		/* Assign's the user's profile data to yet another nice, clean variable */
+		$profile_data =  $this->users->get_user_profile($user_id);
+	 
+		/* Uses two upload library features to assemble the file name (the name, and extension) */
+		$filename = $upload['raw_name'].$upload['file_ext'];
+	 
+		/* Same with the thumbnail we'll generate, but with the suffix '_thumb' */
+		$thumb = $upload['raw_name']."_thumb".$upload['file_ext'];
+	 
+		/* Set the rules for the upload */
+		$config['image_library'] = 'gd2';
+		$config['source_image']	= "./uploads/images/".$filename;
+		$config['create_thumb'] = TRUE;
+		$config['maintain_ratio'] = TRUE;
+		$config['width']	 = 128;
+		$config['height']	= 128;
+	 
+		/* Load "image manipulation library", see CodeIgniter user guide */
+		$this->load->library('image_lib', $config);
+	 
+		/* Resize the image! */
+		$this->image_lib->resize();
+	 
+		/* Assign upload_data to $data variable */
+		$data['upload_data'] = $this->upload->data();
+	 
+		/* Assign profile_data to $data variable */
+		$data['profile_data'] = $profile_data;
+	 
+		/* Runs the users model (update_photo function, see below) and ...
+		... loads the location of the photo new photo into user's profile */
+		if ($this->users->update_photo($user_id, $filename, $thumb))
+		{
+			/* Load "success" view with all the data! */
+			//$this->load->view('auth/upload_success', $data);
+			$this->session->set_flashdata('message', '<p class="success">Your profile picture was successfully changed!</p>');		
+			redirect('auth/my_profile');
+		} 
+		else
+	 	{
+	 		//$data['fail'] = 'Upload has failed';
+			/* Load "success" view with all the data, but something went wrong in database */
+			//$this->load->view('auth/upload_success', $data);
+			$this->session->set_flashdata('message', '<p class="fail">Something went wrong, please try again :) </p>');
+			redirect('auth/do_upload');		
+	 
+		}
 	}
 }
 
@@ -170,6 +197,7 @@ class Auth extends CI_Controller
 		{
 			$id = $this->session->userdata('id');
 			$data = $this->users->get_user_profile($id);
+			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
 			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
 			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
@@ -184,10 +212,12 @@ class Auth extends CI_Controller
 					'last_name' => $this->form_validation->set_value('last_name'),
 					'club' => $this->form_validation->set_value('club'),
 					'gender' => $this->form_validation->set_value('gender'),
-					'birth_date' => $this->form_validation->set_value('birth_date')
+					'birth_date' => $this->form_validation->set_value('birth_date'),
+					'about' => $this->form_validation->set_value('about')
 					);
 				if ($this->users->update_profile($id, $profile_data))
-				{
+				{	
+					$this->session->set_userdata( $profile_data );
 					$this->session->set_flashdata('message', '<p> Update was succesfull!</p>');
 				} 
 				else 
@@ -383,6 +413,7 @@ class Auth extends CI_Controller
 			}
 
 			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
+			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
 			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
 			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
@@ -409,7 +440,8 @@ class Auth extends CI_Controller
 				'last_name'  => $this->input->post('last_name'),
 				'birth_date' => $this->input->post('birth_date'),
 				'gender' => $this->input->post('gender'),
-				'club' => $this->input->post('club')
+				'club' => $this->input->post('club'),
+				'about' => $this->input->post('about')
 			);	
 
 			$user_data = array(
@@ -532,6 +564,10 @@ class Auth extends CI_Controller
 					$user_profile['role'] = $role;
 					unset($user_session);		
 					$this->session->set_userdata($user_profile);
+					if ($this->help_functions->is_admin())
+					{
+						redirect('auth/admin_get_all_players');
+					}
 					redirect('');
 
 				} else {
@@ -596,6 +632,7 @@ class Auth extends CI_Controller
 			}
 
 			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
+			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
 			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
 			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
@@ -622,7 +659,8 @@ class Auth extends CI_Controller
 				'last_name'  => $this->input->post('last_name'),
 				'birth_date' => $this->input->post('birth_date'),
 				'gender' => $this->input->post('gender'),
-				'club' => $this->input->post('club')
+				'club' => $this->input->post('club'),
+				'about' => $this->input->post('about')
 			);
 
 

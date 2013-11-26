@@ -49,6 +49,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('IMPORTED_TMP_FILE_NAME','tmp_tournament');
 define('CSV_LINE_SEPARATOR',"\n");
 define('CSV_COLUMN_SEPARATOR','tmp_tournament');
+define('PATH_TO_USERS_AVATAR', 'http://localhost/discgolf/uploads/images/');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

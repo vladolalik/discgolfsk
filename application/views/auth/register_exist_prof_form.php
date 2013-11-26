@@ -71,6 +71,11 @@ $club = array(
 	'name' => 'club',
 	'value' => set_value('club',$club)
 );
+$about = array (
+	'id' => 'about',
+	'name' => 'about',
+	'value' => set_value('about')
+);
 
 echo $this->input->post('first_name');
 ?>
@@ -112,6 +117,11 @@ echo $this->input->post('first_name');
 		<td><?php echo form_label('Email Address', $email['id']); ?></td>
 		<td><?php echo form_input($email); ?></td>
 		<td style="color: red;"><?php echo form_error($email['name']); ?><?php echo isset($errors[$email['name']])?$errors[$email['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('About', $about['id']); ?></td>
+		<td><?php echo form_textarea($about); ?></td>
+		<td style="color: red;"><?php echo form_error($about['name']); ?><?php echo isset($errors[$about['name']])?$errors[$about['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Password', $password['id']); ?></td>

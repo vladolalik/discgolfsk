@@ -69,6 +69,12 @@ $club = array(
 	'name' => 'club',
 	'value' => set_value('club')
 );
+$about = array (
+	'id' => 'about',
+	'name' => 'about',
+	'value' => set_value('about')
+);
+
 
 echo $this->input->post('first_name');
 ?>
@@ -112,6 +118,11 @@ echo $this->input->post('first_name');
 		<td style="color: red;"><?php echo form_error($email['name']); ?><?php echo isset($errors[$email['name']])?$errors[$email['name']]:''; ?></td>
 	</tr>
 	<tr>
+		<td><?php echo form_label('About', $about['id']); ?></td>
+		<td><?php echo form_textarea($about); ?></td>
+		<td style="color: red;"><?php echo form_error($about['name']); ?><?php echo isset($errors[$about['name']])?$errors[$about['name']]:''; ?></td>
+	</tr>
+	<tr>
 		<td><?php echo form_label('Password', $password['id']); ?></td>
 		<td><?php echo form_password($password); ?></td>
 		<td style="color: red;"><?php echo form_error($password['name']); ?></td>
@@ -121,6 +132,7 @@ echo $this->input->post('first_name');
 		<td><?php echo form_password($confirm_password); ?></td>
 		<td style="color: red;"><?php echo form_error($confirm_password['name']); ?></td>
 	</tr>
+
 
 	<?php if ($captcha_registration) {
 		if ($use_recaptcha) { ?>

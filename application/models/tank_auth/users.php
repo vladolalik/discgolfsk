@@ -28,16 +28,30 @@ class Users extends CI_Model
 	* Upload profile photo
 	*
 	*
-	* @return void
+	* @return boolean
 	*/
 
 	function update_photo($user_id, $filename, $thumb){
-		$this->db->where('user_id', $user_id);
-		$arr = array(
-			'photo'=> $filename,
-			'thumb' => $thumb
-		);
-		$this->db->update($this->profile_table_name, $arr);
+		$query = $this->db->select('photo, thumb')
+						  ->where('user_id', $user_id)
+						  ->get($this->profile_table_name);
+		if ($query->num_rows == 1) 
+		{
+			$old_data = $query->row_array(); 
+			if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
+			{
+				unlink('uploads/images/'.$old_data['thumb']);
+				unlink('uploads/images/'.$old_data['photo']);
+			}
+			$this->db->where('user_id', $user_id);
+			$arr = array(
+				'photo'=> $filename,
+				'thumb' => $thumb
+			);
+			$this->db->update($this->profile_table_name, $arr);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	function is_auto_profile($id)

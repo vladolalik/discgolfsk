@@ -24,7 +24,7 @@ else
 		echo '<tr>';
 		if ($player['thumb'] != '')
 		{	
-			echo  '<td><img src="http://localhost/discgolf/uploads/'.$player['thumb'].'" width="128px" title="profile_picture_'.$player['last_name'].'" /></td>';
+			echo  '<td><img src="'.PATH_TO_USERS_AVATAR.$player['thumb'].'" width="128px" title="profile_picture_'.$player['last_name'].'" /></td>';
 		} 
 		else 
 		{
