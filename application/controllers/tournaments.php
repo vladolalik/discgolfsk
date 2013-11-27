@@ -58,13 +58,15 @@ class Tournaments extends CI_Controller {
 					if ($this->tournament->add_tournament($tournament_data) ){
 						debug('ulozilo');
 						$data['tournament_id'] = $this->tournament->get_tournament_id($_POST['name'], $_POST['date']);
+					}else{
+						//chyba najvacsia pri ukladani
 					}
 				}else{ //inak si zapamatame idcko vybraneho
 					$data['tournament_id'] = $_POST['existing_tournament_id'];
 				}
 				// vytvorit novy tournament alebo poslat idecko 
 				//redirect('tournaments/parse_imported_data');
-				//$this->parse_imported_data( $data );
+				$this->parse_imported_data( $data );
 			}
 			else{
 				
@@ -208,20 +210,20 @@ class Tournaments extends CI_Controller {
 		} //end main foreach
 
 
-		// echo "--------------------------------------------------------------";
-		// echo $v_errors;
-		// echo "--------------------------------------------------------------";
-		// debug($valid_players);
-		// echo "--skore------------------------------------------------------------";
-		// debug($all_players_lap_data);
-		// echo "--Finalove------------------------------------------------------------";
-		// debug($all_players_final_lap_data);
-		$this->__saveData( $valid_players, $all_players_lap_data, $all_players_final_lap_data );
+		echo "--------------------------------------------------------------";
+		echo $v_errors;
+		echo "--------------------------------------------------------------";
+		debug($valid_players);
+		echo "--skore------------------------------------------------------------";
+		debug($all_players_lap_data);
+		echo "--Finalove------------------------------------------------------------";
+		debug($all_players_final_lap_data);
+		$this->__saveData( $valid_players, $all_players_lap_data, $all_players_final_lap_data, $data );
 	} //end parse_imported_data
 
 
 
-	function __saveData($players = array(), $laps_data = array(), $final_laps_data = array()){
+	function __saveData($players = array(), $laps_data = array(), $final_laps_data = array(), $data = array() ){
 		$creating_errors = "";
 		$creating_sucesses = "";
 

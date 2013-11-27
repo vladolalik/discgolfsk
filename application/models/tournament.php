@@ -33,8 +33,8 @@ class Tournament extends CI_Model{
     function get_tournament_id($name, $date){
         $this->db->select('tournament_id')
                     ->from('tournaments')
-                    ->where('name', $name);
-                 //   ->where('date', $date);
+                    ->where('name', $name)
+                    ->where('date', $date);
         $query = $this->db->get();
         debug ($query->result() );
     }
