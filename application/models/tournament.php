@@ -38,6 +38,13 @@ class Tournament extends CI_Model{
         $query = $this->db->get();
         debug ($query->result() );
     }
+    
+    function get_tournaments() {
+    $q = $this -> db -> order_by('name')
+					           -> get('tournaments');
+	
+	return $q -> result();
+}
 
 
 	
