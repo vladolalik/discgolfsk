@@ -240,5 +240,30 @@ class Tournaments extends CI_Controller {
 		debug($creating_errors);
 		//$this->load->view('dsds');	
 	}
+  
+  function view() {
+  
+       $data['tournaments'] = $this -> tournament -> get_tournaments();
+       $data['users'] = $this -> users -> get_users();
+       $this->load->view('tournaments_view',$data);
+  }
+  
+  function t_list() {
+       $data['tournaments'] = $this -> tournament -> get_tournaments();
+       $data['users'] = $this -> users -> get_users();
+       
+       
+       debug($_POST['tournaments']);
+       //$_POST['tournament_id'])
+       $data['match'] = $this->users->get_match($_POST['tournaments'], $_POST['users']);
+        
+       $this->load->view('tournaments_view',$data); 
+  
+  }
+  
+  
+  
+  
+  
 }
 ?>
