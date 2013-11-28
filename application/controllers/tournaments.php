@@ -38,7 +38,7 @@ class Tournaments extends CI_Controller {
 			$data['create_checked'] = FALSE; // zapametanie checkboxu
 		}
 		
-		if ( $this->form_validation->run() || !isset($_POST['create']) ){  //ak je zvalidovane alebo netreba validovat
+		if ( ($this->form_validation->run() || !isset($_POST['create']) ) && isset($_POST['submit']) ){  //ak je zvalidovane alebo netreba validovat
 			$config['upload_path'] = './uploads/';
 			$config['allowed_types'] = 'csv';
 			$config["file_name"] = IMPORTED_TMP_FILE_NAME; // ulozene v config/constants
@@ -129,6 +129,7 @@ class Tournaments extends CI_Controller {
 
 
 	function parse_imported_data( $data = NULL ){
+		header('Content-Type: text/html; charset=utf-8');
 		$dataString =  file_get_contents('./uploads/'.IMPORTED_TMP_FILE_NAME.'.csv', true);
 		$v_errors = ""; 				// string do ktoreho sa postupne nabaluju validacne errory
 		$player_number = 0;						// cislo kolko mien mame zo suboru prejdenych
@@ -210,35 +211,56 @@ class Tournaments extends CI_Controller {
 		} //end main foreach
 
 
-		echo "--------------------------------------------------------------";
-		echo $v_errors;
-		echo "--------------------------------------------------------------";
-		debug($valid_players);
-		echo "--skore------------------------------------------------------------";
-		debug($all_players_lap_data);
-		echo "--Finalove------------------------------------------------------------";
-		debug($all_players_final_lap_data);
-		$this->__saveData( $valid_players, $all_players_lap_data, $all_players_final_lap_data, $data );
+		// echo "--------------------------------------------------------------";
+		// echo $v_errors;
+		// echo "--------------------------------------------------------------";
+		// debug($valid_players);
+		// echo "--skore------------------------------------------------------------";
+		// debug($all_players_lap_data);
+		// echo "--Finalove------------------------------------------------------------";
+		// debug($all_players_final_lap_data);
+		$this->__compare_data( $valid_players, $all_players_lap_data, $all_players_final_lap_data, $data );
 	} //end parse_imported_data
 
 
 
-	function __saveData($players = array(), $laps_data = array(), $final_laps_data = array(), $data = array() ){
-		$creating_errors = "";
-		$creating_sucesses = "";
+	function __compare_data($players = array(), $laps_data = array(), $final_laps_data = array(), $data = array() ){
 
+		$players = $this->__check_players_existence($players);
+		$players = $this->__check_categories_existence($players);
+		//debug($players);
+		$data['players'] = $players;
+		//debug($creating_errors);
+		$this->load->view('tournaments_confirmation', $data);	
+	}
+
+	function __check_players_existence($players){
 		foreach ($players as $key => $player) {
-			if( $this->help_functions->exists_profile($player['name'],$player['surname']) ){
-				$creating_errors .= "<div>Hrac:".$player['name']." ".$player['surname']." uz existuje ".$key.". v poradi v svn subore </div>";
+			//debug($player);
+			$player_id = $this->help_functions->exists_profile($player['name'],$player['surname']);
+			if( $player_id ){
+				$players[$key]['exist'] = $player_id;
+				//$creating_errors .= "<div>Hrac:".$player['name']." ".$player['surname']." uz existuje ".$key.". v poradi v svn subore </div>";
 			}else{
-				$this->help_functions->__create_auto_profile( $player['name'], $player['surname']);
+				$players[$key]['exist'] = -1;
+				//$this->help_functions->__create_auto_profile( $player['name'], $player['surname']);
 				// vytvorime noveho hravca
 			}
-			//debug($player);
-			//debug($key);
 		}
-		debug($creating_errors);
-		//$this->load->view('dsds');	
+		return $players;
+	}
+
+	function __check_categories_existence($players){
+		$this->load->model('category');
+		foreach ($players as $key => $player) {
+			$cat = $this->category->exist($player['category']);
+			if($cat != null){
+				$players[$key]['category_exist'] = $cat;
+			}else{
+				$players[$key]['category_exist'] = -1;
+			}
+		}
+		return $players;
 	}
   
   function view() {
