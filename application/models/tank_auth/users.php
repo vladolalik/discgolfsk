@@ -668,6 +668,67 @@ class Users extends CI_Model
 		}
 		return FALSE;
 	}
+  
+  
+  function get_users() {
+    $u = $this -> db -> order_by('username')
+                     -> where('activated', 1) 
+					           -> get('users');
+	
+	return $u -> result();
+}
+
+    function get_match($tournament_id, $users_id) {
+    if (($tournament_id == '0') and ($users_id == '0')) {
+   //      $d = $this-> db -> order_by('tournament_id')
+  //                       -> get('players_has_tournaments');
+                         
+                         $d = $this->db->query( "SELECT users.username as username, categories.category as category
+									FROM players_has_tournaments, users, categories 
+									WHERE players_has_tournaments.user_id = users.id AND players_has_tournaments.category_id = categories.category_id AND players_has_tournaments.tournamet_id = tournaments.tournament_id 
+									ORDER BY username");
+                     
+                         
+         } 
+         
+    if (($tournament_id == '0') and ($users_id <> '0')) {
+   //      $d = $this-> db -> order_by('tournament_id')
+   //                      -> where('user_id', $users_id)
+   //                      -> get('players_has_tournaments');
+                        $d = $this->db->query( "SELECT users.username as username, categories.category as category
+									FROM players_has_tournaments, users, categories 
+									WHERE $users_id = users.id AND players_has_tournaments.category_id = categories.category_id AND players_has_tournaments.tournamet_id = tournaments.tournament_id 
+									ORDER BY username");
+   
+                              
+         } 
+    if (($tournament_id <> '0') and ($users_id == '0')) {
+   //     $d = $this-> db -> order_by('tournament_id')
+   //                      -> where('tournament_id', $tournament_id)
+   //                      -> get('players_has_tournaments');   
+                        $d = $this->db->query( "SELECT users.username as username, categories.category as category
+									FROM players_has_tournaments, users, categories 
+									WHERE players_has_tournaments.user_id = users.id AND players_has_tournaments.category_id = categories.category_id AND $tournament_id = tournaments.tournament_id 
+									ORDER BY username"); 
+   
+          
+          }  else {
+  //        $d = $this-> db -> order_by('tournament_id')
+  //                        -> where('user_id', $users_id)
+	//                        -> where('tournament_id', $tournament_id)
+  //                        -> get('players_has_tournaments'); 
+                         $d = $this->db->query( "SELECT users.username as username, categories.category as category
+									FROM players_has_tournaments, users, categories 
+									WHERE $users_id = users.id AND players_has_tournaments.category_id = categories.category_id AND $tournament_id = tournaments.tournament_id 
+									ORDER BY username");
+         
+         }
+	return $d -> result();  
+}
+  
+  
+  
+  
 }
 
 /* End of file users.php */
