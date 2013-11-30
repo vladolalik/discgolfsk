@@ -1,4 +1,4 @@
-<?php echo form_open();?>
+<?php echo form_open('tournaments/save_import_data');?>
 	<table style="width: 80%; text-align: center;">
 	<tr>
 		<th>Name</th>
@@ -30,7 +30,13 @@
 		echo $string;
 	?>
 	</table>
+
+	<input type='hidden' name='final_laps_data' value="<?php echo htmlentities(serialize($final_laps_data)); ?>" />
+	<input type='hidden' name='laps_data' value="<?php echo htmlentities(serialize($laps_data)); ?>" />
+	<input type='hidden' name='players' value="<?php echo htmlentities(serialize($players)); ?>" />
+
 <?php
+
 	echo form_submit('submit', 'Save');
 	echo form_close();
 ?>

@@ -13,6 +13,7 @@ class Tournaments extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
+		header('Content-Type: text/html; charset=utf-8');
 		$this->load->model('tournament');
 		$this->load->helper(array('form','url','typography','file'));
 	}
@@ -71,6 +72,8 @@ class Tournaments extends CI_Controller {
 				}else{ //inak si zapamatame idcko vybraneho
 					$data['tournament_id'] = $_POST['existing_tournament_id'];
 				}
+				session_start();
+				$_SESSION['tournament_id']=$data['tournament_id'];
 				// vytvorit novy tournament alebo poslat idecko 
 				//redirect('tournaments/parse_imported_data');
 				$this->parse_imported_data( $data );
@@ -236,6 +239,7 @@ class Tournaments extends CI_Controller {
 		// debug($all_players_lap_data);
 		// echo "--Finalove------------------------------------------------------------";
 		// debug($all_players_final_lap_data);
+
 		$this->__compare_data( $valid_players, $all_players_lap_data, $all_players_final_lap_data, $data );
 	} //end parse_imported_data
 
@@ -252,9 +256,18 @@ class Tournaments extends CI_Controller {
 		$players = $this->__check_players_existence($players);
 		$players = $this->__check_categories_existence($players);
 		//debug($players);
+		//debug($data);
 		$data['players'] = $players;
+		$data['laps_data'] = $laps_data;
+		$data['final_laps_data'] = $final_laps_data;
 		//debug($creating_errors);
+		$_SESSION['players']=$players;
+		$_SESSION['laps_data']=$laps_data;
+		$_SESSION['final_laps_data']=$final_laps_data;
 		$this->load->view('tournaments_confirmation', $data);	
+
+		
+
 	}
 
 	/**
@@ -300,6 +313,92 @@ class Tournaments extends CI_Controller {
 		}
 		return $players;
 	}
+
+
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
+	function __save_player_data($player_id, $user_data, $user_fianl_data = null){
+		if( $player_id == -1 ){
+			
+		}
+
+		// $this->tournament->__save_user_tournament();
+		// $this->tournament->save_user_tournament_data();
+
+
+	}
+
+	function __save_tournamet_properties( $tournament_id, $laps_data, $final_laps_data ){
+		debug( $laps_data );
+		$maximum_laps = 0;
+		$maximum_final_laps = 0;
+		foreach ($laps_data as $key => $player_laps) {
+			if ( count( $player_laps ) > $maximum_laps ){ $maximum_laps = count( $player_laps ); };
+		}
+		foreach ($final_laps_data as $key => $player_laps) {
+			if ( count( $player_laps ) > $maximum_final_laps ){ $maximum_final_laps = count( $player_laps ); };
+		}
+		$this->tournament->save_tournament_properties( $tournament_id, $maximum_laps, $maximum_final_laps );
+	}
+
+
+	function __save_laps( $tournament_id, $laps_data, $final_laps_data ){
+		foreach ( $laps_data as $key => $player_laps ) { //zoberiem prveho hraca
+			foreach ( $player_laps as $lap_key => $lap ) { //prechazdam jednotlivimi lapmi prveho hraca a zistujem pocet kosov a ukladam			
+				$this->tournament->save_lap( $tournament_id, $lap_key, count( $lap ) );
+			//	debug (count( $lap ) );
+			}
+			break;
+		}
+		foreach ( $final_laps_data as $key => $player_laps ) { // to iste pre finalove lapy
+			foreach ( $player_laps as $lap_key => $lap ) { //prechazdam jednotlivimi lapmi prveho hraca a zistujem pocet kosov a ukladam			
+				$this->tournament->save_lap( $tournament_id, $lap_key, count( $lap ), TRUE );
+			//	debug (count( $lap ) );
+			}
+			break;
+		}
+	}
+
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
+	function save_import_data(){
+		session_start();
+		if( isset($_SESSION['players']) && isset($_SESSION['laps_data']) ){
+			$players = $_SESSION['players'];
+			$laps_data = $_SESSION['laps_data'];
+			$final_laps_data = $_SESSION['final_laps_data'];
+			$tournament_id = $_SESSION['tournament_id'];
+			$this->__save_tournamet_properties( $tournament_id, $laps_data, $final_laps_data );
+			$this->__save_laps( $tournament_id, $laps_data, $final_laps_data );
+
+			// unset($_SESSION['players']);
+			// unset($_SESSION['laps_data']);
+			// unset($_SESSION['final_laps_data']);
+			foreach ($players as $key => $player) {
+				if( ( $player['exist'] == TRUE ) && ($player['category_exist'] == TRUE) && isset($_POST[$player['exist']]) ){
+					$this->__save_player_data( $player['exist'], $laps_data[$key], $final_laps_data[$key] );
+				}
+				if( ( $player['exist'] == FALSE ) && ($player['category_exist'] == TRUE) ){
+					//debug($player);
+					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
+				}
+
+			}
+		}
+		debug($players);
+	}
+
+
   
   function view() {
   
