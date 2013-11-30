@@ -21,6 +21,13 @@ class Tournaments extends CI_Controller {
 		echo('index function');
 	}
 
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function import(){
 		$data['tournamets'] = $this->tournament->get_all_tournaments();
 
@@ -79,11 +86,7 @@ class Tournaments extends CI_Controller {
 	}
 	
 
-	/** 
-	* Uploadnutie a vytvorenie docasneho suboru pre import
-	* !pozor -> aby fungovalo treba nahradit v /config/memes 'csv'	=>	array('application/vnd.ms-excel', 'text/anytext', 'text/plain', 'text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel'),
-	* @return string
-	*/
+
 	function do_upload(){
 
 		
@@ -94,6 +97,13 @@ class Tournaments extends CI_Controller {
 	}
 
 
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function __validete_player($name = "", $surname = "", $nationality = "", $category = "", $line_number = 0, $player_number = 0 ){
 		$v_errors = "";
 
@@ -128,6 +138,13 @@ class Tournaments extends CI_Controller {
 	}
 
 
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function parse_imported_data( $data = NULL ){
 		header('Content-Type: text/html; charset=utf-8');
 		$dataString =  file_get_contents('./uploads/'.IMPORTED_TMP_FILE_NAME.'.csv', true);
@@ -146,7 +163,7 @@ class Tournaments extends CI_Controller {
 		foreach ($lines as $row) {				// prechadzame po riadku
 			$loaded_player_data = FALSE;
 			$line_number++;
-			$values = explode(":",$row);		// zozdelime riadok na slova
+			$values = explode(CSV_COLUMN_SEPARATOR,$row);		// zozdelime riadok na slova
 			//if( strlen( $values[0] ) > 0 ){		// kontrola ci to nie je prazdne policko
 				if(  ( (string) $values[0] !== "n" ) && ( (string)$values[0] !== "f" ) ){ //ak je to riadok s menom, priezviskom...
 					$player_number++;
@@ -223,7 +240,13 @@ class Tournaments extends CI_Controller {
 	} //end parse_imported_data
 
 
-
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function __compare_data($players = array(), $laps_data = array(), $final_laps_data = array(), $data = array() ){
 
 		$players = $this->__check_players_existence($players);
@@ -234,6 +257,13 @@ class Tournaments extends CI_Controller {
 		$this->load->view('tournaments_confirmation', $data);	
 	}
 
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function __check_players_existence($players){
 		foreach ($players as $key => $player) {
 			//debug($player);
@@ -250,6 +280,14 @@ class Tournaments extends CI_Controller {
 		return $players;
 	}
 
+
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function __check_categories_existence($players){
 		$this->load->model('category');
 		foreach ($players as $key => $player) {
