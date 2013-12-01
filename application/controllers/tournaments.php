@@ -15,11 +15,69 @@ class Tournaments extends CI_Controller {
 		parent::__construct();
 		header('Content-Type: text/html; charset=utf-8');
 		$this->load->model('tournament');
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->load->model('tournaments_model');
 		$this->load->helper(array('form','url','typography','file'));
 	}
 
-	function index(){
-		echo('index function');
+	public function index()
+	{
+		
+		$this->form_validation->set_rules('name','NAME','trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('date','DATE','required|xss_clean|callback_datecheck');
+		$this->form_validation->set_rules('location','LOCATION','trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('rounds','ROUNDS','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+		$this->form_validation->set_rules('rounds_final','FINAL ROUNDS','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
+		if($this->form_validation->run()){
+			$tournament_data = array(
+					'name'			=>	$this->form_validation->set_value('name'),
+					'date'			=>	$this->form_validation->set_value('date'),
+					'location'		=>	$this->form_validation->set_value('location'),
+					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
+					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final')
+				);
+			//print_r($tournament_data);
+				
+			if ($this->tournaments_model->insert_entry($tournament_data)) {
+				$this->load->view('tournament/success', $tournament_data);
+
+			}
+
+				// inserte?
+
+			
+		}else{
+			$this->load->view('tournament/create');	
+		}
+		
+
+		
+	}
+
+	/**
+	* Funkcia na validaciu duplicity dat pri vytvarani noveho turnaja
+	*
+	*
+	* @return true/false
+	* @author Michal Borcin
+	*/
+	public function datecheck($form_date)
+	{
+		$db_feed=$this->tournaments_model->get_by_date($form_date);
+		foreach ($db_feed as $row){
+			if($this->form_validation->set_value('name')==$row['name']){
+				return false;
+			}
+		}
+		//echo $date;
+		return true;
+	}
+	public function success()
+	{
+
+		$this->load->view('tournament/success');
 	}
 
 	/**

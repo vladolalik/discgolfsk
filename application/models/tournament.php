@@ -63,6 +63,20 @@ class Tournament extends CI_Model{
 }
 
 
-	
+	function get_by_date($date)
+    {
+        $query= $this->db->get_where('tournaments', array('date'=>$date));
+        return $query->result_array();
+    }
+
+    function insert_entry($data)
+    {
+        /*$this->title   = $tournament_data['name'];
+        $this->content = $_POST['content'];
+        $this->date    = time();*/
+
+        $this->db->insert('tournaments', $data);
+        return $this->db->affected_rows();
+    }
 
 }
