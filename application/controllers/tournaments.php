@@ -17,7 +17,7 @@ class Tournaments extends CI_Controller {
 		$this->load->model('tournament');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->load->model('tournaments_model');
+		$this->load->model('tournament');
 		$this->load->helper(array('form','url','typography','file'));
 	}
 
@@ -40,7 +40,7 @@ class Tournaments extends CI_Controller {
 				);
 			//print_r($tournament_data);
 				
-			if ($this->tournaments_model->insert_entry($tournament_data)) {
+			if ($this->tournament->insert_entry($tournament_data)) {
 				$this->load->view('tournament/success', $tournament_data);
 
 			}
@@ -65,7 +65,7 @@ class Tournaments extends CI_Controller {
 	*/
 	public function datecheck($form_date)
 	{
-		$db_feed=$this->tournaments_model->get_by_date($form_date);
+		$db_feed=$this->tournament->get_by_date($form_date);
 		foreach ($db_feed as $row){
 			if($this->form_validation->set_value('name')==$row['name']){
 				return false;
