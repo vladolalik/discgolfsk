@@ -13,6 +13,7 @@ class Tournament extends CI_Model{
     }
 
     /**
+    * 
     *
     */
     function addLap( $data ){
@@ -30,15 +31,31 @@ class Tournament extends CI_Model{
         return $this->db->insert( 'tournaments', $data );
     }
 
+<<<<<<< .mine
+    function get_tournament_id($name, $date){
+        $this->db->select('tournament_id')
+                 ->from('tournaments')
+                 ->where('name', $name)
+                 ->where('date', $date);
+=======
     function get_tournament_id( $name, $date ){
         $this->db->select( 'tournament_id' )
                     ->from( 'tournaments' )
                     ->where( 'name', $name )
                     ->where( 'date', $date );
+>>>>>>> .r61
         $query = $this->db->get();
         $ret = $query->row();
         return $ret->tournament_id;
     }
+<<<<<<< .mine
+
+    /** 
+    * Function return all tournaments
+    *
+    * @return array
+    */
+=======
 
     function save_tournament_properties( $tournament_id, $maximum_laps, $maximum_final_laps ){
         $this->db->where( 'tournament_id', $tournament_id );
@@ -54,20 +71,55 @@ class Tournament extends CI_Model{
         $this->db->set( 'order', $order );
         $this->db->insert( 'laps' );
     }
+>>>>>>> .r61
     
-    function get_tournaments() {
-    $q = $this -> db -> order_by('name')
-					           -> get('tournaments');
+    function get_tournaments() 
+    {
+        $query = $this->db->order_by('name')
+		      			  ->get('tournaments');
+	    if ($query->num_rows() > 0){
+            return $query -> result_array(); 
+        }
+	    return null;
+    }
+
+    function get_all_players()
+    {
+
+<<<<<<< .mine
+        $query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, users.username, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
+                                    FROM users, user_profiles 
+                                    WHERE (users.activated = '1' OR users.activated = '2' OR LOWER(users.username) = 'auto' ) AND users.id = user_profiles.user_id
+                                    ORDER BY user_profiles.last_name
+                                 ");
+        if ($query->num_rows > 0) return $query->result_array();
+    
+    }
+
+    function get_all_results($tournament_id, $player_id)
+    {
+
+        $player = ($player_id != 'ALL')? 'AND p.user_id ='.$player_id : '';
+        $query = $this->db->query("SELECT *
+                                   FROM tournaments t, categories c, laps l, user_profiles u, players_has_tournaments p 
+                                   WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND 
+                                         p.category_id = c.category_id AND l.tournament_id = p.tournament_id AND u.user_id = p.user_id AND
+                                         l.user_id = p.user_id  $player
+                                    ORDER BY p.result 
+                                 ");
+
+        return $query->result_array();
+    }
+
+
 	
-	return $q -> result();
-}
-
-
+=======
 	function get_by_date($date)
     {
         $query= $this->db->get_where('tournaments', array('date'=>$date));
         return $query->result_array();
     }
+>>>>>>> .r61
 
     function insert_entry($data)
     {

@@ -19,6 +19,12 @@ class Tournaments extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->load->model('tournament');
 		$this->load->helper(array('form','url','typography','file'));
+
+		$this->load->helper(array('form', 'url'));
+		$this->load->library('form_validation');
+		$this->load->library('security');
+		$this->load->library('tank_auth');
+		$this->lang->load('tank_auth');
 	}
 
 	public function index()
@@ -459,15 +465,15 @@ class Tournaments extends CI_Controller {
 
   
   function view() {
-  
-       $data['tournaments'] = $this -> tournament -> get_tournaments();
-       $data['users'] = $this -> users -> get_users();
+   
+       $data['tournaments'] = $this ->tournament -> get_tournaments();
+      // $data['users'] = $this ->users -> get_users();
        $this->load->view('tournaments_view',$data);
   }
   
   function t_list() {
-       $data['tournaments'] = $this -> tournament -> get_tournaments();
-       $data['users'] = $this -> users -> get_users();
+       $data['tournaments'] = $this->tournament->get_tournaments();
+       $data['users'] = $this ->users -> get_users();
        
        
        debug($_POST['tournaments']);
@@ -479,7 +485,32 @@ class Tournaments extends CI_Controller {
   }
   
   
-  
+  function view_results()
+  {
+
+  	 $this->form_validation->set_rules('tournaments', 'Tournaments', 'trim|required|xss_clean');
+  	 $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean');
+
+  	if ($this->form_validation->run())
+  	{
+
+	   	 $data['tournaments'] = $this->tournament->get_tournaments();
+		 $data['users'] = $this->tournament->get_all_players();
+	  	 $data['results'] = $this->tournament->get_all_results($this->input->post('tournaments'), $this->input->post('players'));
+	  	 $this->load->view('tournaments_view', $data);
+
+	}  		
+  	else 
+  	{
+
+	  	 $data['tournaments'] = $this->tournament->get_tournaments();
+	  	 $data['users'] = $this->tournament->get_all_players();
+	  	 $data['results'] = $this->tournament->get_all_results(1, 'ALL');
+	  	 $this->load->view('tournaments_view', $data);
+
+	}
+  }
+
   
   
 }

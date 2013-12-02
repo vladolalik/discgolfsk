@@ -6,6 +6,35 @@ CREATE SCHEMA IF NOT EXISTS `discgolf` DEFAULT CHARACTER SET latin1 ;
 USE `discgolf` ;
 
 -- -----------------------------------------------------
+-- Table `discgolf`.`categories`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `discgolf`.`categories` ;
+
+CREATE  TABLE IF NOT EXISTS `discgolf`.`categories` (
+  `category_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `category` VARCHAR(45) NULL ,
+  PRIMARY KEY (`category_id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `discgolf`.`ci_sessions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `discgolf`.`ci_sessions` ;
+
+CREATE  TABLE IF NOT EXISTS `discgolf`.`ci_sessions` (
+  `session_id` VARCHAR(40) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' ,
+  `ip_address` VARCHAR(16) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' ,
+  `user_agent` VARCHAR(150) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  `last_activity` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
+  `user_data` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+  PRIMARY KEY (`session_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
 -- Table `discgolf`.`tournaments`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `discgolf`.`tournaments` ;
@@ -18,26 +47,6 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`tournaments` (
   `nmbr_of_round` INT(11) NULL DEFAULT NULL ,
   `nmbr_of_fnl_laps` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`tournament_id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `discgolf`.`laps`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `discgolf`.`laps` ;
-
-CREATE  TABLE IF NOT EXISTS `discgolf`.`laps` (
-  `lap_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `nmbr_of_bskts` INT(11) NULL ,
-  `order` VARCHAR(45) NULL DEFAULT NULL ,
-  `tournament_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`lap_id`) ,
-  INDEX `fk_LAPS_TOURNAMENTS` (`tournament_id` ASC) ,
-  CONSTRAINT `fk_LAPS_TOURNAMENTS`
-    FOREIGN KEY (`tournament_id` )
-    REFERENCES `discgolf`.`tournaments` (`tournament_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -102,59 +111,32 @@ COLLATE = utf8_bin;
 
 
 -- -----------------------------------------------------
--- Table `discgolf`.`baskets`
+-- Table `discgolf`.`laps`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `discgolf`.`baskets` ;
+DROP TABLE IF EXISTS `discgolf`.`laps` ;
 
-CREATE  TABLE IF NOT EXISTS `discgolf`.`baskets` (
-  `basket_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `order` INT(11) NULL ,
-  `points` VARCHAR(45) NULL DEFAULT NULL ,
-  `lap_id` INT(11) NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `discgolf`.`laps` (
+  `lap_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `nmbr_of_bskts` INT(11) NULL ,
+  `order` VARCHAR(45) NULL DEFAULT NULL ,
+  `points` INT NULL ,
+  `final` VARCHAR(45) NULL ,
+  `tournament_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`basket_id`, `user_id`) ,
-  INDEX `fk_BASKETS_LAPS1` (`lap_id` ASC) ,
-  INDEX `fk_BASKETS_user_profiles1` (`user_id` ASC) ,
-  CONSTRAINT `fk_BASKETS_LAPS1`
-    FOREIGN KEY (`lap_id` )
-    REFERENCES `discgolf`.`laps` (`lap_id` )
+  PRIMARY KEY (`lap_id`) ,
+  INDEX `fk_LAPS_TOURNAMENTS` (`tournament_id` ASC) ,
+  INDEX `fk_laps_user_profiles1` (`user_id` ASC) ,
+  CONSTRAINT `fk_LAPS_TOURNAMENTS`
+    FOREIGN KEY (`tournament_id` )
+    REFERENCES `discgolf`.`tournaments` (`tournament_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_BASKETS_user_profiles1`
+  CONSTRAINT `fk_laps_user_profiles1`
     FOREIGN KEY (`user_id` )
-    REFERENCES `discgolf`.`user_profiles` (`id` )
+    REFERENCES `discgolf`.`user_profiles` (`user_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `discgolf`.`categories`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `discgolf`.`categories` ;
-
-CREATE  TABLE IF NOT EXISTS `discgolf`.`categories` (
-  `category_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `category` VARCHAR(45) NULL ,
-  PRIMARY KEY (`category_id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `discgolf`.`ci_sessions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `discgolf`.`ci_sessions` ;
-
-CREATE  TABLE IF NOT EXISTS `discgolf`.`ci_sessions` (
-  `session_id` VARCHAR(40) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' ,
-  `ip_address` VARCHAR(16) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' ,
-  `user_agent` VARCHAR(150) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
-  `last_activity` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
-  `user_data` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
-  PRIMARY KEY (`session_id`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
 
 
 -- -----------------------------------------------------
@@ -182,6 +164,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`players_has_tournaments` (
   `tournament_id` INT(11) NOT NULL ,
   `category_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
+  `result` INT NULL ,
   PRIMARY KEY (`tournament_id`, `user_id`) ,
   INDEX `fk_PLAYERS_has_TOURNAMENTS_TOURNAMENTS1` (`tournament_id` ASC) ,
   INDEX `fk_PLAYERS_has_TOURNAMENTS_CATEGORIES1` (`category_id` ASC) ,
@@ -198,7 +181,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`players_has_tournaments` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_PLAYERS_has_TOURNAMENTS_user_profiles1`
     FOREIGN KEY (`user_id` )
-    REFERENCES `discgolf`.`user_profiles` (`id` )
+    REFERENCES `discgolf`.`user_profiles` (`user_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -230,7 +213,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`registered_players` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_REGISTERED_PLAYERS_user_profiles1`
     FOREIGN KEY (`user_id` )
-    REFERENCES `discgolf`.`user_profiles` (`id` )
+    REFERENCES `discgolf`.`user_profiles` (`user_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

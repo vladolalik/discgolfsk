@@ -11,7 +11,7 @@ class Auth extends CI_Controller
 		$this->load->library('security');
 		$this->load->library('tank_auth');
 		$this->lang->load('tank_auth');
-		//$this->load->model('tank_auth/users');
+		$this->load->model('tank_auth/users');
 	}
 
 	function index()
@@ -25,9 +25,9 @@ class Auth extends CI_Controller
 	}
 
 	/**
+	* Function that view profile of logged in user
 	*
-	*
-	*
+	* @return void
 	*
 	*/
 	function my_profile()
@@ -39,6 +39,7 @@ class Auth extends CI_Controller
 		$profile_data = $this->users->get_user_profile($this->tank_auth->get_user_id());
 		$this->load->view('my_profile', $profile_data);
 	}
+
 
 	/**
 	* Function provide upload of profile 
@@ -197,6 +198,7 @@ class Auth extends CI_Controller
 		{
 			$id = $this->session->userdata('id');
 			$data = $this->users->get_user_profile($id);
+			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
 			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
 			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
 			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
@@ -204,12 +206,12 @@ class Auth extends CI_Controller
 			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
 			
-
 			if ($this->form_validation->run())  // update profile
 			{	
 				$profile_data = array(
 					'first_name' => $this->form_validation->set_value('first_name'),
 					'last_name' => $this->form_validation->set_value('last_name'),
+					'country' => $this->form_validation->set_value('country'),
 					'club' => $this->form_validation->set_value('club'),
 					'gender' => $this->form_validation->set_value('gender'),
 					'birth_date' => $this->form_validation->set_value('birth_date'),
@@ -319,7 +321,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_inactive_players/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(0);
-		$config['per_page'] = 1; 
+		$config['per_page'] = 3; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -359,6 +361,32 @@ class Auth extends CI_Controller
 	function get_autocreated_profile()
 	{
 	
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'index.php/auth/get_autocreated_profile/'	;
+		$config['total_rows'] = $this->users->get_nmbr_activated(0);
+		$config['per_page'] = 3; 
+		$config['full_tag_open'] = '<div id="pagination">';
+		$config['full_tag_close'] = '</div>';
+				
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+				
+		$config['next_tag_open'] = '<span class="next">';
+		$config['next_tag_close'] = '</span>';
+				
+		$config['prev_tag_open'] = '<span class="prev">';
+		$config['prev_tag_close']= '</span>';
+
+		$this->pagination->initialize($config); 
+		if ($this->uri->segment(3) == NULL)
+		{
+			$number = 0;
+		} 
+		else 
+		{
+			$number= $this->uri->segment(3);
+		}
+
 		$data['players'] = $this->users->get_autocreated_profiles($number, $config['per_page']);
 		$this->load->view('autocreated_profiles', $data);
 
@@ -502,7 +530,7 @@ class Auth extends CI_Controller
 			if ($use_username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
-
+			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
 			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
 			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
 			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
@@ -532,7 +560,8 @@ class Auth extends CI_Controller
 				'birth_date' => $this->input->post('birth_date'),
 				'gender' => $this->input->post('gender'),
 				'club' => $this->input->post('club'),
-				'about' => $this->input->post('about')
+				'about' => $this->input->post('about'),
+				'country' => $this->input->post('country'),
 			);	
 
 			$user_data = array(
@@ -578,7 +607,7 @@ class Auth extends CI_Controller
 			}
 			
 		} 
-		print_r($id);
+		//print_r($id);
 		$data = $this->users->get_user_profile($id);
 		if ($captcha_registration) {
 				if ($use_recaptcha) {
@@ -687,6 +716,103 @@ class Auth extends CI_Controller
 		}
 	}
 
+/**
+	 * Login admin on the site
+	 *
+	 * @return void
+	 */
+	function admin_login()
+	{
+		if ($this->tank_auth->is_logged_in()) {									// logged in
+			redirect('');
+
+		} elseif (!($this->users->__is_admin($this->input->post('login')))) { // must be admin
+			
+			$this->session->set_flashdata('message', '<p class="fail">Access forbidden!</p>');
+			redirect('auth/admin_login');
+
+		} elseif ($this->tank_auth->is_logged_in(FALSE)) {						// logged in, not activated
+			$this->session->set_flashdata('message', '<p class="fail">Your profile is inactive. Contact admin.</p>');
+			redirect('/auth/logout');
+			//redirect('/auth/send_again/');  // uncomment for email activation
+		} else {
+			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
+					$this->config->item('use_username', 'tank_auth'));
+			$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
+
+			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('remember', 'Remember me', 'integer');
+
+			// Get login for counting attempts to login
+			if ($this->config->item('login_count_attempts', 'tank_auth') AND
+					($login = $this->input->post('login'))) {
+				$login = $this->security->xss_clean($login);
+			} else {
+				$login = '';
+			}
+
+			$data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
+			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+				if ($data['use_recaptcha'])
+					$this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
+				else
+					$this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
+			}
+			$data['errors'] = array();
+
+			if ($this->form_validation->run()) {								// validation ok
+				if ($this->tank_auth->login(
+						$this->form_validation->set_value('login'),
+						$this->form_validation->set_value('password'),
+						$this->form_validation->set_value('remember'),
+						$data['login_by_username'],
+						$data['login_by_email'])) {	// success
+
+					//create user seesion		
+					$user_session = $this->users->get_user_by_login($this->form_validation->set_value('login'));
+					$email = $user_session->email;
+					$id = $user_session->id;
+					$role = $user_session->role;
+					$user_profile = $this->users->get_user_profile($id);
+					$user_profile['id'] = $id;
+					$user_profile['email'] = $email;
+					$user_profile['role'] = $role;
+					unset($user_session);		
+					$this->session->set_userdata($user_profile);
+					if ($this->help_functions->is_admin())
+					{
+						redirect('auth/admin_get_all_players');
+					}
+					//redirect('');
+
+				} else {
+					$errors = $this->tank_auth->get_error_message();
+					if (isset($errors['banned'])) {								// banned user
+						$this->_show_message($this->lang->line('auth_message_banned').' '.$errors['banned']);
+
+					} elseif (isset($errors['not_activated'])) {				// not activated user
+						//redirect('/auth/send_again/');
+
+					} else {													// fail
+						foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+					}
+				}
+			}
+			$data['show_captcha'] = FALSE;
+			if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+				$data['show_captcha'] = TRUE;
+				if ($data['use_recaptcha']) {
+					$data['recaptcha_html'] = $this->_create_recaptcha();
+				} else {
+					$data['captcha_html'] = $this->_create_captcha();
+				}
+			}
+
+			$this->load->view('auth/admin_login_view', $data);
+		}
+	}
+
 	/**
 	 * Logout user
 	 *
@@ -721,7 +847,7 @@ class Auth extends CI_Controller
 			if ($use_username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
-
+			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
 			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
 			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
 			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
@@ -751,7 +877,8 @@ class Auth extends CI_Controller
 				'birth_date' => $this->input->post('birth_date'),
 				'gender' => $this->input->post('gender'),
 				'club' => $this->input->post('club'),
-				'about' => $this->input->post('about')
+				'about' => $this->input->post('about'),
+				'country' => $this->input->post('country')
 			);
 
 

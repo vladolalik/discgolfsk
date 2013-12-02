@@ -24,6 +24,29 @@ class Users extends CI_Model
 		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 	}
 
+	/**
+	* Function that check user role from email, return id if it's admin
+	*
+	* @param string
+	* @return int
+	*/
+
+	function __is_admin($email)
+	{
+		$query = $this->db->select('id')
+						  ->where('LOWER(email)', strtolower($email))
+						  ->where('role', 'admin')
+						  ->get($this->table_name);
+		if ($query->num_rows == 1)
+		{
+			$data = $query->row_array();
+			print_r($data['id']);
+			//die(); 
+			return $data['id'];
+		}
+		return NULL;
+	}
+
 	/** 
 	* Function return number of all profiles
 	*
@@ -114,13 +137,19 @@ class Users extends CI_Model
 									users.created
 									FROM users, user_profiles 
 									WHERE users.id = user_profiles.user_id /*AND users.role!='admin'*/
-									ORDER BY user_profiles.last_name, users.activated
+									ORDER BY LOWER(user_profiles.last_name)  /*, users.activated*/
 									LIMIT $from,$count");
 		if ($query->num_rows() > 0) return $query->result_array();
 		return NULL;
 	}
 
-
+	/**
+	* Function return all profiles, activated, inactivated, auto-created
+	*
+	* @param int
+	* @param int  
+	* @return array
+	*/
 	function get_autocreated_profiles($from = 0, $count = 0)
 	{
 
@@ -142,7 +171,7 @@ class Users extends CI_Model
 	*/
 	function __exists_profile($first_name, $last_name)
 	{
-		$query = $this->db->query("SELECT users.id as user_id FROM users, user_profiles WHERE users.id = user_profiles.user_id AND user_profiles.first_name = '".$first_name."' AND user_profiles.last_name = '".$last_name."'");
+		$query = $this->db->query("SELECT users.id as user_id FROM users, user_profiles WHERE users.id = user_profiles.user_id AND LOWER(user_profiles.first_name) = '".strtolower($first_name)."' AND LOWER(user_profiles.last_name) = '".strtolower($last_name)."'");
 		if ($query->num_rows == 1)
 		{
 			$data = $query->row_array();
@@ -627,7 +656,7 @@ class Users extends CI_Model
 		}
 		
 		$this->db->where('user_id', $user_id)
-				 ->where('first_name', $profile_data['first_name'])
+				 ->where('LOWER(first_name)', strtolower($profile_data['first_name']))
 				 ->update($this->profile_table_name, $profile_data);
 		//if ($this->db->affected_rows()==1){
 		$this->db->where('id',$user_id)
@@ -669,13 +698,13 @@ class Users extends CI_Model
 		return FALSE;
 	}
   
-  
+  /*
   function get_users() {
     $u = $this -> db -> order_by('username')
                      -> where('activated', 1) 
 					           -> get('users');
 	
-	return $u -> result();
+	return $u -> result_array();
 }
 
     function get_match($tournament_id, $users_id) {
@@ -727,7 +756,7 @@ class Users extends CI_Model
 }
   
   
-  
+  */
   
 }
 

@@ -32,6 +32,11 @@ $last_name = array(
 	'size' => 30,
 	'readonly' => 'readonly'
 );
+$country = array (
+	'name' => 'country',
+	'id' => 'country',
+	'value' => set_value('country', $country)
+);
 $birth = array(
 	'name' => 'birth_date',
 	'id'   => 'birth_date',
@@ -98,6 +103,11 @@ echo $this->input->post('first_name');
 		<td><?php echo form_label('Last Name', $last_name['id']); ?></td>
 		<td><?php echo form_input($last_name); ?></td>
 		<td style="color: red;"><?php echo form_error($last_name['name']); ?><?php echo isset($errors[$last_name['name']])?$errors[$last_name['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('Country', $country['id']); ?></td>
+		<td><?php echo form_input($country); ?></td>
+		<td style="color: red;"><?php echo form_error($country['name']); ?><?php echo isset($errors[$country['name']])?$errors[$country['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Day of birth', $birth['id']); ?></td>

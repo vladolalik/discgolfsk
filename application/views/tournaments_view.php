@@ -1,46 +1,46 @@
-<!doctype html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>tournament_view</title>
-	<link rel="stylesheet" href="<?= base_url() ?>assets/style.css">
-</head>
-<body>
+<?php $this->load->view('header', array('title' => 'Tournaments', 'caption' => 'Tournaments')); ?>
 <div id="container">
 	
 	
  <?php echo form_open('tournaments/t_list'); ?>
 <select name="tournaments" multiple>
-  <option value='0' selected = 'selected'> ALL TOURNAMENTS </option>
-  <?php foreach($tournaments as $obj): ?>
-  <option value=<?php echo "'".$obj->tournament_id."'";?> ><?php echo $obj->name, " (".$obj->date.") ", $obj->location; ?> </option>
-  <?php endforeach; ?>
+  <option value='ALL' selected = 'selected'> ALL TOURNAMENTS </option>
+  <?php foreach($tournaments as $row): 
+ 	echo '<option value="'.$row['tournament_id'].'">'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';
+   endforeach; ?>
 </select>
 
-<select name="users" multiple>
-  <option value='0' selected = 'selected'> ALL PlAYERS </option>
-  <?php foreach($users as $obj): ?>
-  <option value=<?php echo "'".$obj->id."'";?> ><?php echo $obj->username; ?> </option>
-  <?php endforeach; ?>
+<select name="players" multiple>
+  <option value='ALL' selected = 'selected'> ALL PlAYERS </option>
+  <?php
+  	foreach($users as $row): 
+  		echo '<option value="'.$row['id'].'">'.$row['last_name'].' '.$row['first_name'].'</option>';
+  	endforeach;
+  ?>
 </select>
 
 
 <input type="submit">
-</form>
+<?php echo form_close(); ?>
 
 <table class="Statistics">
-	
-		
-		 <?php foreach($match as $obj):  echo "<tr> 
-     <td>".$obj->username ."</td> 
-     <td>".$obj->category ."</td>
-     </tr>";  endforeach; ?>  
-	
-	
+	<tr>
+		<th> Player </th>
+		<th> Lap </th>
+	<?php 
 
-	
+		foreach($results as $row_array)
+		{
+				echo '<tr>
+						<td>'.$row_array['first_name'].' '.$row_array['last_name'].'</td>
+						<td>'.$row_array['result'].' '.$row_array['points'].'</td>
+					  </tr>';
+			
+		}
+
+	?>
 </table>
-
+<?php print_r($results); ?>
   
   
 </div>
