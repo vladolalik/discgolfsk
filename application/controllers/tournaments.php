@@ -15,75 +15,11 @@ class Tournaments extends CI_Controller {
 		parent::__construct();
 		header('Content-Type: text/html; charset=utf-8');
 		$this->load->model('tournament');
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$this->load->model('tournament');
 		$this->load->helper(array('form','url','typography','file'));
-
-		$this->load->helper(array('form', 'url'));
-		$this->load->library('form_validation');
-		$this->load->library('security');
-		$this->load->library('tank_auth');
-		$this->lang->load('tank_auth');
 	}
 
-	public function index()
-	{
-		
-		$this->form_validation->set_rules('name','NAME','trim|required|xss_clean|strip_tags');
-		$this->form_validation->set_rules('date','DATE','required|xss_clean|callback_datecheck');
-		$this->form_validation->set_rules('location','LOCATION','trim|required|xss_clean|strip_tags');
-		$this->form_validation->set_rules('rounds','ROUNDS','trim|required|xss_clean|is_natural_no_zero|strip_tags');
-		$this->form_validation->set_rules('rounds_final','FINAL ROUNDS','trim|required|xss_clean|is_natural_no_zero|strip_tags');
-		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
-		if($this->form_validation->run()){
-			$tournament_data = array(
-					'name'			=>	$this->form_validation->set_value('name'),
-					'date'			=>	$this->form_validation->set_value('date'),
-					'location'		=>	$this->form_validation->set_value('location'),
-					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
-					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final')
-				);
-			//print_r($tournament_data);
-				
-			if ($this->tournament->insert_entry($tournament_data)) {
-				$this->load->view('tournament/success', $tournament_data);
-
-			}
-
-				// inserte?
-
-			
-		}else{
-			$this->load->view('tournament/create');	
-		}
-		
-
-		
-	}
-
-	/**
-	* Funkcia na validaciu duplicity dat pri vytvarani noveho turnaja
-	*
-	*
-	* @return true/false
-	* @author Michal Borcin
-	*/
-	public function datecheck($form_date)
-	{
-		$db_feed=$this->tournament->get_by_date($form_date);
-		foreach ($db_feed as $row){
-			if($this->form_validation->set_value('name')==$row['name']){
-				return false;
-			}
-		}
-		//echo $date;
-		return true;
-	}
-	public function success()
-	{
-
-		$this->load->view('tournament/success');
+	function index(){
+		echo('index function');
 	}
 
 	/**
@@ -379,53 +315,45 @@ class Tournaments extends CI_Controller {
 	}
 
 
-	/**
-	* Funkcia
-	*
-	*
-	* @return void
-	* @author Branislav Ballon
-	*/
-	function __save_player_data($player_id, $user_data, $user_fianl_data = null){
-		if( $player_id == -1 ){
-			
+
+
+
+
+
+
+
+
+
+
+
+	function __save_player_data( $tournament_id, $player_laps, $player_final_laps = NULL ){
+
+		foreach ( $player_laps as $lap_key => $lap ) { //zoberiem prveho hraca
+			$lap_points = array_sum( $lap );
+			//$this->tournament->save_lap( $tournament_id, $lap_key, count( $lap ) );
 		}
-
-		// $this->tournament->__save_user_tournament();
-		// $this->tournament->save_user_tournament_data();
-
-
+		if( isset( $player_final_laps )  && ( $player_final_laps != NULL ) ){
+			foreach ( $player_final_laps as $lap_key => $final_lap ) { //zoberiem prveho hraca
+				$fianl_lap_points = array_sum( $final_lap );
+				//$this->tournament->save_lap( $tournament_id, $lap_key, count( $lap ) );
+			}
+		}
+	//	$this->tournament->save_player_has_tournament($player_id, $tournament_id, $total_points);
 	}
 
-	function __save_tournamet_properties( $tournament_id, $laps_data, $final_laps_data ){
-		debug( $laps_data );
-		$maximum_laps = 0;
-		$maximum_final_laps = 0;
-		foreach ($laps_data as $key => $player_laps) {
-			if ( count( $player_laps ) > $maximum_laps ){ $maximum_laps = count( $player_laps ); };
-		}
-		foreach ($final_laps_data as $key => $player_laps) {
-			if ( count( $player_laps ) > $maximum_final_laps ){ $maximum_final_laps = count( $player_laps ); };
-		}
+
+
+	function __save_tournamet_properties( $tournament_id, $maximum_laps, $maximum_final_laps ){
 		$this->tournament->save_tournament_properties( $tournament_id, $maximum_laps, $maximum_final_laps );
 	}
 
 
-	function __save_laps( $tournament_id, $laps_data, $final_laps_data ){
-		foreach ( $laps_data as $key => $player_laps ) { //zoberiem prveho hraca
-			foreach ( $player_laps as $lap_key => $lap ) { //prechazdam jednotlivimi lapmi prveho hraca a zistujem pocet kosov a ukladam			
-				$this->tournament->save_lap( $tournament_id, $lap_key, count( $lap ) );
-			//	debug (count( $lap ) );
-			}
-			break;
+	function __get_laps_count( $laps_data ){
+		$maximum_laps = 0;
+		foreach ( $laps_data as $key => $player_laps ) {
+			if ( count( $player_laps ) > $maximum_laps ){ $maximum_laps = count( $player_laps ); };
 		}
-		foreach ( $final_laps_data as $key => $player_laps ) { // to iste pre finalove lapy
-			foreach ( $player_laps as $lap_key => $lap ) { //prechazdam jednotlivimi lapmi prveho hraca a zistujem pocet kosov a ukladam			
-				$this->tournament->save_lap( $tournament_id, $lap_key, count( $lap ), TRUE );
-			//	debug (count( $lap ) );
-			}
-			break;
-		}
+		return $maximum_laps;
 	}
 
 	/**
@@ -442,17 +370,32 @@ class Tournaments extends CI_Controller {
 			$laps_data = $_SESSION['laps_data'];
 			$final_laps_data = $_SESSION['final_laps_data'];
 			$tournament_id = $_SESSION['tournament_id'];
-			$this->__save_tournamet_properties( $tournament_id, $laps_data, $final_laps_data );
-			$this->__save_laps( $tournament_id, $laps_data, $final_laps_data );
+			$laps_count = $this->__get_laps_count( $laps_data );
+			$final_laps_count = $this->__get_laps_count( $final_laps_data );
+			debug( $final_laps_data );
+			debug( $laps_data );
+			//$this->__save_tournamet_properties( $tournament_id, $laps_count, $final_laps_count );
+			
+			
+			//$this->__save_laps( $tournament_id, $laps_data, $final_laps_data );
 
 			// unset($_SESSION['players']);
 			// unset($_SESSION['laps_data']);
 			// unset($_SESSION['final_laps_data']);
 			foreach ($players as $key => $player) {
-				if( ( $player['exist'] == TRUE ) && ($player['category_exist'] == TRUE) && isset($_POST[$player['exist']]) ){
-					$this->__save_player_data( $player['exist'], $laps_data[$key], $final_laps_data[$key] );
+				if( ( $player['exist'] != -1 ) && ($player['category_exist'] == TRUE) && isset($_POST[$player['exist']]) ){ //ak existuje hrac, chceme do neho vlozit udaje a existuje aj jeho kategoria
+					if( isset( $final_laps_data[$key] ) ){
+						$this->__save_player_data( $player['exist'], $tournament_id, $laps_data[$key], $final_laps_data[$key] );
+					}else{
+						$this->__save_player_data( $player['exist'], $tournament_id, $laps_data[$key] );						
+					}		
 				}
-				if( ( $player['exist'] == FALSE ) && ($player['category_exist'] == TRUE) ){
+				if( ( $player['exist'] == -1 ) && ($player['category_exist'] != -1) ){ // ak exsituje hrac aj jeho kategoria
+					if( isset( $final_laps_data[$key] ) ){
+						$this->__save_player_data( $player['exist'], $tournament_id, $laps_data[$key], $final_laps_data[$key] );
+					}else{
+						$this->__save_player_data( $player['exist'], $tournament_id, $laps_data[$key] );						
+					} 
 					//debug($player);
 					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
 				}
@@ -465,15 +408,15 @@ class Tournaments extends CI_Controller {
 
   
   function view() {
-   
-       $data['tournaments'] = $this ->tournament -> get_tournaments();
-      // $data['users'] = $this ->users -> get_users();
+  
+       $data['tournaments'] = $this -> tournament -> get_tournaments();
+       $data['users'] = $this -> users -> get_users();
        $this->load->view('tournaments_view',$data);
   }
   
   function t_list() {
-       $data['tournaments'] = $this->tournament->get_tournaments();
-       $data['users'] = $this ->users -> get_users();
+       $data['tournaments'] = $this -> tournament -> get_tournaments();
+       $data['users'] = $this -> users -> get_users();
        
        
        debug($_POST['tournaments']);
@@ -485,32 +428,7 @@ class Tournaments extends CI_Controller {
   }
   
   
-  function view_results()
-  {
-
-  	 $this->form_validation->set_rules('tournaments', 'Tournaments', 'trim|required|xss_clean');
-  	 $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean');
-
-  	if ($this->form_validation->run())
-  	{
-
-	   	 $data['tournaments'] = $this->tournament->get_tournaments();
-		 $data['users'] = $this->tournament->get_all_players();
-	  	 $data['results'] = $this->tournament->get_all_results($this->input->post('tournaments'), $this->input->post('players'));
-	  	 $this->load->view('tournaments_view', $data);
-
-	}  		
-  	else 
-  	{
-
-	  	 $data['tournaments'] = $this->tournament->get_tournaments();
-	  	 $data['users'] = $this->tournament->get_all_players();
-	  	 $data['results'] = $this->tournament->get_all_results(1, 'ALL');
-	  	 $this->load->view('tournaments_view', $data);
-
-	}
-  }
-
+  
   
   
 }
