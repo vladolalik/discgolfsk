@@ -118,8 +118,6 @@ DROP TABLE IF EXISTS `discgolf`.`results` ;
 CREATE  TABLE IF NOT EXISTS `discgolf`.`results` (
   `result_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `points` INT NULL ,
-  `tournament_id` INT(11) NOT NULL ,
-  `user_id` INT(11) NOT NULL ,
   `lap_1` INT NULL DEFAULT NULL ,
   `lap_2` INT NULL DEFAULT NULL ,
   `lap_3` INT NULL DEFAULT NULL ,
@@ -133,15 +131,17 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`results` (
   `final_1` INT NULL DEFAULT NULL ,
   `final_2` INT NULL DEFAULT NULL ,
   `final_3` INT NULL DEFAULT NULL ,
+  `tournament_id` INT(11) NOT NULL ,
+  `user_id` INT(11) NOT NULL ,
   PRIMARY KEY (`result_id`) ,
-  INDEX `fk_LAPS_TOURNAMENTS` (`tournament_id` ASC) ,
-  INDEX `fk_laps_user_profiles1` (`user_id` ASC) ,
-  CONSTRAINT `fk_LAPS_TOURNAMENTS`
+  INDEX `fk_results_tournaments1` (`tournament_id` ASC) ,
+  INDEX `fk_results_user_profiles1` (`user_id` ASC) ,
+  CONSTRAINT `fk_results_tournaments1`
     FOREIGN KEY (`tournament_id` )
     REFERENCES `discgolf`.`tournaments` (`tournament_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_laps_user_profiles1`
+  CONSTRAINT `fk_results_user_profiles1`
     FOREIGN KEY (`user_id` )
     REFERENCES `discgolf`.`user_profiles` (`user_id` )
     ON DELETE NO ACTION
