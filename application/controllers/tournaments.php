@@ -428,6 +428,14 @@ class Tournaments extends CI_Controller {
 		}
 	}
 
+
+	function __get_laps_count( $laps_data ){
+		$maximum_laps = 0;
+		foreach ($laps_data as $key => $player_laps) {
+			if ( count( $player_laps ) > $maximum_laps ){ $maximum_laps = count( $player_laps ); };
+		}
+	}
+
 	/**
 	* Funkcia
 	*
@@ -442,15 +450,19 @@ class Tournaments extends CI_Controller {
 			$laps_data = $_SESSION['laps_data'];
 			$final_laps_data = $_SESSION['final_laps_data'];
 			$tournament_id = $_SESSION['tournament_id'];
-			$this->__save_tournamet_properties( $tournament_id, $laps_data, $final_laps_data );
-			$this->__save_laps( $tournament_id, $laps_data, $final_laps_data );
+			
+
+			//$laps_count = $this->__get_laps_count( $laps_data );
+			//$final_laps_count = $this->__get_laps_count( $final_laps_data );
+			//$this->__save_tournamet_properties( $tournament_id, $laps_data, $final_laps_data );
+
 
 			// unset($_SESSION['players']);
 			// unset($_SESSION['laps_data']);
 			// unset($_SESSION['final_laps_data']);
 			foreach ($players as $key => $player) {
 				if( ( $player['exist'] == TRUE ) && ($player['category_exist'] == TRUE) && isset($_POST[$player['exist']]) ){
-					$this->__save_player_data( $player['exist'], $laps_data[$key], $final_laps_data[$key] );
+					//$this->__save_player_data( $player['exist'], $laps_data[$key], $final_laps_data[$key] );
 				}
 				if( ( $player['exist'] == FALSE ) && ($player['category_exist'] == TRUE) ){
 					//debug($player);
