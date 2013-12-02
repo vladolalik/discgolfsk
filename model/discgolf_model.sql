@@ -111,19 +111,30 @@ COLLATE = utf8_bin;
 
 
 -- -----------------------------------------------------
--- Table `discgolf`.`laps`
+-- Table `discgolf`.`results`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `discgolf`.`laps` ;
+DROP TABLE IF EXISTS `discgolf`.`results` ;
 
-CREATE  TABLE IF NOT EXISTS `discgolf`.`laps` (
-  `lap_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `nmbr_of_bskts` INT(11) NULL ,
-  `order` VARCHAR(45) NULL DEFAULT NULL ,
+CREATE  TABLE IF NOT EXISTS `discgolf`.`results` (
+  `result_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `points` INT NULL ,
-  `final` VARCHAR(45) NULL DEFAULT NULL ,
   `tournament_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`lap_id`) ,
+  `lap_1` INT NULL DEFAULT NULL ,
+  `lap_2` INT NULL DEFAULT NULL ,
+  `lap_3` INT NULL DEFAULT NULL ,
+  `lap_4` INT NULL DEFAULT NULL ,
+  `lap_5` INT NULL DEFAULT NULL ,
+  `lap_6` INT NULL DEFAULT NULL ,
+  `lap_7` INT NULL DEFAULT NULL ,
+  `lap_8` INT NULL DEFAULT NULL ,
+  `lap_9` INT NULL DEFAULT NULL ,
+  `lap_10` INT NULL DEFAULT NULL ,
+  `points` INT NULL DEFAULT NULL ,
+  `final_1` INT NULL DEFAULT NULL ,
+  `final_2` INT NULL DEFAULT NULL ,
+  `final_3` INT NULL DEFAULT NULL ,
+  PRIMARY KEY (`result_id`) ,
   INDEX `fk_LAPS_TOURNAMENTS` (`tournament_id` ASC) ,
   INDEX `fk_laps_user_profiles1` (`user_id` ASC) ,
   CONSTRAINT `fk_LAPS_TOURNAMENTS`
@@ -164,8 +175,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`players_has_tournaments` (
   `tournament_id` INT(11) NOT NULL ,
   `category_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
-  `result` INT NULL ,
-  `final` VARCHAR(45) NULL DEFAULT NULL ,
+  `final` INT NULL DEFAULT NULL ,
   `disqualified` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`tournament_id`, `user_id`) ,
   INDEX `fk_PLAYERS_has_TOURNAMENTS_TOURNAMENTS1` (`tournament_id` ASC) ,
@@ -242,6 +252,37 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`user_autologin` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `discgolf`.`number_of_baskets`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `discgolf`.`number_of_baskets` ;
+
+CREATE  TABLE IF NOT EXISTS `discgolf`.`number_of_baskets` (
+  `id` INT NOT NULL ,
+  `result_id` INT(11) NOT NULL ,
+  `no_bskts_1` INT NULL ,
+  `no_bskts_2` INT NULL ,
+  `no_bskts_3` INT NULL ,
+  `no_bskts_4` INT NULL ,
+  `no_bskts_5` INT NULL ,
+  `no_bskts_6` INT NULL ,
+  `no_bskts_7` INT NULL ,
+  `no_bskts_8` INT NULL ,
+  `no_bskts_9` INT NULL ,
+  `no_bskts_10` INT NULL ,
+  `no_final_1` INT NULL ,
+  `no_final_2` INT NULL ,
+  `no_final_3` INT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_number_of_baskets_results1` (`result_id` ASC) ,
+  CONSTRAINT `fk_number_of_baskets_results1`
+    FOREIGN KEY (`result_id` )
+    REFERENCES `discgolf`.`results` (`result_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 
