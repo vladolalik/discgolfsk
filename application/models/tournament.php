@@ -62,7 +62,7 @@ class Tournament extends CI_Model{
 
     function get_tournaments() 
     {
-        $query = $this->db->order_by('date')
+        $query = $this->db->order_by('date DESC')
                           ->get('tournaments');
         if ($query->num_rows() > 0){
             return $query->result_array(); 
@@ -112,11 +112,11 @@ class Tournament extends CI_Model{
                                     ORDER BY COALESCE(p.final, 9999), ISNULL(p.disqualified) DESC, r.points
 
                                 ");
-     
-
-
-        /*c.category_id, COALESCE(p.final, 999999999), p.result, l.user_id, l.order*/
-        return $query->result_array();
+        if ($query->num_rows()>0)
+        {
+            return $query->result_array();
+        }
+        return NULL;
     }
 
 
@@ -139,7 +139,11 @@ class Tournament extends CI_Model{
                                     ORDER BY COALESCE(p.final, 9999), ISNULL(p.disqualified) DESC, r.points
 
                                 ");
-        return $query->result_array();
+        if ($query->num_rows()>0)
+        {
+            return $query->result_array();
+        }
+        return NULL;
 
     }
 
@@ -147,7 +151,11 @@ class Tournament extends CI_Model{
     {
         $query = $this->db->where('user_id', $player_id)
                           ->get('user_profiles');
-        return $query->row_array();
+        if ($query->num_rows()>0)
+        {
+            return $query->row_array();
+        } 
+        return NULL;
     }
 
 }

@@ -2,11 +2,20 @@
 <html>
 	<HEAD>
 	      <TITLE><?php echo $title; ?></TITLE>
+	      	<script type="text/javascript" src="http://localhost/discgolf/tinymce/tinymce.min.js"></script>
+			<script type="text/javascript">
+				tinymce.init({
+    			selector: "textarea.tinymc"
+ 				});
+			</script>
 	</HEAD>
 	<body>
 		<nav>
 			<ul>
-			<?php if ($this->tank_auth->is_logged_in(TRUE))
+
+			<?php
+				echo '<li>'.anchor('/tournaments/view_results', 'Results', 'title="Results"').'</li>'; 
+				if ($this->tank_auth->is_logged_in(TRUE))
 					{
 						echo '<li>'.anchor('auth/my_profile', 'My profile', 'title="profile"').' 
 									<ul>
@@ -25,9 +34,10 @@
 					else 
 					{
 						echo '<li>'.anchor('/auth/login', 'Login', 'title="login"').'</li>
-							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>
-							  <li>'.anchor('/tournaments/view_results', 'Results', 'title="Results"').'</li>';
+							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>';
+							  
 					}
+
 			?>
 			</ul>
 		</nav>

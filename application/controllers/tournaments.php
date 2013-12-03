@@ -28,13 +28,38 @@ class Tournaments extends CI_Controller {
 	}
 
 	public function index()
+	{		
+	 	redirect('/tournaments/view_results');
+	}
+
+
+	function admin_view_tournaments()
 	{
-		
-		$this->form_validation->set_rules('name','NAME','trim|required|xss_clean|strip_tags');
-		$this->form_validation->set_rules('date','DATE','required|xss_clean|callback_datecheck');
-		$this->form_validation->set_rules('location','LOCATION','trim|required|xss_clean|strip_tags');
-		$this->form_validation->set_rules('rounds','ROUNDS','trim|required|xss_clean|is_natural_no_zero|strip_tags');
-		$this->form_validation->set_rules('rounds_final','FINAL ROUNDS','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+		$data['tournaments'] = $this->tournament->get_tournaments();
+		$this->load->view('tournament/admin_tournaments_view', $data);
+	}
+
+
+	/**
+	* Function that create new tournament
+	*
+	* @author Michal Borcin
+	* edited by Vladimir Lalik
+	* @return void
+	*/
+	function admin_add_tournament()
+	{
+		if (!$this->tank_auth->is_logged_in())
+		{
+			redirect();
+		}
+
+		$this->form_validation->set_rules('name','Name','trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('about','About','trim|xss_clean');
+		$this->form_validation->set_rules('date','Date','required|xss_clean|callback_datecheck');
+		$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+		$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		if($this->form_validation->run()){
 			$tournament_data = array(
@@ -42,24 +67,21 @@ class Tournaments extends CI_Controller {
 					'date'			=>	$this->form_validation->set_value('date'),
 					'location'		=>	$this->form_validation->set_value('location'),
 					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
-					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final')
+					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
+					'about' => $this->form_validation->set_value('about')
 				);
-			//print_r($tournament_data);
-				
-			if ($this->tournament->insert_entry($tournament_data)) {
-				$this->load->view('tournament/success', $tournament_data);
-
-			}
-
-				// inserte?
-
 			
+				
+			if ($this->tournament->add_tournament($tournament_data)) {
+			
+				//$this->load->view('tournament/success', $tournament_data);
+				$this->session->set_flashdata('message', '<p class="success">Tournament was successfully created</p>');
+				redirect('tournaments/admin_view_tournaments');
+			}
+				// inserte?	
 		}else{
 			$this->load->view('tournament/create');	
-		}
-		
-
-		
+		}		
 	}
 
 	/**
@@ -71,15 +93,16 @@ class Tournaments extends CI_Controller {
 	*/
 	public function datecheck($form_date)
 	{
-		$db_feed=$this->tournament->get_by_date($form_date);
+		/*$db_feed=$this->tournament->get_by_date($form_date);
 		foreach ($db_feed as $row){
 			if($this->form_validation->set_value('name')==$row['name']){
 				return false;
 			}
-		}
+		}*/
 		//echo $date;
 		return true;
 	}
+
 	public function success()
 	{
 
@@ -585,7 +608,7 @@ class Tournaments extends CI_Controller {
 		}
 		//print_r($data['results']);
 		// die();
-	  	 $this->load->view('tournaments_view', $data);
+	  	 $this->load->view('result_view', $data);
 
 	}  		
   	else 
@@ -632,7 +655,7 @@ class Tournaments extends CI_Controller {
 				 }
 			}
 		}
-	  	 $this->load->view('tournaments_view', $data);
+	  	 $this->load->view('result_view', $data);
 
 	}
   }

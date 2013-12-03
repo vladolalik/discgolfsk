@@ -43,7 +43,8 @@ $club = array(
 $about = array (
 	'id' => 'about',
 	'name' => 'about',
-	'value' => set_value('about', $about)
+	'value' => set_value('about', $about),
+	'class' => 'tinymc'
 );
 
 ?>

@@ -10,6 +10,7 @@
 	<p><b>Location: </b><?php echo($location); ?></p>
 	<p><b>Number of rounds: </b><?php echo($nmbr_of_round); ?></p>
 	<p><b>Number of final rounds: </b><?php echo($nmbr_of_fnl_laps); ?></p>
+	<?php echo $about; ?>
 
 </body>
 </html>
