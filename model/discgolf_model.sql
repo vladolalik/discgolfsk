@@ -46,6 +46,9 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`tournaments` (
   `location` VARCHAR(45) NULL DEFAULT NULL ,
   `nmbr_of_round` INT(11) NULL DEFAULT NULL ,
   `nmbr_of_fnl_laps` INT(11) NULL DEFAULT NULL ,
+  `about` TEXT NULL ,
+  `photo` VARCHAR(200) NULL DEFAULT NULL ,
+  `thumb` VARCHAR(200) NULL DEFAULT NULL ,
   PRIMARY KEY (`tournament_id`) )
 ENGINE = InnoDB;
 
@@ -259,7 +262,7 @@ COLLATE = utf8_bin;
 DROP TABLE IF EXISTS `discgolf`.`number_of_baskets` ;
 
 CREATE  TABLE IF NOT EXISTS `discgolf`.`number_of_baskets` (
-  `id` INT NOT NULL ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
   `result_id` INT(11) NOT NULL ,
   `no_bskts_1` INT NULL ,
   `no_bskts_2` INT NULL ,
