@@ -25,7 +25,8 @@
 					else 
 					{
 						echo '<li>'.anchor('/auth/login', 'Login', 'title="login"').'</li>
-							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>';
+							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>
+							  <li>'.anchor('/tournaments/view_results', 'Results', 'title="Results"').'</li>';
 					}
 			?>
 			</ul>

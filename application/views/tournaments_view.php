@@ -1,3 +1,4 @@
+<!-- autor Vlado Lalik -->
 <?php $this->load->view('header', array('title' => 'Tournaments', 'caption' => 'Tournaments')); ?>
 <div id="container">
 	
@@ -31,7 +32,10 @@
 <?php 
 	if ($results != NULL)
 	{
-		echo $results['0']['category']; ?>
+		//var_dump($results);
+		//die();
+		echo '<h1>'.$results['0']['name'].' ('.$results['0']['date'].')</h1>';
+		echo '<h2>'.$results['0']['category'].'</h2>'; ?>
 		<table class="Statistics" border="1px">
 		<tr>
 			<?php 
@@ -42,12 +46,12 @@
 						<th>Player</th>';
 			 	for ($i=1; $i<=$results['0']['nmbr_of_round'];$i++)
 			 	{
-			 		echo '<th>Round '.$i.'</th>';
+			 		echo '<th>Round '.$i.' ('.$results['0']['no_bskts_'.$i].')</th>';
 			 	}																//header of table
 			 	echo '<th>Total</th>';
 			 	for ($i=1; $i<=$results['0']['nmbr_of_fnl_laps'];$i++)
 			 	{
-			 		echo '<th>Final round '.$i.'</th>';
+			 		echo '<th>Final round '.$i.' ('.$results['0']['no_final_'.$i].')</th>';
 			 	}
 
 			 	echo '<th>Total</th>
@@ -57,7 +61,7 @@
 			 	{
 			 		echo '<tr>';
 			 		echo '<td>'.$row_array['rank'].'</td>';
-			 		echo '<td>'.$row_array['first_name'].' '.$row_array['last_name'].'</td>';
+			 		echo '<td>'.anchor('/tournaments/view_individual_results/'.$row_array['user_id'], $row_array['first_name'].' '.$row_array['last_name'], 'target="blank"').'</td>';
 			 		$total = 0;
 			 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
 			 		{
@@ -85,10 +89,11 @@
 			 				echo '<td>'.$row_array['final_'.$i].'</td>';
 			 			}
 			 			
-			 			if ($row_array['final_'.$i] != NULL)
-			 			{
-			 				echo '<td>'.$total.'</td>';
-			 			}
+			 		}
+			 		$i = $i-1;
+			 		if ($row_array['final_'.$i] != NULL)
+			 		{
+			 			echo '<td>'.$total.'</td>';
 			 		}
 
 			 		echo '</tr>';

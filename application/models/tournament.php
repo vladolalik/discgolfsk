@@ -103,11 +103,12 @@ class Tournament extends CI_Model{
     {
 
         $player = ($player_id != 'ALL')? 'AND p.user_id ='.$player_id : '';
-        $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name
-                                    FROM tournaments t, categories c, results r, user_profiles u, players_has_tournaments p
-                                    WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND 
+        $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name, n.*
+                                    FROM tournaments t, categories c, results r, user_profiles u, players_has_tournaments p, 
+                                    number_of_baskets n
+                                    WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id AND
                                          p.category_id = c.category_id AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
-                                          $player AND c.category_id = '$category_id'
+                                          $player AND c.category_id = '$category_id' AND r.result_id = n.result_id
                                     ORDER BY COALESCE(p.final, 9999), ISNULL(p.disqualified) DESC, r.points
 
                                 ");
@@ -119,6 +120,34 @@ class Tournament extends CI_Model{
     }
 
 
-    
+    /**
+    * Function return all player stats
+    * Created by Vlado
+    *
+    * @param int
+    * @return array
+    */
+    function get_player_stats($player_id)
+    {
+
+        $query = $this->db->query(" SELECT u.*, c.category, c.category_id, r.*, p.final, p.disqualified, t.*, n.*
+                                    FROM tournaments t, categories c, results r, user_profiles u, players_has_tournaments p, 
+                                    number_of_baskets n
+                                    WHERE u.user_id=p.user_id AND c.category_id = p.category_id AND t.tournament_id = p.tournament_id AND
+                                          p.category_id=c.category_id AND r.tournament_id=p.tournament_id AND p.user_id=r.user_id AND
+                                          p.user_id='$player_id' AND r.result_id=n.result_id
+                                    ORDER BY COALESCE(p.final, 9999), ISNULL(p.disqualified) DESC, r.points
+
+                                ");
+        return $query->result_array();
+
+    }
+
+    function get_user_data($player_id)
+    {
+        $query = $this->db->where('user_id', $player_id)
+                          ->get('user_profiles');
+        return $query->row_array();
+    }
 
 }

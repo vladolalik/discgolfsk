@@ -523,8 +523,8 @@ class Tournaments extends CI_Controller {
   
   /**
   * Function filter results by tournaments, players, categories
-  * Created by Vlado
   * 
+  * @author Vladimir Lalik
   * @return void
   */
 
@@ -549,29 +549,39 @@ class Tournaments extends CI_Controller {
 	  	 $data['results'] = $this->tournament->get_all_results($tournament_id, $player_id, $category_id);
 	  	 // compute ranking
 	  	 //print_r($data['results']);
-	  	 if ($player_id != 'ALL')
+	  	 if ($data['results'] != NULL)
 	  	 {
-	  	 	$data['results']['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category_id);
-	  	 }
-	  	 else 
-	  	 {
-		  	 $rank = 0;
-			 foreach ($data['results'] as $key => $row)
-			 {
-			 	if ($row['disqualified'] != NULL)
-			 	{
-			 		$data['results'][$key]['rank'] = NULL;
-			 	} 
-			 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
-			 	{
-			 		$data['results'][$key]['rank'] = $rank;	
-			 	} 
-			 	else 
-			 	{
-			 		$rank = $rank + 1;
-			 		$data['results'][$key]['rank'] = $rank;	
-			 	}
-			 }
+		  	  if ($player_id != 'ALL')
+		  	  {
+		  	 	if ($data['results']['0']['disqualified'] == '1')
+		  	 	{
+		  	 		$data['results']['0']['rank'] = '';	
+		  	 	}
+		  	 	else
+		  	 	{
+		  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category_id);
+		  	 	}
+		  	 }
+		  	 else 
+		  	 {
+			  	 $rank = 0;
+				 foreach ($data['results'] as $key => $row)
+				 {
+				 	if ($row['disqualified'] != NULL)
+				 	{
+				 		$data['results'][$key]['rank'] = NULL;
+				 	} 
+				 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
+				 	{
+				 		$data['results'][$key]['rank'] = $rank;	
+				 	} 
+				 	else 
+				 	{
+				 		$rank = $rank + 1;
+				 		$data['results'][$key]['rank'] = $rank;	
+				 	}
+				 }
+			}
 		}
 		//print_r($data['results']);
 		// die();
@@ -586,7 +596,42 @@ class Tournaments extends CI_Controller {
 	  	 $data['categories'] = $this->tournament->get_categories();
 	  	 $last_tournament_id = $data['tournaments']['0']['tournament_id'];
 	  	 $category_id = $data['categories']['0']['category_id'];
-	  	 $data['results'] = $this->tournament->get_all_results($last_tournament_id,'ALL',$category_id);
+	  	 $player_id = 'ALL';
+	  	 $data['results'] = $this->tournament->get_all_results($last_tournament_id, $player_id, $category_id);
+	  	 if ($data['results'] != NULL)
+	  	 {
+		  	  if ($player_id != 'ALL')
+		  	  {
+		  	 	if ($data['results']['0']['disqualified'] == '1')
+		  	 	{
+		  	 		$data['results']['0']['rank'] = '';	
+		  	 	}
+		  	 	else
+		  	 	{
+		  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $last_tournament_id, $category_id);
+		  	 	}
+		  	 }
+		  	 else 
+		  	 {
+			  	 $rank = 0;
+				 foreach ($data['results'] as $key => $row)
+				 {
+				 	if ($row['disqualified'] != NULL)
+				 	{
+				 		$data['results'][$key]['rank'] = NULL;
+				 	} 
+				 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
+				 	{
+				 		$data['results'][$key]['rank'] = $rank;	
+				 	} 
+				 	else 
+				 	{
+				 		$rank = $rank + 1;
+				 		$data['results'][$key]['rank'] = $rank;	
+				 	}
+				 }
+			}
+		}
 	  	 $this->load->view('tournaments_view', $data);
 
 	}
@@ -594,7 +639,7 @@ class Tournaments extends CI_Controller {
 
 /**
 * Function that compute player rank in tournament
-* created by vlado
+* @author Vladimir Lalik
 * @return int
 */
 function compute_rank($player_id, $tournament_id, $category_id)
@@ -621,6 +666,31 @@ function compute_rank($player_id, $tournament_id, $category_id)
 			return $rank;
 		}
 	}
+}
+
+/**
+* Function that view player profile and stats
+* @author Vladimir Lalik
+* @return void
+*
+*/
+function view_individual_results()
+{
+	$player_id = $this->uri->segment(3);
+	$data = $this->tournament->get_user_data($player_id);
+	$data['results'] = $this->tournament->get_player_stats($player_id);
+	foreach ($data['results'] as $key => $row)
+	{
+		if ($data['results'][$key]['disqualified'] == '1')
+		  	 	{
+		  	 		$data['results'][$key]['rank'] = '';	
+		  	 	}
+		  	 	else
+		  	 	{
+					$data['results'][$key]['rank'] = $this->compute_rank($player_id, $row['tournament_id'], $row['category_id']);
+				}
+	}
+	$this->load->view('individual_stats', $data);
 }
   
   
