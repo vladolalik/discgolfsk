@@ -55,6 +55,11 @@ class Tournament extends CI_Model{
         $this->db->insert( 'laps' );
     }
     
+    function save_result( $data ){
+
+        $this->db->insert( 'results', $data );
+    }
+
     function get_tournaments() 
     {
         $query = $this->db->order_by('date')
