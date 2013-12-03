@@ -224,8 +224,8 @@ class Users extends CI_Model
 						   ->where('id', $this->db->insert_id())
 						   ->get($this->profile_table_name);
 		$data = $select->row_array();
-		print_r($data['user_id']);
-		die();
+		//print_r($data['user_id']);
+
 		return $data['user_id'];
 	}
 
