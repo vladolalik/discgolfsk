@@ -526,7 +526,7 @@ class Tournaments extends CI_Controller {
 	  	 //print_r($data['results']);
 	  	 if ($player_id != 'ALL')
 	  	 {
-	  	 	$this->compute_rank($player_id, $tournament_id, $category_id);
+	  	 	$data['results']['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category_id);
 	  	 }
 	  	 else 
 	  	 {
@@ -569,12 +569,33 @@ class Tournaments extends CI_Controller {
 
 /**
 * Function that compute player rank in tournament
-*
-*
+* created by vlado
+* @return int
 */
 function compute_rank($player_id, $tournament_id, $category_id)
 {
-
+	$results = $this->tournament->get_all_results($tournament_id,'ALL',$category_id);
+	 $rank = 0;
+	 foreach ($results as $key => $row)
+	 {
+	 	if ($row['disqualified'] != NULL)
+	 	{
+			$results[$key]['rank'] = NULL;
+		} 
+		elseif ($key!=0 && $results[$key-1]['points'] == $results[$key]['points'])
+		{
+			 $results[$key]['rank'] = $rank;	
+		} 
+		else 
+		{
+			 $rank = $rank + 1;
+			 $results[$key]['rank'] = $rank;	
+		}
+		if ($row['user_id'] == $player_id)
+		{
+			return $rank;
+		}
+	}
 }
   
   
