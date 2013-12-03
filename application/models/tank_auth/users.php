@@ -220,7 +220,13 @@ class Users extends CI_Model
 							   'user_id' => $this->db->insert_id()
 		 					  );
 		$query = $this->db->insert($this->profile_table_name, $data_profile);
-		return $this->db->insert_id();
+		$select = $this->db->select('user_id')
+						   ->where('id', $this->db->insert_id())
+						   ->get($this->profile_table_name);
+		$data = $select->row_array();
+		print_r($data['user_id']);
+		die();
+		return $data['user_id'];
 	}
 
 	/**

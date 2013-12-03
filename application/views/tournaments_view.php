@@ -4,75 +4,102 @@
 	
  <?php echo form_open('tournaments/view_results'); ?>
 <select name="tournaments" multiple>
-  <option value='ALL' selected = 'selected'> ALL TOURNAMENTS </option>
   <?php foreach($tournaments as $row): 
- 	echo '<option value="'.$row['tournament_id'].'">'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';
+ 	echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';
    endforeach; ?>
 </select>
 
 <select name="players" multiple>
-  <option value='ALL' selected = 'selected'> ALL PlAYERS </option>
+  <option value='ALL' <?php echo set_select('players', 'ALL', TRUE);?>> ALL PLAYERS </option>
   <?php
   	foreach($users as $row): 
-  		echo '<option value="'.$row['id'].'">'.$row['last_name'].' '.$row['first_name'].'</option>';
+  		echo '<option value="'.$row['user_id'].'"'. set_select('players', $row['user_id']).'>'.$row['last_name'].' '.$row['first_name'].'</option>';
+  	endforeach;
+  ?>
+</select>
+<select name="categories" multiple>
+  <?php
+  	var_dump($categories);
+  	foreach($categories as $row): 
+  		echo '<option value="'.$row['category_id'].'"'. set_select('categories', $row['category_id']).'>'.$row['category'].'</option>';
   	endforeach;
   ?>
 </select>
 
-
 <input type="submit">
 <?php echo form_close(); ?>
+<?php 
+	if ($results != NULL)
+	{
+		echo $results['0']['category']; ?>
+		<table class="Statistics" border="1px">
+		<tr>
+			<?php 
+			if ($results != NULL)
+			{
+				echo '<tr> 
+						<th>Rank</th>
+						<th>Player</th>';
+			 	for ($i=1; $i<=$results['0']['nmbr_of_round'];$i++)
+			 	{
+			 		echo '<th>Round '.$i.'</th>';
+			 	}																//header of table
+			 	echo '<th>Total</th>';
+			 	for ($i=1; $i<=$results['0']['nmbr_of_fnl_laps'];$i++)
+			 	{
+			 		echo '<th>Final round '.$i.'</th>';
+			 	}
 
-<table class="Statistics">
-	<tr>
-		<th> Player </th>
-	<?php 
+			 	echo '<th>Total</th>
+			 		</tr>';
+			 	
+			 	foreach ($results as $key=>$row_array)
+			 	{
+			 		echo '<tr>';
+			 		echo '<td>'.$row_array['rank'].'</td>';
+			 		echo '<td>'.$row_array['first_name'].' '.$row_array['last_name'].'</td>';
+			 		$total = 0;
+			 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
+			 		{
+			 			if ($row_array['lap_'.$i] == NULL)
+			 			{
+			 				echo '<td>--</td>';
+			 			} 
+			 			else 
+			 			{
+			 				echo '<td>'.$row_array['lap_'.$i].'</td>';
+			 				$total = $total + $row_array['lap_'.$i];
+			 			}
+			 		}
+			 		echo '<td>'.$total.'</td>';
 
-		for ($i=0; $i<$results[0]['nmbr_of_round']; $i++)
-		{
-			echo '<th>'.$results[$i]['nmbr_of_bskts'].'</th>';
-		}
-		echo '<th></th>';
-		echo '<th>'.$results[$i+1]['nmbr_of_bskts'].'</th>';
+			 		for ($i=1; $i<=$row_array['nmbr_of_fnl_laps'];$i++)
+			 		{	
+			 			if ($row_array['final_'.$i] == NULL)
+			 			{
+			 				echo '<td>--</td>';
+			 			} 
+			 			else 
+			 			{	
+			 				$total = $total + $row_array['final_'.$i];
+			 				echo '<td>'.$row_array['final_'.$i].'</td>';
+			 			}
+			 			
+			 			if ($row_array['final_'.$i] != NULL)
+			 			{
+			 				echo '<td>'.$total.'</td>';
+			 			}
+			 		}
 
-	?>
-
-	</tr>
-	<?php 
-		$lap = 0;
-		echo '</tr>';
-		$id = $results[0]['user_id'];
-		$last_key = 0;
-		$sum = 0;
-		echo '<tr>
-				<td>'.$results[0]['first_name'].' '.$results[0]['last_name'].'</td>';
-		foreach($results as $key => $row_array)
-		{
-			if ($id != $row_array['user_id']){
-				echo '<td>'.$results[$key-1]['result'].'</td>';
-				echo '</tr>';
-				$id = $row_array['user_id'];
-				$lap = 1;
-				echo '<tr>
-						<td>'.$row_array['first_name'].' '.$row_array['last_name'].'</td>
-					    <td>'.$row_array['points'].'</td>';		
-			} else {
-				if ($row_array['final'] == 1)
-				{
-					echo '<td>'.$sum.'</td>';
-					$sum = 0;
-				}
-				echo '<td>'.$row_array['points'].'</td>';
-				$sum = $sum + $row_array['points'];
-				
+			 		echo '</tr>';
+			 	}
+			 	
 			}
-			$last_key = $key;			
-		}
-		echo '<td>'.$results[$last_key]['result'].'</tr>';
 
-	?>
-</table>
-<?php print_r($results); ?>
+			?>
+		</table>
+<?php }
+	print_r($results); ?>
   
   
 </div>
