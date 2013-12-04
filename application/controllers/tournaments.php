@@ -465,8 +465,8 @@ class Tournaments extends CI_Controller {
 		if( ( $number_of_laps + $number_of_final_laps )  == count( $data ) ){
 			$player_has_tournament['final'] = 1;
 		}
-		if( ( $number_of_laps )  < $lap_count ){
-			$player_has_tournament['diqualified'] = 1;
+		if( ( $number_of_laps )  > $lap_count ){
+			$player_has_tournament['disqualified'] = 1;
 		}
 
 		$data['tournament_id'] 	=  $tournament_id;

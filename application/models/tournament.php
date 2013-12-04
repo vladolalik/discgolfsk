@@ -69,7 +69,8 @@ class Tournament extends CI_Model{
         $this->db->insert( 'players_has_tournaments', $data );
     }
     function player_has_tournament( $data ){
-        return $this->db->get_where( 'players_has_tournaments', $data );
+        $query = $this->db->get_where( 'players_has_tournaments', $data );
+        return $query->num_rows;
     }
 
     /**
