@@ -207,21 +207,21 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `discgolf`.`registered_players` ;
 
 CREATE  TABLE IF NOT EXISTS `discgolf`.`registered_players` (
-  `tournaments_tournament_id` INT(11) NOT NULL ,
-  `categories_category_id` INT(11) NOT NULL ,
+  `tournament_id` INT(11) NOT NULL ,
+  `category_id` INT(11) NOT NULL ,
   `accommodation` TINYINT(1) NULL ,
   `nutrition` TINYINT(1) NULL DEFAULT NULL ,
   `user_id` INT(11) NOT NULL ,
   PRIMARY KEY (`user_id`) ,
-  INDEX `fk_REGISTERED_PLAYERS_TOURNAMENTS1` (`tournaments_tournament_id` ASC) ,
-  INDEX `fk_REGISTERED_PLAYERS_CATEGORIES1` (`categories_category_id` ASC) ,
+  INDEX `fk_REGISTERED_PLAYERS_TOURNAMENTS1` (`tournament_id` ASC) ,
+  INDEX `fk_REGISTERED_PLAYERS_CATEGORIES1` (`category_id` ASC) ,
   CONSTRAINT `fk_REGISTERED_PLAYERS_CATEGORIES1`
-    FOREIGN KEY (`categories_category_id` )
+    FOREIGN KEY (`category_id` )
     REFERENCES `discgolf`.`categories` (`category_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_REGISTERED_PLAYERS_TOURNAMENTS1`
-    FOREIGN KEY (`tournaments_tournament_id` )
+    FOREIGN KEY (`tournament_id` )
     REFERENCES `discgolf`.`tournaments` (`tournament_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
