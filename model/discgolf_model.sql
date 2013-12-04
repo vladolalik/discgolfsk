@@ -49,6 +49,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`tournaments` (
   `about` TEXT NULL ,
   `photo` VARCHAR(200) NULL DEFAULT NULL ,
   `thumb` VARCHAR(200) NULL DEFAULT NULL ,
+  `allow_registration` INT NULL DEFAULT 0 ,
   PRIMARY KEY (`tournament_id`) )
 ENGINE = InnoDB;
 
