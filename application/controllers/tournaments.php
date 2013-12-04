@@ -118,13 +118,10 @@ class Tournaments extends CI_Controller {
 	*/
 	function import(){
 		$data['tournamets'] = $this->tournament->get_all_tournaments();
-
-		debug($_POST);
-
 		$this->load->library('form_validation');
 
-		if( isset($_POST['create']) ){ // ak nie je zaskrtnute ako novy tak validujeme
-			debug('novy');
+		if( isset($_POST['create']) ){ // ak  je zaskrtnute ako novy tak validujeme
+
 			$data['create_checked'] = TRUE; // zapametanie checkboxu
 			$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
 			$this->form_validation->set_rules('date', '', 'trim|required|xss_clean|htmlspecialchars');
@@ -160,7 +157,7 @@ class Tournaments extends CI_Controller {
 					$data['tournament_id'] = $_POST['existing_tournament_id'];
 				}
 				session_start();
-				$_SESSION['tournament_id']=$data['tournament_id'];
+				$_SESSION['tournament_id'] = $data['tournament_id'];
 				// vytvorit novy tournament alebo poslat idecko 
 				//redirect('tournaments/parse_imported_data');
 				$this->parse_imported_data( $data );
@@ -245,15 +242,18 @@ class Tournaments extends CI_Controller {
 		$all_players_lap_data = array();
 		$all_players_final_lap_data = array();
 		$valid_players = array();
+		$data['validation_errors'] = "";
 		$line_number = 0;
 		$loaded_player_data = FALSE; 			// informacia o tom ci su pre noveho hraca ulozene uz nejake data
 
 		$lines = explode("\n",$dataString); 	// rozdelime subor na pole riadkov
 		$lines = array_slice($lines, 0, ( sizeof($lines) -1 ) );  
 		foreach ($lines as $row) {				// prechadzame po riadku
+			debug($row);
 			$loaded_player_data = FALSE;
 			$line_number++;
 			$values = explode(CSV_COLUMN_SEPARATOR,$row);		// zozdelime riadok na slova
+			debug($values);
 			//if( strlen( $values[0] ) > 0 ){		// kontrola ci to nie je prazdne policko
 				if(  ( (string) $values[0] !== "n" ) && ( (string)$values[0] !== "f" ) ){ //ak je to riadok s menom, priezviskom...
 					$player_number++;
@@ -273,6 +273,7 @@ class Tournaments extends CI_Controller {
 						$valid_players[$player_number]['category'] 		= $category;
 					}else{
 						$v_errors .= $player_errors;
+						$data['validation_errors']  .= $player_errors;
 					}
 				}else if( $values[0] === "n" ){					//ak je riadok normalne kolo
 					$loaded_player_data = TRUE;
@@ -316,6 +317,8 @@ class Tournaments extends CI_Controller {
 				$player_final_lap_data = array();	// pre kazdeho hraca vynulujeme jeho vysledkove polia	
 			}
 		} //end main foreach
+		debug('koniec');
+
 
 
 		// echo "--------------------------------------------------------------";
@@ -342,8 +345,10 @@ class Tournaments extends CI_Controller {
 
 		$players = $this->__check_players_existence($players);
 		$players = $this->__check_categories_existence($players);
-		//debug($players);
-		//debug($data);
+		debug($players);
+		debug($laps_data);
+		debug($final_laps_data);
+		debug($data);
 		$data['players'] = $players;
 		$data['laps_data'] = $laps_data;
 		$data['final_laps_data'] = $final_laps_data;
@@ -423,59 +428,43 @@ class Tournaments extends CI_Controller {
 	}
 
 
-	function __save_player_data( $tournament_id, $user_id, $player_laps_data, $player_final_laps_data = NULL ){
+	function __save_player_data( $tournament_id, $user_id, $player_laps_data, $player_final_laps_data = NULL, $number_of_laps, $number_of_final_laps, $category_id ){
 		$points = 0;
-		$laps = array(
-			1 => NULL,
-			2 => NULL,
-			3 => NULL,
-			4 => NULL,
-			5 => NULL,
-			6 => NULL,
-			7 => NULL,
-			8 => NULL,
-			9 => NULL,
-			10 => NULL
-		);
-		$final_laps = array(
-			1 => NULL,
-			2 => NULL,
-			3 => NULL
-		);
+		$data = array();
+		$in_final = FALSE;
+		$baskets_data 	  = array();
+		$lap_count = 0;
 		foreach ($player_laps_data as $lap_key => $lap) {
 			$points += array_sum( $lap );
-			$laps[$lap_key+1] = array_sum( $lap );
+			$data['lap_'.($lap_key+1)] = array_sum( $lap );
+			$baskets_data['no_bskts_'.($lap_key+1)] = count( $lap );
+			$lap_count++;
 		}
-		debug($player_laps_data);
-		debug($player_final_laps_data);
 		if( $player_final_laps_data != NULL){
 			foreach ($player_final_laps_data as $lap_key => $lap) {
 				$points += array_sum( $lap );
-				$final_laps[$lap_key+1] = array_sum( $lap );
+				$data['final_'.($lap_key+1)] = array_sum( $lap );
+				$baskets_data['no_final_'.($lap_key+1)] = count( $lap );
 			}
 		}
+		if( ( $number_of_laps + $number_of_final_laps )  == count( $data ) ){
+			$player_has_tournament['final'] = 1;
+		}
+		if( ( $number_of_laps )  < $lap_count ){
+			$player_has_tournament['diqualified'] = 1;
+		}
 
-		$data = array(
-			'tournament_id' => $tournament_id,
-			'user_id'		=> $user_id,
-			'points'		=> $points,
-			'lap_1'			=> $laps[1],
-			'lap_2'			=> $laps[2],
-			'lap_3'			=> $laps[3],
-			'lap_4'			=> $laps[4],
-			'lap_5'			=> $laps[5],
-			'lap_6'			=> $laps[6],
-			'lap_7'			=> $laps[7],
-			'lap_8'			=> $laps[8],
-			'lap_9'			=> $laps[9],
-			'lap_10'		=> $laps[10],
-			'final_1'		=> $final_laps[1],
-			'final_2'		=> $final_laps[2],
-			'final_3'		=> $final_laps[3]
-		);
-		debug( $data ); 
-		$this->tournament->save_result( $data );
+		$data['tournament_id'] 	=  $tournament_id;
+		$data['user_id'] 		=  $user_id;
+		$data['points']			=  $points;
 
+		$baskets_data['result_id'] = $this->tournament->save_result( $data );
+		$this->tournament->save_baskets_for_result( $baskets_data );
+
+		$player_has_tournament['user_id'] = $user_id;
+		$player_has_tournament['tournament_id'] = $tournament_id;
+		$player_has_tournament['category_id'] = $category_id;
+		$this->tournament->save_player_has_tournament( $player_has_tournament );
 	}
 
 	/**
@@ -495,31 +484,28 @@ class Tournaments extends CI_Controller {
 
 			$number_of_laps = $this->__get_number_of_laps( $laps_data );
 			$number_of_final_laps = $this->__get_number_of_laps( $final_laps_data );
-			debug( 'number of laps: '.$number_of_laps.' '. $number_of_final_laps );
-			
-
-			//$laps_count = $this->__get_laps_count( $laps_data );
-			//$final_laps_count = $this->__get_laps_count( $final_laps_data );
-			//$this->__save_tournamet_properties( $tournament_id, $number_of_laps, $number_of_final_laps );
+		
+			$this->__save_tournamet_properties( $tournament_id, $number_of_laps, $number_of_final_laps );
 
 
-			// unset($_SESSION['players']);
-			// unset($_SESSION['laps_data']);
-			// unset($_SESSION['final_laps_data']);
 			foreach ($players as $key => $player) {
 				if( ( $player['exist'] != -1 ) && ($player['category_exist'] != -1) && isset($_POST[$player['exist']]) ){
-					$this->__save_player_data($tournament_id, $player['exist'], $laps_data[$key],  $final_laps_data[$key]);
+					if( !isset($final_laps_data[$key]) ){
+						$final_laps_data[$key] = null;						
+					}
+					$this->__save_player_data( $tournament_id, $player['exist'], $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 				}
 				if( ( $player['exist'] == -1 ) && ($player['category_exist'] != -1) ){
-					//debug($player);
+					if( !isset($final_laps_data[$key]) ){
+						$final_laps_data[$key] = null;						
+					}
 					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname']);
-					$this->__save_player_data($tournament_id, $new_player_id, $laps_data[$key],  $final_laps_data[$key]);
+					$this->__save_player_data($tournament_id, $new_player_id, $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
 				}
 
 			}
 		}
-		debug( $players );
 	}
 
 

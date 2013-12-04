@@ -56,9 +56,23 @@ class Tournament extends CI_Model{
     }
     
     function save_result( $data ){
-
         $this->db->insert( 'results', $data );
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
     }
+    function save_baskets_for_result( $data ){
+        $this->db->insert( 'number_of_baskets', $data );
+    }
+
+    function save_player_has_tournament( $data ){
+        $this->db->insert( 'players_has_tournaments', $data );
+    }
+    // function player_has_tournament( $player_id ){
+
+
+    // }
+
 
     function get_tournaments() 
     {

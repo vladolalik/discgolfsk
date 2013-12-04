@@ -8,7 +8,9 @@
 		<th>Category</th>
 	</tr>
 	<?php
-	//debug($players);
+	if( isset( $validation_errors ) ){
+		echo "<div id='players-validation-error'>".$validation_errors."</div>";
+	}
 		$string = "";
 		foreach ($players as $key => $player) {
 			$string .= '<tr>';
@@ -16,7 +18,7 @@
 			$string .= '<td>'.$player['surname'].'</td>';
 			$string .= '<td>'.$player['nationality'].'</td>';
 			if( $player['exist'] != -1){ //moznost parovania ak este nie je vytvoreny
-				$string .= '<td><input type="checkbox" checked value="'.$player['exist'].'"/>'.'</td>';
+				$string .= '<td><input type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
 			}else{
 				$string .= '<td>new</td>';
 			}
