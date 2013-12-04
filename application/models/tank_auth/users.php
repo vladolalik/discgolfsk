@@ -701,7 +701,7 @@ class Users extends CI_Model
 				$this->db->delete('registered_players');
 				// results
 				$this->db->where('user_id', $user_id);
-				$this->db->delete('baskets');
+				$this->db->delete('results');
 
 				$this->db->where('user_id', $user_id);
 				$this->db->delete('players_has_tournaments');

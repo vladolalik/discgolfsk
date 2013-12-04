@@ -716,9 +716,9 @@ class Auth extends CI_Controller
 		}
 	}
 
-/**
+	/**
 	 * Login admin on the site
-	 *
+	 * @author Vladimir Lalik
 	 * @return void
 	 */
 	function admin_login()

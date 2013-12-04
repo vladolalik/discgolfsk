@@ -2,12 +2,6 @@
 <html>
 	<HEAD>
 	      <TITLE><?php echo $title; ?></TITLE>
-	      	<script type="text/javascript" src="http://localhost/discgolf/tinymce/tinymce.min.js"></script>
-			<script type="text/javascript">
-				tinymce.init({
-    			selector: "textarea.tinymc"
- 				});
-			</script>
 	</HEAD>
 	<body>
 		<nav>

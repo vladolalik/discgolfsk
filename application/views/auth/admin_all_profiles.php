@@ -51,7 +51,7 @@ else
 			  <td>'.$player['gender'].'</td>
 			  <td>'.$player['club'].'</td>'; 
 		echo ($player['activated']==2)? '<td>'.anchor('/auth/admin_update_auto_profile/'.$player['user_id'], 'Update', 'title="Update"').'</td>' : '<td> -- </td>';
-		echo '<td><form action="/discgolf/index.php/auth/admin_delete_player/'.$player['user_id'].'"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td></tr>';
+		echo '<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td></tr>';
 
 	}
 	echo '</table>';

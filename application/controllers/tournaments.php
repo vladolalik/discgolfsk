@@ -726,6 +726,10 @@ function view_individual_results()
  */
  function admin_upload_photo()
  {
+ 	if (!$this->help_functions->is_admin())
+	{
+		redirect();
+	}
  	/* Upload Settings */
 	$config['upload_path'] = './uploads/tournaments';
 	$config['allowed_types'] = 'gif|jpg|png';
@@ -829,6 +833,83 @@ function view_individual_results()
 		}
 	}
  }
+
+
+/**
+* Function thaht update tournament attributes
+*
+* @author Vladimir Lalik
+* @return void
+*/
+
+ function admin_update_tournament()
+ {
+ 	if (!$this->help_functions->is_admin())
+	{
+		redirect();
+	}
+	$tournament_id = $this->uri->segment(3);
+	$data = $this->tournament->get_tournament_by_id($tournament_id);
+	if ($data == NULL) {
+		redirect('/tournaments/admin_view_tournaments');
+	}
+	$this->form_validation->set_rules('name','Name','trim|required|xss_clean|strip_tags');
+	$this->form_validation->set_rules('about','About','trim|xss_clean');
+	$this->form_validation->set_rules('date','Date','required|xss_clean|callback_datecheck');
+	$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
+	$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+	$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
+	if($this->form_validation->run()){
+		$tournament_data = array(
+					'name'			=>	$this->form_validation->set_value('name'),
+					'date'			=>	$this->form_validation->set_value('date'),
+					'location'		=>	$this->form_validation->set_value('location'),
+					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
+					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
+					'about' => $this->form_validation->set_value('about')
+				);
+			
+				
+		if ($this->tournament->update_tournament($tournament_id, $tournament_data)) {
+			
+				//$this->load->view('tournament/success', $tournament_data);
+			$this->session->set_flashdata('message', '<p class="success">Tournament was successfully updated!</p>');
+			redirect('tournaments/admin_view_tournaments');
+		} else {
+			$this->session->set_flashdata('message', '<p class="fail">Tournament was not updated!</p>');
+			redirect('tournaments/admin_view_tournaments');
+		}
+				// inserte?	
+	}else{
+
+		$this->load->view('tournament/update_tournament', $data);	
+
+	}		
+}
+
+
+function admin_delete_tournament()
+{
+	if (!$this->help_functions->is_admin())
+	{
+		redirect();
+	}
+	$tournament_id = $this->uri->segment(3);
+	
+	if ( $this->tournament->delete_tournament($tournament_id))
+	{
+		$this->session->set_flashdata('message', '<p class="success">Tournament was deleted!</p>');
+		redirect('tournaments/admin_view_tournaments');
+	} 
+	else 
+	{
+		$this->session->set_flashdata('message', '<p class="fail">Tournament was not deleted!</p>');
+		redirect('tournaments/admin_view_tournaments');
+	}
+}
+
   
 }
+
 ?>

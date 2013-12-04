@@ -196,37 +196,84 @@ class Tournament extends CI_Model{
     }
 
 /**
-    * Upload tournament photo
-    *
-    * @author Vladimir Lalik
-    *
-    * @param int
-    * @param string
-    * @param string
-    * @return boolean
-    */
+* Upload tournament photo
+ *
+ * @author Vladimir Lalik
+ *
+ * @param int
+* @param string
+* @param string
+* @return boolean
+ */
 
-    function update_photo($tournament_id, $filename, $thumb){
-        $query = $this->db->select('photo, thumb')
-                          ->where('tournament_id', $tournament_id)
-                          ->get('tournaments');
-        if ($query->num_rows == 1) 
+function update_photo($tournament_id, $filename, $thumb){
+    $query = $this->db->select('photo, thumb')
+                     ->where('tournament_id', $tournament_id)
+                   ->get('tournaments');
+    if ($query->num_rows == 1) 
+    {
+        $old_data = $query->row_array(); 
+        if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
         {
-            $old_data = $query->row_array(); 
-            if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
-            {
-                unlink('uploads/images/'.$old_data['thumb']);
-                unlink('uploads/images/'.$old_data['photo']);
-            }
-            $this->db->where('tournament_id', $tournament_id);
-            $arr = array(
-                'photo'=> $filename,
-                'thumb' => $thumb
-            );
-            $this->db->update('tournaments', $arr);
-            return TRUE;
+            unlink('uploads/images/'.$old_data['thumb']);
+            unlink('uploads/images/'.$old_data['photo']);
         }
-        return FALSE;
+        $this->db->where('tournament_id', $tournament_id);
+        $arr = array(
+             'photo'=> $filename,
+             'thumb' => $thumb
+         );
+        $this->db->update('tournaments', $arr);
+        return TRUE;
     }
+    return FALSE;
+}
+
+/**
+* Function for update tournament attributes
+*
+* @param int
+* @param array
+* @return bool
+*/
+
+function update_tournament($tournament_id, $data)
+{
+    $this->db->where('tournament_id', $tournament_id)
+             ->update('tournaments', $data);
+    if ($this->db->affected_rows()==1){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/**
+* Function that delete tournament and all record, which are joined to this tournament
+*
+* @author Vladimir Lalik
+* @param int
+* @return bool
+*/
+function delete_tournament($tournament_id)
+{
+    if (!$this->help_functions->is_admin())
+    {
+        redirect();
+    }
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('players_has_tournaments');
+    $query = $this->db->where('tournaments_tournament_id', $tournament_id)
+                      ->delete('registered_players');
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('results');
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('tournaments');
+    if ($this->db->affected_rows()>0)
+    {
+        return TRUE;
+    }                
+    return FALSE;
+}
+
 
 }

@@ -30,8 +30,8 @@
 				<td>'.$row['nmbr_of_fnl_laps'].'</td>
 				<td>'.anchor('/tournaments/admin_upload_photo/'.$row['tournament_id'], 'Add photo', 'title="Add_photo"').'</td>
 				<td>'.anchor('/tournaments/admin_tournament_detail/'.$row['tournament_id'], 'Details', 'title="Details"').'</td>
-				<td>'.anchor('/touranments/admin_update_tournament/'.$row['tournament_id'], 'Update', 'title="Update"').'</td>
-				<td>'.anchor('/tournaments/admin_delete_tourn/'.$row['tournament_id'], 'Delete', 'title="Delete"').'</td>
+				<td>'.anchor('/tournaments/admin_update_tournament/'.$row['tournament_id'], 'Update', 'title="Update"').'</td>
+				<td><form action="'.base_url().'index.php/tournaments/admin_delete_tournament/'.$row['tournament_id'].'"><input type="submit" name="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete touranment: '.$row['name'].' ('.$row['date'].') ?\')" /></form></td>
 			  </tr>';
 	}
 	echo '</table>';
