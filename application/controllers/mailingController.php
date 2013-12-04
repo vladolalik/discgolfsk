@@ -31,7 +31,7 @@ class MailingController extends CI_Controller {
         'smtp_host' => "ssl://smtp.googlemail.com",
         'smtp_port' => 465,
         'smtp_user' => "tguncaga@gmail.com",
-        'smtp_pass' => "Kolarik.1",
+        'smtp_pass' => "xxxxxxxxxxxtajne",
         'mailtype'  => "html", 
         'charset'   => "utf-8"
       );
