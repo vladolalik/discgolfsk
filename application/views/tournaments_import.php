@@ -1,11 +1,10 @@
-<!doctype html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>import</title>
-	<link rel="stylesheet" href="<?= base_url() ?>assets/style.css">
-</head>
-<body>
+<?php 
+/**
+* @author Branislav Ballon
+*/
+ $this->load->view('admin/admin_header', array('title'=>'Import tournament | Discgolf', 'caption'=>'Import tournament')); 
+
+ ?>
 <div id="container">
 	<fieldset>
 		<legend>Import tournament:</legend>
@@ -79,6 +78,3 @@
 
 	</fieldset>
 	
-</div>
-</body>
-</html>

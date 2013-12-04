@@ -117,6 +117,10 @@ class Tournaments extends CI_Controller {
 	* @author Branislav Ballon
 	*/
 	function import(){
+		if (!$this->tank_auth->is_logged_in())
+		{
+			redirect();
+		}
 		$data['tournamets'] = $this->tournament->get_all_tournaments();
 		$this->load->library('form_validation');
 
@@ -233,6 +237,10 @@ class Tournaments extends CI_Controller {
 	* @author Branislav Ballon
 	*/
 	function parse_imported_data( $data = NULL ){
+		if (!$this->tank_auth->is_logged_in())
+		{
+			redirect();
+		}
 		header('Content-Type: text/html; charset=utf-8');
 		$dataString =  file_get_contents('./uploads/'.IMPORTED_TMP_FILE_NAME.'.csv', true);
 		$v_errors = ""; 				// string do ktoreho sa postupne nabaluju validacne errory
@@ -464,7 +472,9 @@ class Tournaments extends CI_Controller {
 		$player_has_tournament['user_id'] = $user_id;
 		$player_has_tournament['tournament_id'] = $tournament_id;
 		$player_has_tournament['category_id'] = $category_id;
-		$this->tournament->save_player_has_tournament( $player_has_tournament );
+		if( !$this->tournament->player_has_tournament( $player_has_tournament ) ){
+			$this->tournament->save_player_has_tournament( $player_has_tournament );	
+		}
 	}
 
 	/**
@@ -475,6 +485,10 @@ class Tournaments extends CI_Controller {
 	* @author Branislav Ballon
 	*/
 	function save_import_data(){
+		if (!$this->tank_auth->is_logged_in())
+		{
+			redirect();
+		}
 		session_start();
 		if( isset($_SESSION['players']) && isset($_SESSION['laps_data']) ){
 			$players = $_SESSION['players'];

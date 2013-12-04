@@ -21,6 +21,7 @@
 		<li><?php echo anchor('tournaments/admin_view_tournaments', 'Tournaments', 'title="Tournaments"'); ?> 
 			<ul>
 				<li><?php echo anchor('tournaments/admin_add_tournament', 'Add new tournament', 'title="Add new tournament"'); ?></li>
+				<li><?php echo anchor('tournaments/import', 'Import tournament', 'title="Add new tournament"'); ?></li>
 			</ul>
 		</li>
 		<li><?php echo anchor('', 'Home', 'home'); ?> </li>
