@@ -65,6 +65,19 @@
 	<tr>
 	<?php
 		$options=array(
+			'name'	=>'allow_registration',
+			'id'	=>'allow_registration',
+			'value' => '1',
+			'checked' => 'TRUE'
+
+		); 
+		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';
+		echo '<td>'.form_checkbox($options).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
 			'name'	=>'about',
 			'id' => 'about',
 			'value' => set_value('about'),

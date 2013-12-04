@@ -56,19 +56,26 @@ class Tournaments extends CI_Controller {
 
 		$this->form_validation->set_rules('name','Name','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('about','About','trim|xss_clean');
+		$this->form_validation->set_rules('allow_registration','Allow registration','trim|xss_clean|strip_tags');
 		$this->form_validation->set_rules('date','Date','required|xss_clean|callback_datecheck');
 		$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 		$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		if($this->form_validation->run()){
+			if ($this->form_validation->set_value('allow_registration') == NULL)
+			{
+				$allow_registration = 0;	
+			}
+			
 			$tournament_data = array(
 					'name'			=>	$this->form_validation->set_value('name'),
 					'date'			=>	$this->form_validation->set_value('date'),
 					'location'		=>	$this->form_validation->set_value('location'),
 					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
-					'about' => $this->form_validation->set_value('about')
+					'about' => $this->form_validation->set_value('about'),
+					'allow_registration' => $allow_registration
 				);
 			
 				
@@ -855,19 +862,27 @@ function view_individual_results()
 	}
 	$this->form_validation->set_rules('name','Name','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('about','About','trim|xss_clean');
+	$this->form_validation->set_rules('allow_registration','Allow registration','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('date','Date','required|xss_clean|callback_datecheck');
 	$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 	if($this->form_validation->run()){
+		$allow_registration = $this->form_validation->set_value('allow_registration');
+		if ($this->form_validation->set_value('allow_registration') == NULL)
+		{
+			$allow_registration = 0;	
+		}
+		
 		$tournament_data = array(
 					'name'			=>	$this->form_validation->set_value('name'),
 					'date'			=>	$this->form_validation->set_value('date'),
 					'location'		=>	$this->form_validation->set_value('location'),
 					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
-					'about' => $this->form_validation->set_value('about')
+					'about' => $this->form_validation->set_value('about'),
+					'allow_registration' => $allow_registration
 				);
 			
 				
@@ -909,6 +924,53 @@ function admin_delete_tournament()
 	}
 }
 
+function view_tournaments()
+{
+	$this->load->library('pagination');
+	$config['base_url'] = base_url().'index.php/tournaments/view_tournaments/'	;
+	$config['total_rows'] = $this->tournament->get_nmbr_tournaments();
+	$config['per_page'] = 1; 
+	$config['full_tag_open'] = '<div id="pagination">';
+	$config['full_tag_close'] = '</div>';
+						
+	$config['first_link'] = FALSE;
+	$config['last_link'] = FALSE;
+						
+	$config['next_tag_open'] = '<span class="next">';
+	$config['next_tag_close'] = '</span>';
+						
+	$config['prev_tag_open'] = '<span class="prev">';
+	$config['prev_tag_close']= '</span>';
+
+	$this->pagination->initialize($config); 
+	if ($this->uri->segment(3) == NULL)
+	{
+		$number = 0;
+	} 
+	else 
+	{
+		$number= $this->uri->segment(3);
+	}
+
+	$data['tournaments']=$this->tournament->get_tournaments_paginate($number, $config['per_page']);
+	$this->load->view('tournament/tournament_blog_view', $data);
+}
+
+function tournament_details()
+{
+	$tournament_id=$this->uri->segment(3);
+	$data=$this->tournament->get_tournament_by_id($tournament_id);
+	if ($data==NULL)
+	{
+		redirect('tournaments/view_tournaments');
+	}
+	$date_tourn = new DateTime($data['date']);
+	$date_now = new DateTime('now');
+	$interval = $date_tourn->diff($date_now);
+	print_r($interval);
+	//die();
+	$this->load->view('tournament/tournament_details', $data);
+}
   
 }
 

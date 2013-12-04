@@ -8,7 +8,8 @@
 			<ul>
 
 			<?php
-				echo '<li>'.anchor('/tournaments/view_results', 'Results', 'title="Results"').'</li>'; 
+				echo '<li>'.anchor('/tournaments/view_results', 'Results', 'title="Results"').'</li>
+					 <li>'.anchor('/tournaments/view_tournaments', 'Tournaments', 'title="Tournaments"').'</li>';
 				if ($this->tank_auth->is_logged_in(TRUE))
 					{
 						echo '<li>'.anchor('auth/my_profile', 'My profile', 'title="profile"').' 

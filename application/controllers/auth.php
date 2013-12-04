@@ -18,7 +18,8 @@ class Auth extends CI_Controller
 	{
 		//$this->help_functions->__create_auto_profile();
 		if ($message = $this->session->flashdata('message')) {
-			$this->load->view('auth/general_message', array('message' => $message));
+			//$this->load->view('auth/general_message', array('message' => $message));
+			redirect('tournament/result');
 		} else {
 			redirect('/auth/login/');
 		}

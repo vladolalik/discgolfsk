@@ -72,7 +72,13 @@ class Tournament extends CI_Model{
         return $this->db->get_where( 'players_has_tournaments', $data );
     }
 
-
+    /**
+    * Function return all tournaments ordered by date DESC
+    *
+    * @author Vladimir Lalik
+    * @return array
+    *
+    */
     function get_tournaments() 
     {
         $query = $this->db->order_by('date DESC')
@@ -81,6 +87,37 @@ class Tournament extends CI_Model{
             return $query->result_array(); 
         }
         return null;
+    }
+
+    /**
+    * Function return all tournaments ordered by date DESC for pagination
+    *
+    * @param int
+    * @param int
+    * @author Vladimir Lalik
+    * @return array
+    *
+    */
+    function get_tournaments_paginate($from, $to) 
+    {
+        $query = $this->db->order_by('date DESC')
+                          ->get('tournaments', $to, $from);
+        if ($query->num_rows() > 0){
+            return $query->result_array(); 
+        }
+        return null;
+    }
+
+    /**
+    * Function return number of tournaments
+    *
+    * @author Vladimir Lalik
+    * @return int
+    */
+    function get_nmbr_tournaments()
+    {
+        $query= $this->db->get('tournaments');
+        return $query->num_rows();
     }
 
     /**

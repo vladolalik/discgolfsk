@@ -65,6 +65,18 @@
 	<tr>
 	<?php
 		$options=array(
+			'name'	=>'allow_registration',
+			'id'	=>'allow_registration',
+			'value' => '1',
+			'checked' => ($allow_registration=='1')?'TRUE':'FALSE'
+
+		); 
+		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';
+		?> <td><input type="checkbox" value="1" name="allow_registration" id="allow_registration" <?php if ($allow_registration=='1') echo 'checked="checked"'; ?>></td>' 
+	</tr>
+	<tr>
+	<?php
+		$options=array(
 			'name'	=>'about',
 			'id' => 'about',
 			'value' => set_value('about', $about),
@@ -75,7 +87,7 @@
 	?>
 	</tr>
 </table>
-	<?php echo form_submit('mysubmit', 'Submit'); print_r(base_url());?>
+	<?php echo form_submit('mysubmit', 'Submit'); ?>
 
 	
 

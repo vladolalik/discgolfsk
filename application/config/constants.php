@@ -50,6 +50,7 @@ define('IMPORTED_TMP_FILE_NAME','tmp_tournament');
 define('CSV_LINE_SEPARATOR',"\n");
 define('CSV_COLUMN_SEPARATOR',',');
 define('PATH_TO_USERS_AVATAR', 'http://localhost/discgolf/uploads/images/');
+define('PATH_TO_TOURNAMENT_THUMB', 'http://localhost/discgolf/uploads/tournaments/');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
