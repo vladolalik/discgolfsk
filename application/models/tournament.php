@@ -89,7 +89,6 @@ class Tournament extends CI_Model{
     function get_all_players()
     {
 
-//<<<<<<< .mine
         $query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, users.username, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
                                     FROM users, user_profiles 
                                     WHERE (users.activated = '1' OR users.activated = '2' OR LOWER(users.username) = 'auto' ) AND users.id = user_profiles.user_id
@@ -109,7 +108,11 @@ class Tournament extends CI_Model{
                                     WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id AND
                                          p.category_id = c.category_id AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
                                           $player AND c.category_id = '$category_id' AND r.result_id = n.result_id
-                                    ORDER BY COALESCE(p.final, 9999), ISNULL(p.disqualified) DESC, r.points
+                                    ORDER BY 
+                                            CASE WHEN ISNULL (r.final_3) THEN 9999 END,
+                                            CASE WHEN ISNULL (r.final_2) THEN 99999 END,
+                                            CASE WHEN ISNULL (r.final_1) THEN 999999 END,
+                                            ISNULL(p.disqualified) DESC, r.points
 
                                 ");
         if ($query->num_rows()>0)
@@ -136,7 +139,11 @@ class Tournament extends CI_Model{
                                     WHERE u.user_id=p.user_id AND c.category_id = p.category_id AND t.tournament_id = p.tournament_id AND
                                           p.category_id=c.category_id AND r.tournament_id=p.tournament_id AND p.user_id=r.user_id AND
                                           p.user_id='$player_id' AND r.result_id=n.result_id
-                                    ORDER BY COALESCE(p.final, 9999), ISNULL(p.disqualified) DESC, r.points
+                                    ORDER BY  
+                                            CASE WHEN ISNULL (r.final_3) THEN 9999 END,
+                                            CASE WHEN ISNULL (r.final_2) THEN 99999 END,
+                                            CASE WHEN ISNULL (r.final_1) THEN 999999 END,
+                                            ISNULL(p.disqualified) DESC, r.points
 
                                 ");
         if ($query->num_rows()>0)
@@ -156,6 +163,57 @@ class Tournament extends CI_Model{
             return $query->row_array();
         } 
         return NULL;
+    }
+
+    /**
+    * Function return tournament attributes
+    *
+    * @param int
+    * @return array
+    */
+    function get_tournament_by_id($id)
+    {
+        $query = $this->db->where('tournament_id', $id)
+                          ->get('tournaments');
+        if ($query->num_rows()==1)
+        {
+            return $query->row_array();
+        }
+        return NULL;
+    }
+
+/**
+    * Upload tournament photo
+    *
+    * @author Vladimir Lalik
+    *
+    * @param int
+    * @param string
+    * @param string
+    * @return boolean
+    */
+
+    function update_photo($tournament_id, $filename, $thumb){
+        $query = $this->db->select('photo, thumb')
+                          ->where('tournament_id', $tournament_id)
+                          ->get('tournaments');
+        if ($query->num_rows == 1) 
+        {
+            $old_data = $query->row_array(); 
+            if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
+            {
+                unlink('uploads/images/'.$old_data['thumb']);
+                unlink('uploads/images/'.$old_data['photo']);
+            }
+            $this->db->where('tournament_id', $tournament_id);
+            $arr = array(
+                'photo'=> $filename,
+                'thumb' => $thumb
+            );
+            $this->db->update('tournaments', $arr);
+            return TRUE;
+        }
+        return FALSE;
     }
 
 }

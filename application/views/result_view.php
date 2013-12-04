@@ -1,28 +1,43 @@
 <!-- autor Vlado Lalik -->
-<?php $this->load->view('header', array('title' => 'Tournaments', 'caption' => 'Tournaments')); ?>
+<?php $this->load->view('header', array('title' => 'Results', 'caption' => 'Results')); ?>
 <div id="container">
 	
 	
  <?php echo form_open('tournaments/view_results'); ?>
-<select name="tournaments" multiple>
-  <?php foreach($tournaments as $row): 
- 	echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';
+<select name="tournaments" size="5">
+  <?php foreach($tournaments as $key=>$row):
+  	if ($key == 0)
+  	{
+  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id'], TRUE).'>'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';
+  	} 
+  	else 
+  	{
+  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';	
+  	}
+ 	
    endforeach; ?>
 </select>
 
-<select name="players" multiple>
+<select name="players" size="5">
   <option value='ALL' <?php echo set_select('players', 'ALL', TRUE);?>> ALL PLAYERS </option>
   <?php
-  	foreach($users as $row): 
+  	foreach($users as $key=>$row): 
   		echo '<option value="'.$row['user_id'].'"'. set_select('players', $row['user_id']).'>'.$row['last_name'].' '.$row['first_name'].'</option>';
   	endforeach;
   ?>
 </select>
-<select name="categories" multiple>
+<select name="categories" size="5">
   <?php
   	var_dump($categories);
-  	foreach($categories as $row): 
-  		echo '<option value="'.$row['category_id'].'"'. set_select('categories', $row['category_id']).'>'.$row['category'].'</option>';
+  	foreach($categories as $key=>$row):
+  		if ($key==0)
+  		{ 
+  			echo '<option value="'.$row['category_id'].'"'. set_select('categories', $row['category_id'], TRUE).'>'.$row['category'].'</option>';
+  		}
+  		else 
+  		{
+  			echo '<option value="'.$row['category_id'].'"'. set_select('categories', $row['category_id']).'>'.$row['category'].'</option>';	
+  		}
   	endforeach;
   ?>
 </select>

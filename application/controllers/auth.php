@@ -418,7 +418,7 @@ class Auth extends CI_Controller
 		$config['prev_tag_open'] = '<span class="prev">';
 		$config['prev_tag_close']= '</span>';
 		
-		print_r($config);
+		//print_r($config);
 		//die();	
 		//$config['display_pages'] = FALSE;
 				

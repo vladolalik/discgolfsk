@@ -76,7 +76,11 @@ class Users extends CI_Model
 	/**
 	* Upload profile photo
 	*
+	* @author Vladimir Lalik
 	*
+	* @param int
+	* @param string
+ 	* @param string
 	* @return boolean
 	*/
 
@@ -420,13 +424,16 @@ class Users extends CI_Model
 	 */
 	function __delete_user($user_id)
 	{
-		if ($this->__delete_profile($user_id))
+		if (!$this->help_functions->is_admin_by_id($user_id))
 		{
-			$this->db->where('id', $user_id)
-					 ->where('role !=', 'admin');
-			$this->db->delete($this->table_name);
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
+			if ($this->__delete_profile($user_id))
+			{
+				$this->db->where('id', $user_id)
+						 ->where('role !=', 'admin');
+				$this->db->delete($this->table_name);
+				if ($this->db->affected_rows() > 0) {
+					return TRUE;
+				}
 			}
 		}
 		return FALSE;

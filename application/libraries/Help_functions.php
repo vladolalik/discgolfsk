@@ -12,6 +12,12 @@ class Help_functions{
 		}
 	}
 
+	/**
+	* Function that return true if logged in user is admin
+	* @author Vladimir Lalik
+	* 
+	* @return bool
+	*/
 	function is_admin(){
 		$this->ci = & get_instance();
 		if ($this->ci->session->userdata('role') === 'admin')
@@ -21,9 +27,24 @@ class Help_functions{
 		return false;
 	}
 
+
+	function is_admin_by_id($user_id)
+	{
+		$this->ci = & get_instance();
+		$this->ci->load->model('tank_auth/users');
+		$data = $this->ci->users->get_user_by_id($user_id, 1);
+		if ($data->role == 'admin')
+		{
+			return true;
+		}
+		return false;
+	}
+
+
 	/** 
 	* Create profile after import
-	*  @param string
+	* @author Vladimir Lalik
+	* @param string
 	* @return int
 	*/
 
@@ -39,9 +60,10 @@ class Help_functions{
 
 	}
 
-		/**
+	/**
 	* Function return id of user if his profile exits, else null
 	*
+	* @author Vladimir Lalik
 	* @param string
 	* @param string
 	* @return int
@@ -61,6 +83,13 @@ class Help_functions{
 		
 	}
 
+	/**
+	* Function that return true if profile was autocreated
+	*
+	* @author Vladimir Lalik
+	* @param int
+	* @return bool
+	*/
 	function is_auto_profile($id)
 	{
 		$this->ci = & get_instance();
