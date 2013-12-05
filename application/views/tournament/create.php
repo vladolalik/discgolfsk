@@ -1,10 +1,13 @@
 <?php $this->load->view('admin/admin_header', array('title'=>'Create tournament', 'caption'=>'Create tournament')); ?>
-	<?php 
-		echo validation_errors();
-		echo form_open($this->uri->uri_string()); ?>
-	<br />
-	<table>
-		<tr>
+	<fieldset>
+		<legend>Tournament data</legend>
+		<?php 
+			echo validation_errors();
+			echo form_open($this->uri->uri_string()); ?>
+		<br />
+		
+		<table id="add-tournament">
+			<tr>
 	<?php
 		$options=array(
 			'name'	=>'name',
@@ -89,7 +92,7 @@
 	</tr>
 </table>
 	<?php echo form_submit('mysubmit', 'Submit');?>
-
+</fieldset>
 	
 
 	
