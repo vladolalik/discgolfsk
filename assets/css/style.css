@@ -193,3 +193,8 @@ nav #main-nav li ul{
 #confirmation-errors input[type=submit]{
 	float: right;
 }
+#tournament-import-new label{
+	width: 15%;
+	display: block;
+	float: left;
+}

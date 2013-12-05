@@ -117,7 +117,7 @@ class Tournaments extends CI_Controller {
 	}
 
 	/**
-	* Funkcia
+	* Funkcia sluzi na ulozenie suboru a spracovanie formulara na vytvorenie nového alebo použitie existujúceho tournamentu
 	*
 	*
 	* @return void
@@ -137,6 +137,7 @@ class Tournaments extends CI_Controller {
 			$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
 			$this->form_validation->set_rules('date', '', 'trim|required|xss_clean|htmlspecialchars');
 			$this->form_validation->set_rules('location', '', 'trim|required|xss_clean|htmlspecialchars');
+			$this->form_validation->set_rules('about','About','trim|xss_clean');
 		}else{
 			$data['create_checked'] = FALSE; // zapametanie checkboxu
 		}
@@ -154,9 +155,10 @@ class Tournaments extends CI_Controller {
 
 				if( isset($_POST['create'] ) ){ // ak je zakliknute ze chceme novy, tak ho vytvorime
 					$tournament_data = array(
-						'name'		=> $_POST['name'],
-						'date'		=> $_POST['date'],
-						'location'	=> $_POST['location'],
+						'name'			=>	$this->form_validation->set_value('name'),
+						'date'			=>	$this->form_validation->set_value('date'),
+						'location'		=>	$this->form_validation->set_value('location'),
+						'about' 		=> $this->form_validation->set_value('about')
 					);
 					if ($this->tournament->add_tournament($tournament_data) ){
 						$data['tournament_id'] = $this->tournament->get_tournament_id($_POST['name'], $_POST['date']);
@@ -195,10 +197,11 @@ class Tournaments extends CI_Controller {
 
 
 	/**
-	* Funkcia
+	* Interná funkcia slúťiaca na validáciu dát hráča pri importe, na vstupe sú dané všetky atribúty pre hráča
+	* ktoré preju internou validaciu codeignitera, v prípade že daný hráč nie je válídny, vráti o tom informáciu
 	*
 	*
-	* @return void
+	* @return string
 	* @author Branislav Ballon
 	*/
 	function __validete_player($name = "", $surname = "", $nationality = "", $category = "", $line_number = 0, $player_number = 0 ){
@@ -236,7 +239,11 @@ class Tournaments extends CI_Controller {
 
 
 	/**
-	* Funkcia
+	* Funkcia na na spracovanie (parsovanie) importovaného súboru, prejde celý súbor po riadkoch
+	* ukladá si všetky dáta, pričom keď narazí na hráča tak ho zvaliduje, všetky údake ukladá do polí 
+	* player-lap-data - vzdy index hraca -> lapy -> kose
+	* final_laps_data - vzdy index hraca -> lapy -> kose
+	* players - udaj o hracovi -> hodnotu
 	*
 	*
 	* @return void
@@ -329,21 +336,8 @@ class Tournaments extends CI_Controller {
 				$player_final_lap_data = array();	// pre kazdeho hraca vynulujeme jeho vysledkove polia	
 			}
 		} //end main foreach
-
-
-
-		// echo "--------------------------------------------------------------";
-		// echo $v_errors;
-		// echo "--------------------------------------------------------------";
-		// debug($valid_players);
-		// echo "--skore------------------------------------------------------------";
-		// debug($all_players_lap_data);
-		// echo "--Finalove------------------------------------------------------------";
-		// debug($all_players_final_lap_data);
-
 		$this->__compare_data( $valid_players, $all_players_lap_data, $all_players_final_lap_data, $data );
 	} //end parse_imported_data
-
 
 	/**
 	* Funkcia

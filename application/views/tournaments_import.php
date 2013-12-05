@@ -49,7 +49,12 @@
               'id'          => 'location',
               'checked' 	=> $create_checked,
             );
-
+            $about_textarea = array(
+              'name'  =>'about',
+              'id' => 'about',
+              'value' => set_value('about'),
+              'class' => 'tinymc'
+            ); 
             //vytvori sa pole do selectu
 			$select = array();
 			foreach ($tournamets as  $tournamet){
@@ -61,20 +66,42 @@
 			<?php
 
 			echo form_open_multipart('tournaments/import');
-			echo form_dropdown('existing_tournament_id', $select, set_value('existing_tournament_id'));
-			echo form_checkbox('create','1',$create_checked);
-			echo form_label('New', 'create');
-			echo form_label('Name: ', 'name');
-			echo form_input($name_input);
-			echo form_label('Date: ', 'date');
-			echo form_input($date_input);
-			echo form_label('Location', 'location');
-			echo form_input($location_input);
-			echo form_label('Userfile', 'userfile');
-			echo form_upload('userfile');
-			echo form_submit('submit', 'import');
-			echo form_close();
-		?>
+      echo form_label('Userfile', 'userfile');
+      echo form_upload('userfile');
+      echo '<div class="clear">&nbsp;</div>';
+
+      echo form_label('New tournamet', 'create');
+      echo form_checkbox('create','1',$create_checked, 'id="import-new-tournament"');  
+      echo ' or select from existing ';
+      echo form_dropdown('existing_tournament_id', $select, set_value('existing_tournament_id'), 'id="import-existing-tournament"');
+      echo '<div class="clear">&nbsp;</div>';
+      ?>
+      <div id="import-new-tournament-form">
+      <?php
+        echo '<div id="tournament-import-new">';
+    			echo form_label('Name: ', 'name');
+    			echo form_input($name_input);
+          echo '<div class="clear">&nbsp;</div>'; 
+
+    			echo form_label('Date: ', 'date');
+    			echo form_input($date_input);
+          echo '<div class="clear">&nbsp;</div>';
+
+    			echo form_label('Location', 'location');
+    			echo form_input($location_input);
+          echo '<div class="clear">&nbsp;</div>';
+        echo '</div>';
+
+          echo form_label('About: ','about');
+          echo form_textarea($about_textarea);
+          echo '<div class="clear">&nbsp;</div>';
+        ?>
+      </div>
+        <?php
+
+  			echo form_submit('submit', 'import');
+  			echo form_close();
+		  ?>
 
 	</fieldset>
 	
