@@ -13,23 +13,26 @@
 		</div>
 		<div id="regist_form">
 			<?php
-				//if ($will=='1' && $allow_registration=='1')
-				//{	
+			//print_r($will);
+				if ($this->tank_auth->is_logged_in() && $will=='1' && $allow_registration=='1')
+				{	
 
 
 					$option_acc=array(
 						'name'=>'accommodation',
 						'id'=>'accommodation',
-						'value'=>'1';
+						'value'=>'1'
 					);
 
 					$option_food=array(
 						'name'=>'nutrition',
 						'id'=>'nutrition',
-						'value'=>'1';
-					);
+						'value'=>'1'
+					); ?>
 
-					echo form_open('/tournaments/tournament_details/'.$tournament_id); ?>
+					<fieldset>
+					<legend>Tournament data</legend>
+					<?php echo form_open('/tournaments/tournament_details/'.$tournament_id); ?>
 
 						<table>
 							<tr>
@@ -54,10 +57,19 @@
 								<td><?php echo form_checkbox($option_food); ?></td>
 								<td style="color: red;"><?php echo form_error($option_food['name']); ?></td>
 							</tr>
-
-
-					<?php echo form_close();
-				//} 
+						</table>
+					
+					<?php 
+						echo form_submit('register', 'Register');
+						echo form_close();
+					?>
+					</fieldset>
+			<?php
+				} 
+				else if  (!$this->tank_auth->is_logged_in())
+				{
+					echo '<p> You must login or register if you want register for tournament</p>';
+				}
 			?>
 
 		</div>
