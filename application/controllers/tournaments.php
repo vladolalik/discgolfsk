@@ -159,7 +159,6 @@ class Tournaments extends CI_Controller {
 						'location'	=> $_POST['location'],
 					);
 					if ($this->tournament->add_tournament($tournament_data) ){
-						debug('ulozilo');
 						$data['tournament_id'] = $this->tournament->get_tournament_id($_POST['name'], $_POST['date']);
 					}else{
 						//chyba najvacsia pri ukladani
@@ -220,9 +219,9 @@ class Tournaments extends CI_Controller {
 		{
 			$v_errors = "";
 		}else{
-			$v_errors .= " <div class='error' > </n>";
+			$v_errors .= " <div class='player-error' > </n>";
 			$v_errors .= "Error in player data: ";
-			$v_errors .= "<br /></n>";
+			// $v_errors .= "</n>";
 			$v_errors .= validation_errors();
 			$v_errors .= "csv line: ".$line_number;
 			$v_errors .= "<br /></n>";
@@ -264,11 +263,9 @@ class Tournaments extends CI_Controller {
 		$lines = explode("\n",$dataString); 	// rozdelime subor na pole riadkov
 		$lines = array_slice($lines, 0, ( sizeof($lines) -1 ) );  
 		foreach ($lines as $row) {				// prechadzame po riadku
-			debug($row);
 			$loaded_player_data = FALSE;
 			$line_number++;
 			$values = explode(CSV_COLUMN_SEPARATOR,$row);		// zozdelime riadok na slova
-			debug($values);
 			//if( strlen( $values[0] ) > 0 ){		// kontrola ci to nie je prazdne policko
 				if(  ( (string) $values[0] !== "n" ) && ( (string)$values[0] !== "f" ) ){ //ak je to riadok s menom, priezviskom...
 					$player_number++;
@@ -332,7 +329,6 @@ class Tournaments extends CI_Controller {
 				$player_final_lap_data = array();	// pre kazdeho hraca vynulujeme jeho vysledkove polia	
 			}
 		} //end main foreach
-		debug('koniec');
 
 
 
@@ -360,10 +356,7 @@ class Tournaments extends CI_Controller {
 
 		$players = $this->__check_players_existence($players);
 		$players = $this->__check_categories_existence($players);
-		debug($players);
-		debug($laps_data);
-		debug($final_laps_data);
-		debug($data);
+
 		$data['players'] = $players;
 		$data['laps_data'] = $laps_data;
 		$data['final_laps_data'] = $final_laps_data;
@@ -543,7 +536,6 @@ class Tournaments extends CI_Controller {
        $data['users'] = $this ->users -> get_users();
        
        
-       debug($_POST['tournaments']);
        //$_POST['tournament_id'])
        $data['match'] = $this->users->get_match($_POST['tournaments'], $_POST['users']);
         

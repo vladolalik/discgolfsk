@@ -1,6 +1,6 @@
 /* GENERAL
 ------------------------------------------------------------*/
-ul, li, h1, body { margin: 0; padding: 0; }
+ul, li, h1, body,p { margin: 0; padding: 0; }
 .center 	{ vertical-align: middle; }
 .clear, .cl { clear: both; }
 .wrap		{ overflow: hidden; }
@@ -145,6 +145,10 @@ nav #main-nav li ul{
 	color: #ffffff;
 	border-bottom: 3px solid #446986;
 }
+#header h1{
+	line-height: 50px;
+	padding-left: 20px;
+}
 
 /* ADMIN - SPECIFIC
 ------------------------------------------------------------*/
@@ -174,4 +178,18 @@ nav #main-nav li ul{
 }
 #activate-players{
 	width: 100%;
+}
+.player-error{
+	padding: 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+#confirmation-errors{
+	margin-top: 10px;
+}
+#confirmation-errors table{
+	width: 100%;
+	text-align: center;
+}
+#confirmation-errors input[type=submit]{
+	float: right;
 }
