@@ -967,7 +967,10 @@ function tournament_details()
 	$date_tourn = new DateTime($data['date']);
 	$date_now = new DateTime('now');
 	$interval = $date_tourn->diff($date_now);
+	$data['will'] = $interval->invert;
+	$data['categories']=$this->tournament->get_categories();
 	print_r($interval);
+
 	//die();
 	$this->load->view('tournament/tournament_details', $data);
 }
