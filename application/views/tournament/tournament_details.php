@@ -20,8 +20,15 @@
 					$option_acc=array(
 						'name'=>'accommodation',
 						'id'=>'accommodation',
-						'value'=>set_Value('accommodation');
-						);
+						'value'=>'1';
+					);
+
+					$option_food=array(
+						'name'=>'nutrition',
+						'id'=>'nutrition',
+						'value'=>'1';
+					);
+
 					echo form_open('/tournaments/tournament_details/'.$tournament_id); ?>
 
 						<table>
@@ -38,10 +45,16 @@
 								<td style="color: red;"><?php echo form_error('category'); ?></td>
 							</tr>
 							<tr>
-								<td><?php echo form_label('Accommodation', $first_name['id']); ?></td>
-								<td><?php echo form_input($first_name); ?></td>
-								<td style="color: red;"><?php echo form_error($first_name['name']); ?><?php echo isset($errors[$first_name['name']])?$errors[$first_name['name']]:''; ?></td>
+								<td><?php echo form_label('Accommodation', $option_acc['id']); ?></td>
+								<td><?php echo form_checkbox($option_acc); ?></td>
+								<td style="color: red;"><?php echo form_error($option_acc['name']); ?></td>
 							</tr>
+							<tr>
+								<td><?php echo form_label('Food', $option_food['id']); ?></td>
+								<td><?php echo form_checkbox($option_food); ?></td>
+								<td style="color: red;"><?php echo form_error($option_food['name']); ?></td>
+							</tr>
+
 
 					<?php echo form_close();
 				//} 
