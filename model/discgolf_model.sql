@@ -179,7 +179,7 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`players_has_tournaments` (
   `category_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   `final` INT NULL DEFAULT NULL ,
-  `disqualified` VARCHAR(45) NULL DEFAULT NULL ,
+  `disqualified` INT NULL DEFAULT NULL ,
   PRIMARY KEY (`tournament_id`, `user_id`) ,
   INDEX `fk_PLAYERS_has_TOURNAMENTS_TOURNAMENTS1` (`tournament_id` ASC) ,
   INDEX `fk_PLAYERS_has_TOURNAMENTS_CATEGORIES1` (`category_id` ASC) ,

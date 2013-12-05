@@ -313,5 +313,31 @@ function delete_tournament($tournament_id)
     return FALSE;
 }
 
+/**
+* Function register player for tournament
+*
+* @author Vladimir Lalik
+* @param array
+* @return bool
+*/
+function register_player($registration_data)
+{
+    $select = $this->db->where('user_id', $registration_data['user_id'])
+                       ->where('tournament_id', $registration_data['tournament_id'])
+                       ->get('registered_players');
+    if ($select->num_rows()==0)
+    {
+        $query = $this->db->insert('registered_players', $registration_data);
+        if($this->db->affected_rows() == 1)
+        {
+            return TRUE;
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+    return FALSE;
+}
 
 }

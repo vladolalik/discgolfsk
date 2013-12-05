@@ -45,7 +45,7 @@
 <input type="submit">
 <?php echo form_close(); ?>
 <?php 
-	if ($results != NULL)
+	if (isset($results) && $results != NULL)
 	{
 		//var_dump($results);
 		//die();

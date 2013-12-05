@@ -576,46 +576,51 @@ class Tournaments extends CI_Controller {
 		 $tournament_id = $this->input->post('tournaments');
 		 $player_id = $this->input->post('players');
 		 $category_id = $this->input->post('categories');
-	  	 $data['results'] = $this->tournament->get_all_results($tournament_id, $player_id, $category_id);
-	  	 // compute ranking
-	  	 //print_r($data['results']);
-	  	 if ($data['results'] != NULL)
-	  	 {
-		  	  if ($player_id != 'ALL')
-		  	  {
-		  	 	if ($data['results']['0']['disqualified'] == '1')
-		  	 	{
-		  	 		$data['results']['0']['rank'] = '';	
-		  	 	}
-		  	 	else
-		  	 	{
-		  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category_id);
-		  	 	}
-		  	 }
-		  	 else 
+		 if ($tournament_id!=NULL && $category_id!=NULL)
+		 {
+		  	 $data['results'] = $this->tournament->get_all_results($tournament_id, $player_id, $category_id);
+		  	 // compute ranking
+		  	 //print_r($data['results']);
+		  	 if ($data['results'] != NULL)
 		  	 {
-			  	 $rank = 0;
-				 foreach ($data['results'] as $key => $row)
-				 {
-				 	if ($row['disqualified'] != NULL)
-				 	{
-				 		$data['results'][$key]['rank'] = NULL;
-				 	} 
-				 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
-				 	{
-				 		$data['results'][$key]['rank'] = $rank;	
-				 	} 
-				 	else 
-				 	{
-				 		$rank = $rank + 1;
-				 		$data['results'][$key]['rank'] = $rank;	
-				 	}
-				 }
+			  	  if ($player_id != 'ALL')
+			  	  {
+			  	 	if ($data['results']['0']['disqualified'] == '1')
+			  	 	{
+			  	 		$data['results']['0']['rank'] = '';	
+			  	 	}
+			  	 	else
+			  	 	{
+			  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category_id);
+			  	 	}
+			  	 }
+			  	 else 
+			  	 {
+				  	 $rank = 0;
+					 foreach ($data['results'] as $key => $row)
+					 {
+					 	if ($row['disqualified'] != NULL)
+					 	{
+					 		$data['results'][$key]['rank'] = NULL;
+					 	} 
+					 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
+					 	{
+					 		$data['results'][$key]['rank'] = $rank;	
+					 	} 
+					 	else 
+					 	{
+					 		$rank = $rank + 1;
+					 		$data['results'][$key]['rank'] = $rank;	
+					 	}
+					 }
+				}
 			}
+			//print_r($data['results']);
+			// die();
 		}
-		//print_r($data['results']);
-		// die();
-	  	 $this->load->view('result_view', $data);
+		$this->load->view('result_view', $data);
+		   
+		  
 
 	}  		
   	else 
@@ -627,42 +632,46 @@ class Tournaments extends CI_Controller {
 	  	 $last_tournament_id = $data['tournaments']['0']['tournament_id'];
 	  	 $category_id = $data['categories']['0']['category_id'];
 	  	 $player_id = 'ALL';
-	  	 $data['results'] = $this->tournament->get_all_results($last_tournament_id, $player_id, $category_id);
-	  	 if ($data['results'] != NULL)
-	  	 {
-		  	  if ($player_id != 'ALL')
-		  	  {
-		  	 	if ($data['results']['0']['disqualified'] == '1')
-		  	 	{
-		  	 		$data['results']['0']['rank'] = '';	
-		  	 	}
-		  	 	else
-		  	 	{
-		  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $last_tournament_id, $category_id);
-		  	 	}
-		  	 }
-		  	 else 
+
+	  	if ($last_tournament_id!=NULL && $category_id!=NULL)
+		{
+		  	 $data['results'] = $this->tournament->get_all_results($last_tournament_id, $player_id, $category_id);
+		  	 if ($data['results'] != NULL)
 		  	 {
-			  	 $rank = 0;
-				 foreach ($data['results'] as $key => $row)
-				 {
-				 	if ($row['disqualified'] != NULL)
-				 	{
-				 		$data['results'][$key]['rank'] = NULL;
-				 	} 
-				 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
-				 	{
-				 		$data['results'][$key]['rank'] = $rank;	
-				 	} 
-				 	else 
-				 	{
-				 		$rank = $rank + 1;
-				 		$data['results'][$key]['rank'] = $rank;	
-				 	}
-				 }
+			  	  if ($player_id != 'ALL')
+			  	  {
+			  	 	if ($data['results']['0']['disqualified'] == '1')
+			  	 	{
+			  	 		$data['results']['0']['rank'] = '';	
+			  	 	}
+			  	 	else
+			  	 	{
+			  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $last_tournament_id, $category_id);
+			  	 	}
+			  	 }
+			  	 else 
+			  	 {
+				  	 $rank = 0;
+					 foreach ($data['results'] as $key => $row)
+					 {
+					 	if ($row['disqualified'] != NULL)
+					 	{
+					 		$data['results'][$key]['rank'] = NULL;
+					 	} 
+					 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
+					 	{
+					 		$data['results'][$key]['rank'] = $rank;	
+					 	} 
+					 	else 
+					 	{
+					 		$rank = $rank + 1;
+					 		$data['results'][$key]['rank'] = $rank;	
+					 	}
+					 }
+				}
 			}
 		}
-	  	 $this->load->view('result_view', $data);
+	  	$this->load->view('result_view', $data);
 
 	}
   }
@@ -870,7 +879,7 @@ function view_individual_results()
 	$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 	if($this->form_validation->run()){
 		$allow_registration = $this->form_validation->set_value('allow_registration');
-		if ($this->form_validation->set_value('allow_registration') == NULL)
+		if ($allow_registration == NULL)
 		{
 			$allow_registration = 0;	
 		}
@@ -929,7 +938,7 @@ function view_tournaments()
 	$this->load->library('pagination');
 	$config['base_url'] = base_url().'index.php/tournaments/view_tournaments/'	;
 	$config['total_rows'] = $this->tournament->get_nmbr_tournaments();
-	$config['per_page'] = 1; 
+	$config['per_page'] = 3; 
 	$config['full_tag_open'] = '<div id="pagination">';
 	$config['full_tag_close'] = '</div>';
 						
@@ -956,6 +965,14 @@ function view_tournaments()
 	$this->load->view('tournament/tournament_blog_view', $data);
 }
 
+
+/**
+* Function that view details of tournament and allow 
+*
+*
+*
+*
+*/
 function tournament_details()
 {
 	$tournament_id=$this->uri->segment(3);
@@ -964,13 +981,62 @@ function tournament_details()
 	{
 		redirect('tournaments/view_tournaments');
 	}
-	$date_tourn = new DateTime($data['date']);
-	$date_now = new DateTime('now');
-	$interval = $date_tourn->diff($date_now);
-	$data['will'] = $interval->invert;
-	$data['categories']=$this->tournament->get_categories();
-	//print_r($interval);
-	$this->load->view('tournament/tournament_details', $data);
+
+	$this->form_validation->set_rules('category_id','Category','trim|required|xss_clean|strip_tags');
+	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
+	$this->form_validation->set_rules('nutrition','Food','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('accommodation','Accommodation','trim|xss_clean|strip_tags');
+	if ($this->form_validation->run()){
+		
+		if (!$this->tank_auth->is_logged_in()) 
+		{
+			redirect(); // redirect if user is not logged in
+		}
+
+		// check if this values was checked in form
+		$nutrition = $this->form_validation->set_value('nutrition');
+		if ($nutrition == NULL)
+		{
+			$nutrition = 0;	
+		}
+
+		$accommodation = $this->form_validation->set_value('accommodation');
+		
+		if ( $accommodation == NULL)
+		{
+			$accommodation = 0;	
+		}
+
+		$registration_data = array(
+			'user_id'=>$this->session->userdata('id'),
+			'tournament_id'=>$this->form_validation->set_value('tournament_id'),
+			'category_id'=>$this->form_validation->set_value('category_id'),
+			'accommodation'=>$accommodation,
+			'nutrition'=>$nutrition
+		);
+		if ($this->tournament->register_player($registration_data))
+		{
+			$this->session->set_flashdata('message', '<p class="success">You are register in tournament '.$data['name'].' ('.$data['date'].')</p>');
+			redirect('tournaments/tournament_details/'.$data['tournament_id']);
+		} 
+		else 
+		{
+	-		$this->session->set_flashdata('message', '<p class="fail"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
+			redirect('tournaments/tournament_details/'.$data['tournament_id']);
+		}
+		//print_r($registration_data);
+		//die();
+	}
+	else 
+	{
+		$date_tourn = new DateTime($data['date']);
+		$date_now = new DateTime('now');
+		$interval = $date_tourn->diff($date_now);
+		$data['will'] = $interval->invert;
+		$data['categories']=$this->tournament->get_categories();
+		//print_r($interval);
+		$this->load->view('tournament/tournament_details', $data);
+	}
 }
   
 }

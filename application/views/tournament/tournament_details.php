@@ -33,7 +33,7 @@
 					<fieldset>
 					<legend>Tournament data</legend>
 					<?php echo form_open('/tournaments/tournament_details/'.$tournament_id); ?>
-
+						<input type="hidden" value="<?php echo $tournament_id; ?>" name="tournament_id" id="tournament_id"/>
 						<table>
 							<tr>
 								<td><?php echo form_label('Category', 'category_id'); ?></td>
@@ -68,7 +68,7 @@
 				} 
 				else if  (!$this->tank_auth->is_logged_in())
 				{
-					echo '<p> You must login or register if you want register for tournament</p>';
+					echo '<div class="notice"><p> You must '.anchor('/auth/login/', 'login', 'title="login"').' or '.anchor('/auth/register', 'register', 'title="register"').' if you want register for tournament</p></div>';
 				}
 			?>
 
