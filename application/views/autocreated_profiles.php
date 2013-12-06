@@ -1,8 +1,8 @@
+<?php $this->load->view('header', array('title' => 'Auto-created profiles', 'caption' => 'Auto-created profiles')); ?>
 <?php 
-
 if ($players ==NULL)
 {
-	echo '<p> No auto created profiles profiles</p>';
+	echo '<p>No auto created profiles profiles</p>';
 } 
 else
 {

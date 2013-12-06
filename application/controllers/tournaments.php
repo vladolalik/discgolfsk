@@ -35,8 +35,44 @@ class Tournaments extends CI_Controller {
 
 	function admin_view_tournaments()
 	{
+
+		if (!($this->help_functions->is_admin()))
+		{
+			redirect();
+		}
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'index.php/tournaments/admin_view_tournaments/'	;
+		$config['total_rows'] = $this->tournament->get_nmbr_tournaments();
+		$config['per_page'] = 3; 
+		$config['full_tag_open'] = '<div id="pagination">';
+		$config['full_tag_close'] = '</div>';
+							
+		$config['first_link'] = FALSE;
+		$config['last_link'] = FALSE;
+							
+		$config['next_tag_open'] = '<span class="next">';
+		$config['next_tag_close'] = '</span>';
+							
+		$config['prev_tag_open'] = '<span class="prev">';
+		$config['prev_tag_close']= '</span>';
+
+		$this->pagination->initialize($config); 
+		if ($this->uri->segment(3) == NULL)
+		{
+			$number = 0;
+		} 
+		else 
+		{
+			$number= $this->uri->segment(3);
+		}
+
+		$data['tournaments']=$this->tournament->get_tournaments_paginate($number, $config['per_page']);
+		$this->load->view('tournament/admin_tournaments_view', $data);
+
+		/*
 		$data['tournaments'] = $this->tournament->get_tournaments();
 		$this->load->view('tournament/admin_tournaments_view', $data);
+		*/
 	}
 
 
@@ -100,13 +136,13 @@ class Tournaments extends CI_Controller {
 	*/
 	public function datecheck($form_date)
 	{
-		/*$db_feed=$this->tournament->get_by_date($form_date);
+		$db_feed=$this->tournament->get_by_date($form_date);
 		foreach ($db_feed as $row){
 			if($this->form_validation->set_value('name')==$row['name']){
 				return false;
 			}
-		}*/
-		//echo $date;
+		}
+		//var_dump($date);
 		return true;
 	}
 
@@ -955,8 +991,8 @@ function view_tournaments()
 /**
 * Function that view details of tournament and allow 
 *
-*
-*
+* @author Vladimir Lalik
+* @return void
 *
 */
 function tournament_details()
@@ -1007,7 +1043,7 @@ function tournament_details()
 		} 
 		else 
 		{
-	-		$this->session->set_flashdata('message', '<p class="fail"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
+			$this->session->set_flashdata('message', '<p class="fail"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
 			redirect('tournaments/tournament_details/'.$data['tournament_id']);
 		}
 		//print_r($registration_data);
@@ -1023,6 +1059,39 @@ function tournament_details()
 		//print_r($interval);
 		$this->load->view('tournament/tournament_details', $data);
 	}
+}
+
+
+/**
+* Function that view registerd players in tournament
+*
+* @author Vladimir Lalik
+* @return void
+*
+*/
+function admin_registered_players()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
+	$data['tournaments']=$this->tournament->get_tournaments();
+	
+	if ($this->form_validation->run())
+	{
+		$tournament=array(
+			'tournament_id'=>$this->form_validation->set_value('tournament_id')
+		);
+		$data['registered_players']=$this->tournament->get_registerd_players($tournament);
+		
+		$this->load->view('tournament/registered_players_view', $data);
+	} 
+	else 
+	{
+		$this->load->view('tournament/registered_players_view', $data);
+	}
+
 }
   
 }

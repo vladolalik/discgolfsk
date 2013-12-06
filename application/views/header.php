@@ -29,7 +29,8 @@
 					else 
 					{
 						echo '<li>'.anchor('/auth/login', 'Login', 'title="login"').'</li>
-							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>';
+							  <li>'.anchor('/auth/register', 'Register', 'title="register"').'</li>
+							  <li>'.anchor('/auth/get_autocreated_profile', 'Find yourself', 'title="Find your name in autocreated profiles and get your profile"').'</li>';
 							  
 					}
 

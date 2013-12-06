@@ -340,4 +340,42 @@ function register_player($registration_data)
     return FALSE;
 }
 
+
+/**
+* Function returns registerd players for tournament with id in param
+*
+* @author Vladimir Lalik
+* @param array
+* @return array
+*/
+function get_registerd_players($data)
+{
+    $select=$this->db->select('*')
+                     ->where($data)
+                     ->from('registered_players')
+                     ->join('user_profiles', 'registered_players.user_id=user_profiles.user_id')
+                     ->join('categories','registered_players.category_id=categories.category_id')
+                     ->get();
+    if ($select->num_rows()>0)
+    {
+        return $select->result_array();
+    }
+    return NULL;
+}
+
+/**
+* Function return tournaments which match date from parameters
+*
+* @author Vladimir Lalik
+* @param date
+* @return array
+*
+*/
+function get_by_date($date)
+{
+    $query=$this->db->where('date', $date)
+                    ->get('tournaments');
+    return $query->result_array();
+}
+
 }

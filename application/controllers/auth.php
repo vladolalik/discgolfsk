@@ -16,7 +16,7 @@ class Auth extends CI_Controller
 
 	function index()
 	{
-		//$this->help_functions->__create_auto_profile();
+		$this->help_functions->__create_auto_profile();
 		if ($message = $this->session->flashdata('message')) {
 			//$this->load->view('auth/general_message', array('message' => $message));
 			redirect('tournaments/view_results');
@@ -249,6 +249,10 @@ class Auth extends CI_Controller
 	function admin_update_auto_profile()
 	{
 		$id = $this->uri->segment(3);
+		if (!is_numeric($id))
+		{
+			redirect();
+		}
 		if (!($this->help_functions->is_admin()) || !($this->help_functions->is_auto_profile($id)))
 		{
 			redirect();
@@ -321,7 +325,7 @@ class Auth extends CI_Controller
 
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_inactive_players/'	;
-		$config['total_rows'] = $this->users->get_nmbr_activated(0);
+		$config['total_rows'] = $this->users->get_nmbr_activated(NOT_ACTIVE_PROFILE);
 		$config['per_page'] = 3; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
@@ -364,7 +368,7 @@ class Auth extends CI_Controller
 	
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/get_autocreated_profile/'	;
-		$config['total_rows'] = $this->users->get_nmbr_activated(0);
+		$config['total_rows'] = $this->users->get_nmbr_activated(AUTO_CREATED_PROFILE);
 		$config['per_page'] = 3; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';

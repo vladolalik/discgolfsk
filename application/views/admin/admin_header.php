@@ -25,7 +25,7 @@
 	<div class="container">
 		<nav>
 			<ul id="main-nav">
-				<li><?php echo anchor('tournaments/admin_view_tournaments', 'ADMINISTRÁCIA', 'title="Tournaments", id="navigation-header"'); ?></li>
+				<li><?php echo anchor('tournaments/admin_view_tournaments', 'ADMINISTRATION', 'title="Tournaments", id="navigation-header"'); ?></li>
 				<li><?php echo anchor('', '<i class="fa fa-home"></i>Home', 'home'); ?> </li>
 				<li><?php echo anchor('auth/admin_get_all_players', '<i class="fa fa-users"></i>Players', 'title="Players"'); ?> </a> 
 					<ul> 
@@ -37,6 +37,7 @@
 					<ul>
 						<li><?php echo anchor('tournaments/admin_add_tournament', '<i class="fa fa-angle-right"></i>Add new tournament', 'title="Add new tournament"'); ?></li>
 						<li><?php echo anchor('tournaments/import', '<i class="fa fa-angle-right"></i>Import tournament', 'title="Add new tournament"'); ?></li>
+						<li><?php echo anchor('tournaments/admin_registered_players', '<i class="fa fa-angle-right"></i>Registered players', 'title="Registered players"'); ?></li>
 					</ul>
 				</li>
 				<li><?php echo anchor('auth/logout', '<i class="fa fa-key"></i>Logout', 'title="Logout"');?> </li>

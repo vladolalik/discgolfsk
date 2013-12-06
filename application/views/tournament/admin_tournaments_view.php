@@ -36,6 +36,7 @@
 				  </tr>';
 		}
 		echo '</table>';
+		echo $this->pagination->create_links();
 	} 
 	else
 	{
