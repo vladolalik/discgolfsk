@@ -156,6 +156,16 @@ nav #main-nav li ul{
 	width: 100%;
 	margin-top: 20px;
 }
+.admin-tournaments-table a{
+	border: 1px solid #446986;
+	margin: 5px 0px;
+	text-decoration: none;
+	color:#446986;
+	display: block;
+}.admin-tournaments-table a:hover{
+	background-color:#446986;
+	color: #ffffff;
+}
 .admin-tournaments-table th{
 	font-weight: normal;
 	height: 30px;
@@ -197,4 +207,61 @@ nav #main-nav li ul{
 	width: 15%;
 	display: block;
 	float: left;
+}
+.admin-player-avatar{
+	width: 64px;
+	height: 64px;
+}
+#admin-players-table{
+	text-align: center;
+	width: 100%;
+}
+#admin-players-table a{
+	border: 1px solid #446986;
+	margin: 5px 0px;
+	text-decoration: none;
+	color:#446986;
+	display: block;
+}
+#admin-players-table a:hover{
+	background-color:#446986;
+	color: #ffffff;
+}
+#admin-players-table th{
+	font-weight: normal;
+	border-bottom: 1px solid #000000;
+}
+#admin-players-table tr.second{
+	border-bottom: 1px solid #CCCCCC;
+}
+#admin-players-table td{
+	padding: 5px;
+}
+#admin-players-table span{
+	color: #9B9B9B;
+	font-size: 12px;
+}
+#admin-autocreated-profiles-table{
+	width: 100%;
+	text-align: center;
+}
+#admin-autocreated-profiles-table a{
+	border: 1px solid #446986;
+	margin: 5px 0px;
+	text-decoration: none;
+	color:#446986;
+	display: block;
+}
+#admin-autocreated-profiles-table a:hover{
+	background-color:#446986;
+	color: #ffffff;
+}
+#admin-autocreated-profiles-table tr{
+	line-height: 25px;
+}
+#admin-autocreated-profiles-table th{
+	font-weight: normal;
+	height: 30px;
+	line-height: 30px;
+	border-bottom: 1px solid #000000;
 }

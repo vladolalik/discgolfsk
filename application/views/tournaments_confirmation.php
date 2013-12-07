@@ -18,6 +18,7 @@
 			<th>Name</th>
 			<th>Surname</th>
 			<th>Nationality</th>
+			<th>Birth date</th>
 			<th>Connect</th>
 			<th>Category</th>
 		</tr>
@@ -30,6 +31,7 @@
 				$string .= '<td>'.$player['name'].'</td>';
 				$string .= '<td>'.$player['surname'].'</td>';
 				$string .= '<td>'.$player['nationality'].'</td>';
+				$string .= '<td>'.$player['birth_date'].'</td>';
 				if( $player['exist'] != -1){ //moznost parovania ak este nie je vytvoreny
 					$string .= '<td><input type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
 				}else{
@@ -45,10 +47,6 @@
 			echo $string;
 		?>
 		</table>
-
-		<input type='hidden' name='final_laps_data' value="<?php echo htmlentities(serialize($final_laps_data)); ?>" />
-		<input type='hidden' name='laps_data' value="<?php echo htmlentities(serialize($laps_data)); ?>" />
-		<input type='hidden' name='players' value="<?php echo htmlentities(serialize($players)); ?>" />
 
 		<?php
 

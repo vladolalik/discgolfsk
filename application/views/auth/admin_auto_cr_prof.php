@@ -8,7 +8,7 @@ if ($players == NULL)
 } 
 else
 {
-	echo '<table border="1"><tr>
+	echo '<table id="admin-autocreated-profiles-table" class="table-row-diff"><tr>
 								<th>First Name</th>
 								<th>Last name</th>
 								<th>Date of birth</th>

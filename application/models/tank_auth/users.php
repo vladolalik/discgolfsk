@@ -173,9 +173,9 @@ class Users extends CI_Model
 	* @param string
 	* @return int
 	*/
-	function __exists_profile($first_name, $last_name)
+	function __exists_profile($first_name, $last_name, $birth_date)
 	{
-		$query = $this->db->query("SELECT users.id as user_id FROM users, user_profiles WHERE users.id = user_profiles.user_id AND LOWER(user_profiles.first_name) = '".strtolower($first_name)."' AND LOWER(user_profiles.last_name) = '".strtolower($last_name)."'");
+		$query = $this->db->query("SELECT users.id as user_id FROM users, user_profiles WHERE users.id = user_profiles.user_id AND LOWER(user_profiles.first_name) = '".strtolower($first_name)."' AND LOWER(user_profiles.last_name) = '".strtolower($last_name)."' AND LOWER(user_profiles.birth_date) = '".strtolower($birth_date)."'");
 		if ($query->num_rows == 1)
 		{
 			$data = $query->row_array();

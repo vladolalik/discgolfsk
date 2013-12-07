@@ -8,50 +8,41 @@ if ($players == NULL)
 } 
 else
 {
-	echo '<table border="1"><tr><th>Picture</th>
-								<th>Email</th>
-								<th>Status</th>
-								<th>Created</th>
-								<th>First Name</th>
-								<th>Last name</th>
-								<th>Date of birth</th>
-								<th>Gender</th>
-								<th>Club</th>
-								<th>Update</th>
-								<th>Delete</th>
-							</tr>';
+	echo '<table id="admin-players-table" >';
 	foreach ($players as $player){
 		echo '<tr>';
 		if ($player['thumb'] != '')
 		{	
-			echo  '<td><img src="'.PATH_TO_USERS_AVATAR.$player['thumb'].'" width="128px" title="profile_picture_'.$player['last_name'].'" /></td>';
+			echo  '<td rowspan="2"><img class="admin-player-avatar" src="'.PATH_TO_USERS_AVATAR.$player['thumb'].'" width="128px" title="profile_picture_'.$player['last_name'].'" /></td>';
 		} 
 		else 
 		{
 			echo '<td></td>';
 		}
-
-		echo  '<td>'.$player['email'].'</td>';
+		echo  '<td><span>Name:</span><br/>'.$player['first_name'].'</td>';
+		echo  '<td><span>Surname:</span><br/>'.$player['last_name'].'</td>';
+		echo  '<td><span>Email:</span><br/>'.$player['email'].'</td>';
 		if ($player['activated'] == 0)
 		{
-			echo '<td>Not activated</td>';
+			echo '<td><span>Status:</span><br/>Not activated</td>';
 		}
 		else if ($player['activated'] == 1)
 		{
-			echo '<td>Activated</td>';
+			echo '<td><span>Status:</span><br/>Activated</td>';
 		} 
 		else 
 		{
-			echo '<td>Auto create</td>';
+			echo '<td><span>Status:</span><br/>Auto create</td>';
 		}
-		echo '<td>'.$player['created'].'</td>
-			  <td>'.$player['first_name'].'</td>
-			  <td>'.$player['last_name'].'</td>
-			  <td>'.$player['birth_date'].'</td>
-			  <td>'.$player['gender'].'</td>
-			  <td>'.$player['club'].'</td>'; 
 		echo ($player['activated']==2)? '<td>'.anchor('/auth/admin_update_auto_profile/'.$player['user_id'], 'Update', 'title="Update"').'</td>' : '<td> -- </td>';
-		echo '<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td></tr>';
+
+		echo '</tr>';
+		echo '<tr class="second">';
+			echo '<td colspan="2"><span>Created:</span><br/>'.$player['created'].'</td>
+			  <td><span>Birth date:</span><br/>'.$player['birth_date'].'</td>
+			  <td>'.$player['club'].'</td>'; 
+			echo '<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td>';
+		echo '</tr>';
 
 	}
 	echo '</table>';

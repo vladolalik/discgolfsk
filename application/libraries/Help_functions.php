@@ -69,7 +69,7 @@ class Help_functions{
 	* @return int
 	* 
 	*/
-	function exists_profile($first_name, $last_name)
+	function exists_profile($first_name, $last_name, $birth_date)
 	{
 
 		$this->ci =&get_instance();
@@ -79,7 +79,7 @@ class Help_functions{
 		// 	redirect();
 		// }
 		
-		return $this->ci->users->__exists_profile($first_name, $last_name);
+		return $this->ci->users->__exists_profile($first_name, $last_name,$birth_date);
 		
 	}
 

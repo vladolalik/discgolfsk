@@ -240,19 +240,21 @@ class Tournaments extends CI_Controller {
 	* @return string
 	* @author Branislav Ballon
 	*/
-	function __validete_player($name = "", $surname = "", $nationality = "", $category = "", $line_number = 0, $player_number = 0 ){
+	function __validete_player($name = "", $surname = "", $nationality = "", $category = "",$birth_date = "", $line_number = 0, $player_number = 0 ){
 		$v_errors = "";
 
 		$_POST['name'] 			= $name;					//ulozime
 		$_POST['surname']		= $surname;
 		$_POST['nationality'] 	= $nationality;
 		$_POST['category']		= $category;
+		$_POST['birth_date']	= $birth_date;
 
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('surname', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('nationality', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('category', '', 'trim|required|xss_clean|htmlspecialchars');
+		$this->form_validation->set_rules('birth_date', '', 'trim|required|xss_clean|htmlspecialchars');
 
 		if ($this->form_validation->run())
 		{
@@ -318,14 +320,16 @@ class Tournaments extends CI_Controller {
 					$surname				= $values[1];
 					$nationality 			= $values[2];   
 					$category				= $values[3];
+					$birth_date				= $values[4];
 
 					// volanie validacie
-					$player_errors = $this->__validete_player($name ,$surname ,$nationality ,$category, $line_number, $player_number );
+					$player_errors = $this->__validete_player($name ,$surname ,$nationality ,$category, $birth_date, $line_number, $player_number );
 					if( $player_errors == ""){ // ak nie su errory ulozim ho a zapamatam si jeho id
 						$valid_players[$player_number]['name'] 			= $name;
 						$valid_players[$player_number]['surname'] 		= $surname;
 						$valid_players[$player_number]['nationality'] 	= $nationality;
 						$valid_players[$player_number]['category'] 		= $category;
+						$valid_players[$player_number]['birth_date'] 	= $birth_date;
 					}else{
 						$v_errors .= $player_errors;
 						$data['validation_errors']  .= $player_errors;
@@ -410,7 +414,7 @@ class Tournaments extends CI_Controller {
 	function __check_players_existence($players){
 		foreach ($players as $key => $player) {
 			//debug($player);
-			$player_id = $this->help_functions->exists_profile($player['name'],$player['surname']);
+			$player_id = $this->help_functions->exists_profile($player['name'],$player['surname'], $player['birth_date']);
 			if( $player_id ){
 				$players[$key]['exist'] = $player_id;
 				//$creating_errors .= "<div>Hrac:".$player['name']." ".$player['surname']." uz existuje ".$key.". v poradi v svn subore </div>";
@@ -550,6 +554,7 @@ class Tournaments extends CI_Controller {
 
 			}
 		}
+		$this->redirect('tournamets/view_results');
 	}
 
 
