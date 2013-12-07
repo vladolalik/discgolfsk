@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <title><?php echo $title; ?></title>
  
-<link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
+<link rel="stylesheet" href="<?= base_url() ?>assets/css/admin-style.css">
 <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>	
 <script type="text/javascript" src="<?= base_url() ?>tinymce/tinymce.min.js"></script>	
 <script type="text/javascript" src="<?= base_url() ?>assets/js/scripts.js"></script>	

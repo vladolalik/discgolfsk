@@ -34,7 +34,7 @@ else
 		{
 			echo '<td><span>Status:</span><br/>Auto create</td>';
 		}
-		echo ($player['activated']==2)? '<td>'.anchor('/auth/admin_update_auto_profile/'.$player['user_id'], 'Update', 'title="Update"').'</td>' : '<td> -- </td>';
+		echo ($player['activated']==2)? '<td class="table-line-height">'.anchor('/auth/admin_update_auto_profile/'.$player['user_id'], 'Update', 'title="Update"').'</td>' : '<td> -- </td>';
 
 		echo '</tr>';
 		echo '<tr class="second">';

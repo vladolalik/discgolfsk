@@ -8,7 +8,7 @@ ul, li, h1, body,p { margin: 0; padding: 0; }
 body{
 	font-family: Verdana;
 	font-size: 14px;
-	background-image: url('../img/hoffman.png'); 
+	/*background-image: url('../img/hoffman.png'); */
 }
 table{
 border-collapse:collapse;
@@ -51,7 +51,30 @@ input[type=text], input[type=date]{
 input[type=submit]{
 	border-radius: none;
 }
-
+.stat-line{
+	width: 100%;
+	height: 0px;
+	border-top: 2px solid #5A8EB6;
+	border-bottom: 1px solid #446986;
+}
+/* HEADER
+------------------------------------------------------------*/
+#header{
+	background-image: url('../img/line-body.png') ; 
+	background-repeat: repeat-x;
+	padding-top: 20px;
+	font-family: 'Exo 2', sans-serif;
+	height: 85px;
+	/*line-height: 60px;*/
+}
+#header a{
+	float: left;
+}
+#header h1{ 
+	float:left;
+	text-transform: capitalize;
+	font-size: 14px;
+}
 /* NAVIGATION
 ------------------------------------------------------------*/
 nav i{
@@ -114,154 +137,4 @@ nav #main-nav li ul{
 	margin: auto;
 }
 
-/* CONTENT
-------------------------------------------------------------*/
-#content{
-	float: left;
-	/*padding: 0px 20px; */
-	width: 735px;
-	/*background-color: #F1F1F1;	*/
-	background-color: #F1F1F1;
-}
-#content h1{
-	font-size: 0.875em;
-	background-color: #5A8EB6;	
-	height: 50px;
-	line-height: 50px;
-	color: #ffffff;
-	border: none;
-	text-align: center;
-/*	-webkit-box-shadow: 0 6px 6px -6px black;
-	-moz-box-shadow: 0 6px 6px -6px black;
-	box-shadow: 0px 7px 10px -5px black;*/
-	border-bottom: 3px solid #446986;
-	padding-left: 0px; 
-	margin-bottom: 20px;
-}
-#header{
-	background-color: #5A8EB6;
-	height: 50px;
-	margin-bottom: 15px;
-	color: #ffffff;
-	border-bottom: 3px solid #446986;
-}
-#header h1{
-	line-height: 50px;
-	padding-left: 20px;
-}
 
-/* ADMIN - SPECIFIC
-------------------------------------------------------------*/
-.admin-tournaments-table{
-	width: 100%;
-	margin-top: 20px;
-}
-.admin-tournaments-table a{
-	border: 1px solid #446986;
-	margin: 5px 0px;
-	text-decoration: none;
-	color:#446986;
-	display: block;
-}.admin-tournaments-table a:hover{
-	background-color:#446986;
-	color: #ffffff;
-}
-.admin-tournaments-table th{
-	font-weight: normal;
-	height: 30px;
-	line-height: 30px;
-	border-bottom: 1px solid #000000;
-}
-
-.admin-tournaments-table tr{
-	line-height: 25px;
-}
-.admin-tournaments-table tr td{
-	padding: 0px 5px;
-}
-#add-tournament{
-
-}
-#add-tournament tr{
-	line-height: 30px;
-	height: 30px;
-}
-#activate-players{
-	width: 100%;
-}
-.player-error{
-	padding: 10px;
-	border-bottom: 1px solid #CCCCCC;
-}
-#confirmation-errors{
-	margin-top: 10px;
-}
-#confirmation-errors table{
-	width: 100%;
-	text-align: center;
-}
-#confirmation-errors input[type=submit]{
-	float: right;
-}
-#tournament-import-new label{
-	width: 15%;
-	display: block;
-	float: left;
-}
-.admin-player-avatar{
-	width: 64px;
-	height: 64px;
-}
-#admin-players-table{
-	text-align: center;
-	width: 100%;
-}
-#admin-players-table a{
-	border: 1px solid #446986;
-	margin: 5px 0px;
-	text-decoration: none;
-	color:#446986;
-	display: block;
-}
-#admin-players-table a:hover{
-	background-color:#446986;
-	color: #ffffff;
-}
-#admin-players-table th{
-	font-weight: normal;
-	border-bottom: 1px solid #000000;
-}
-#admin-players-table tr.second{
-	border-bottom: 1px solid #CCCCCC;
-}
-#admin-players-table td{
-	padding: 5px;
-}
-#admin-players-table span{
-	color: #9B9B9B;
-	font-size: 12px;
-}
-#admin-autocreated-profiles-table{
-	width: 100%;
-	text-align: center;
-}
-#admin-autocreated-profiles-table a{
-	border: 1px solid #446986;
-	margin: 5px 0px;
-	text-decoration: none;
-	color:#446986;
-	display: block;
-}
-#admin-autocreated-profiles-table a:hover{
-	background-color:#446986;
-	color: #ffffff;
-}
-#admin-autocreated-profiles-table tr{
-	line-height: 25px;
-}
-#admin-autocreated-profiles-table th{
-	font-weight: normal;
-	height: 30px;
-	line-height: 30px;
-	border-bottom: 1px solid #000000;
-}

@@ -1,9 +1,23 @@
-<!DOCTYPE HTML>
-<html>
-	<HEAD>
-	      <TITLE><?php echo $title; ?></TITLE>
-	</HEAD>
-	<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title><?php echo $title; ?></title>
+ 
+<link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
+<link href='http://fonts.googleapis.com/css?family=Exo+2&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<body>
+	<section id="header">
+		<div class="container">
+			<a href=""><img src="<?= base_url() ?>assets/img/logo.png" alt="discgolf.sk"/></a>
+			<h1>Statistics 1.0</h1>
+			<div class="clear">&nbsp;</div>
+		</div>	
+		<div class="stat-line">&nbsp;</div>	
+		<div class="clear">&nbsp;</div>
+	</section>
+
+	<div class="container">
 		<nav>
 			<ul>
 
