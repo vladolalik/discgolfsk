@@ -914,7 +914,9 @@ class Auth extends CI_Controller
 					//	}
 						unset($data['password']); // Clear password (just for any case)
 
-						$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+						//$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+						$this->session->set_flashdata('message', '<p class="success">Your profile was successfully created, now you must wait until admin confirm your registration</p>');
+						redirect('tournaments/view_results');
 					}
 				} else {
 					$errors = $this->tank_auth->get_error_message();

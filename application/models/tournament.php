@@ -300,7 +300,7 @@ function delete_tournament($tournament_id)
     }
     $query = $this->db->where('tournament_id', $tournament_id)
                       ->delete('players_has_tournaments');
-    $query = $this->db->where('tournaments_tournament_id', $tournament_id)
+    $query = $this->db->where('tournament_id', $tournament_id)
                       ->delete('registered_players');
     $query = $this->db->where('tournament_id', $tournament_id)
                       ->delete('results');

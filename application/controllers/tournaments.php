@@ -899,7 +899,7 @@ function view_individual_results()
 	$this->form_validation->set_rules('name','Name','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('about','About','trim|xss_clean');
 	$this->form_validation->set_rules('allow_registration','Allow registration','trim|xss_clean|strip_tags');
-	$this->form_validation->set_rules('date','Date','required|xss_clean|callback_datecheck');
+	$this->form_validation->set_rules('date','Date','required|xss_clean');
 	$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
@@ -938,6 +938,7 @@ function view_individual_results()
 
 	}		
 }
+
 
 
 function admin_delete_tournament()
