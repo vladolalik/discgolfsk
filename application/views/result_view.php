@@ -49,7 +49,7 @@
 		//die();
 		echo '<h2>'.$results['0']['name'].' ('.$results['0']['date'].')</h2>';
 		echo '<h3> <i class="fa fa-angle-right"></i> '.$results['0']['category'].'</h3>'; ?>
-		<table class="Statistics" border="1px">
+		<table id="results-table" class="statistics table-row-diff">
 		<tr>
 			<?php 
 			if ($results != NULL)
@@ -59,12 +59,12 @@
 						<th>Player</th>';
 			 	for ($i=1; $i<=$results['0']['nmbr_of_round'];$i++)
 			 	{
-			 		echo '<th>Round '.$i.' ('.$results['0']['no_bskts_'.$i].')</th>';
+			 		echo '<th>'.$i.' <span>('.$results['0']['no_bskts_'.$i].')</span></th>';
 			 	}																//header of table
 			 	echo '<th>Total</th>';
 			 	for ($i=1; $i<=$results['0']['nmbr_of_fnl_laps'];$i++)
 			 	{
-			 		echo '<th>Final round '.$i.' ('.$results['0']['no_final_'.$i].')</th>';
+			 		echo '<th>Final'.$i.'<span>('.$results['0']['no_final_'.$i].')</span></th>';
 			 	}
 
 			 	echo '<th>Total</th>
@@ -73,40 +73,42 @@
 			 	foreach ($results as $key=>$row_array)
 			 	{
 			 		echo '<tr>';
-			 		echo '<td>'.$row_array['rank'].'</td>';
+			 		echo '<td class="text-center" >'.$row_array['rank'].'</td>';
 			 		echo '<td>'.anchor('/tournaments/view_individual_results/'.$row_array['user_id'], $row_array['first_name'].' '.$row_array['last_name'], 'target="blank"').'</td>';
 			 		$total = 0;
 			 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
 			 		{
 			 			if ($row_array['lap_'.$i] == NULL)
 			 			{
-			 				echo '<td>--</td>';
+			 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
 			 			} 
 			 			else 
 			 			{
-			 				echo '<td>'.$row_array['lap_'.$i].'</td>';
+			 				echo '<td class="text-center" >'.$row_array['lap_'.$i].'</td>';
 			 				$total = $total + $row_array['lap_'.$i];
 			 			}
 			 		}
-			 		echo '<td>'.$total.'</td>';
+			 		echo '<td class="text-center" >'.$total.'</td>';
 
 			 		for ($i=1; $i<=$row_array['nmbr_of_fnl_laps'];$i++)
 			 		{	
 			 			if ($row_array['final_'.$i] == NULL)
 			 			{
-			 				echo '<td>--</td>';
+			 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
 			 			} 
 			 			else 
 			 			{	
 			 				$total = $total + $row_array['final_'.$i];
-			 				echo '<td>'.$row_array['final_'.$i].'</td>';
+			 				echo '<td class="text-center" >'.$row_array['final_'.$i].'</td>';
 			 			}
 			 			
 			 		}
 			 		$i = $i-1;
 			 		if ($row_array['final_'.$i] != NULL)
 			 		{
-			 			echo '<td>'.$total.'</td>';
+			 			echo '<td class="text-center" >'.$total.'</td>';
+			 		}else{
+			 			echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
 			 		}
 
 			 		echo '</tr>';

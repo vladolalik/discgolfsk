@@ -106,6 +106,7 @@ nav i{
 	font-size: 1.25em;
 }
 nav{
+	margin-top: 10px;
 	float: left;
 	min-width: 200px;
 	background-color: #F1F1F1;
@@ -163,6 +164,9 @@ nav #main-nav li ul{
 }
 /* CONTENT
 --------------------------------------------------------*/
+#content{
+	margin-top: 10px;
+}
 #content {
 	float: left;
 	padding: 0px 20px;
@@ -194,4 +198,98 @@ nav #main-nav li ul{
 }
 #results-submit{
 	margin-bottom: 25px;
+}
+#content a{
+	text-decoration: none;
+	border-radius: none;
+	border: 1px solid #00AFAF;
+	cursor: pointer;
+	color:  #008F8F;
+	padding: 5px;
+	line-height:  30px;
+}
+#content a:hover{
+	border-radius: none;
+	border: 1px solid #00AFAF;
+	background-color: inherit;
+	cursor: pointer;
+	background-color: #00AFAF;
+	color: #ffffff;
+	padding: 5px;
+}
+#results-table{
+	width: 100%;
+}
+#results-table th{
+	/*color: #00AFAF;*/
+	font-size: 14px;
+	font-weight: normal;
+}
+#results-table td i{
+	color: #474747;
+}
+#results-table th span{
+	font-size: 12px;
+	color: #474747;
+}
+#results-table  ,#results-table  th, #results-table td{
+	border: 1px solid #CCCCCC;;
+}
+#results-table a{
+	border: 0px;
+	text-decoration: underline;
+}
+#results-table a:hover{
+	border: none;
+}
+#my_profile{
+	text-align: left;
+}
+.profile-table{
+	width: 100%;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.profile-table th{
+	/*color: #00AFAF;*/
+	font-size: 14px;
+	font-weight: normal;
+}
+.profile-table td i{
+	color: #474747;
+}
+.profile-table th span{
+	font-size: 12px;
+	color: #474747;
+}
+.profile-table  ,.profile-table  th, .profile-table td{
+	border: 1px solid #CCCCCC;
+}
+.profile-tablea{
+	border: 0px;
+	text-decoration: underline;
+}
+.profile-table a:hover{
+	border: none;
+}
+#my-profile-table{
+	text-align: left;
+	float: left;
+	margin-left: 20px;
+}
+#my-profile-table th{
+	font-size: 12px;
+}
+#my-profile-table td{
+	
+}
+#profile-thumb{
+	float: left;
+	padding: 5px;
+	background-color: white;
+	border: 2px solid #00AFAF;
+}
+#profile-thumb img{
+	display: block;
+
 }

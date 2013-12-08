@@ -2,33 +2,33 @@
 <?php $this->load->view('header', array('title' => 'Results', 'caption' => $results['0']['first_name'].' '.$results['0']['last_name'])); ?>
 <?php //print_r($results); ?>
 
-<div id="thumb"><?php echo '<img src="'.PATH_TO_USERS_AVATAR.$thumb.'" width="128px" title="profile_picture_'.$last_name.'" />'; ?> </div>
-<h2> <?php echo $first_name.' '.$last_name; ?> </h2>
-<table class="my_profile">
+<div id="profile-thumb"><?php echo '<img src="'.PATH_TO_USERS_AVATAR.$thumb.'" width="128px" title="profile_picture_'.$last_name.'" />'; ?> </div>
+<table id="my-profile-table">
 	<tr>
-		<th>Country</th>
+		<th>Country: </th>
 		<td><?php echo $country; ?></td>
 	</tr>
 	<tr>
-		<th>Gender</th>
+		<th>Gender: </th>
 		<td><?php echo $gender; ?></td>
 	</tr>
 	<tr>
-		<th>Club</th>
+		<th>Club: </th>
 		<td><?php echo $club; ?></td>
 	</tr>
 	<tr>
-		<th>About</th>
+		<th>About: </th>
 		<td><?php echo $about; ?></td>
 	</tr>
 </table>
+<div class="clear">&nbsp;</div>
 
 
 <?php
-			foreach($results as $key=>$row)
+			foreach($results as $key => $row)
 			{
 				echo '<h2>Tournament: '.$row['name'].' ('.$row['date'].')</h2>';
-				echo '<table border="1px">';
+				echo '<table class="profile-table">';
 				echo '<tr> 
 						<th>Rank</th>';
 			 	for ($i=1; $i<=$row['nmbr_of_round'];$i++)
