@@ -80,6 +80,18 @@ option:hover,
 option:focus,
 option:active,
 option:checked { background-color: red; }
+#pagination .next a{
+	margin-left: 5px;
+}
+#pagination strong{
+	border-radius: none;
+	border: 1px solid #00AFAF;
+	background-color: inherit;
+	cursor: pointer;
+	background-color: #00AFAF;
+	color: #ffffff;
+	padding: 5px;
+}
 /* HEADER
 ------------------------------------------------------------*/
 #header{
@@ -197,7 +209,9 @@ nav #main-nav li ul{
 	height: 0px;
 }
 #results-submit{
+	margin-top: 60px;
 	margin-bottom: 25px;
+	float: left;
 }
 #content a{
 	text-decoration: none;
@@ -293,3 +307,79 @@ nav #main-nav li ul{
 	display: block;
 
 }
+#result-tournaments{
+	float: left;
+}
+#result-players{
+	float: left;
+}
+#result-categories{
+	float: left;
+}
+.tournament-review{ 
+	border-bottom: 1px solid #cccccc;
+	padding-bottom: 10px;
+}
+#content .tournament-review h3{
+	font-size: 20px;
+}
+.tournament-review .tournament-picture{
+	float: left;
+	width: 300px;
+	padding: 5px;
+	border: 2px solid #00AFAF;
+	background-color: #ffffff;
+}
+.tournament-review .tournament-picture img{
+	width: 300px;
+	display: block;
+}
+#content .tournament-review .tournament-picture a{
+	border:0px;
+}
+#content .tournament-review .tournament-picture a:hover{
+	border:0px;
+}
+.tournament-review .tournament-info{
+	float: left;
+	padding-left: 30px;
+	width: 340px;
+}
+.tournament-review .tournament-info span{
+	color: #474747;
+	font-size: 14px;
+}
+#content .tournament-review .tournament-detail{
+	display: block; 
+	width: 60px;
+	margin-top: 5px;
+	text-align: center;
+}
+#about{
+	margin-top: 20px;
+	font-weight: normal;
+	border-bottom: 1px solid #cccccc;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+#about div{
+	border-bottom: 1px solid #cccccc;
+	margin-bottom: 5px;
+}
+#about strong{
+	font-weight: normal;
+}
+.registration-row{
+	padding: 10px 0px;
+	border-top: 1px solid #cccccc;
+}
+#registration-table input, #registration-table select{
+	width: 200px;
+}
+#registration-submit{
+	margin-top: 25px;
+	margin-bottom: 25px;
+	display: block;
+	width: 80px;
+}
+

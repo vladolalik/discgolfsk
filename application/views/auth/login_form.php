@@ -82,9 +82,11 @@ echo $this->session->flashdata('message');
 	</tr>
 	<?php }
 	} ?>
-
 	<tr>
-		<td colspan="3">
+		<td colspan="3"> <?php echo form_submit('submit', 'Let me in'); ?> </td>
+	</tr>
+	<tr class="registration-row-wrapper">
+		<td colspan="3" class="registration-row"> 
 			<?php echo form_checkbox($remember); ?>
 			<?php echo form_label('Remember me', $remember['id']); ?>
 			<?php echo anchor('/auth/forgot_password/', 'Forgot password'); ?>
@@ -92,5 +94,5 @@ echo $this->session->flashdata('message');
 		</td>
 	</tr>
 </table>
-<?php echo form_submit('submit', 'Let me in'); ?>
+
 <?php echo form_close(); ?>

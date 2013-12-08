@@ -85,7 +85,7 @@ $about = array (
 echo $this->input->post('first_name');
 ?>
 <?php echo form_open($this->uri->uri_string()); ?>
-<table>
+<table id="registration-table">
 	<?php if ($use_username) { ?>
 	<tr>
 		<td><?php echo form_label('Username', $username['id']); ?></td>
@@ -181,5 +181,5 @@ echo $this->input->post('first_name');
 	<?php }
 	} ?>
 </table>
-<?php echo form_submit('register', 'Register'); ?>
+<?php echo form_submit('register', 'Register', 'id="registration-submit"'); ?>
 <?php echo form_close(); ?>

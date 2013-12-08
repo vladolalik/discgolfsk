@@ -40,6 +40,7 @@
 </select>
 
 <input id="results-submit" type="submit" value="show">
+<br class="clear"/>
 <div class="content-simple-line">&nbsp;</div>
 <?php echo form_close(); ?>
 <?php 
