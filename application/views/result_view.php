@@ -1,10 +1,7 @@
 <!-- autor Vlado Lalik -->
 <?php $this->load->view('header', array('title' => 'Results', 'caption' => 'Results')); ?>
-<div id="container">
-	
-	
  <?php echo form_open('tournaments/view_results'); ?>
-<select name="tournaments" size="5">
+<select name="tournaments" id="result-tournaments" size="5">
   <?php foreach($tournaments as $key=>$row):
   	if ($key == 0)
   	{
@@ -18,7 +15,7 @@
    endforeach; ?>
 </select>
 
-<select name="players" size="5">
+<select name="players" id="result-players" size="5">
   <option value='ALL' <?php echo set_select('players', 'ALL', TRUE);?>> ALL PLAYERS </option>
   <?php
   	foreach($users as $key=>$row): 
@@ -26,7 +23,7 @@
   	endforeach;
   ?>
 </select>
-<select name="categories" size="5">
+<select name="categories" id="result-categories" size="5">
   <?php
   	var_dump($categories);
   	foreach($categories as $key=>$row):
@@ -42,15 +39,16 @@
   ?>
 </select>
 
-<input type="submit">
+<input id="results-submit" type="submit" value="show">
+<div class="content-simple-line">&nbsp;</div>
 <?php echo form_close(); ?>
 <?php 
 	if (isset($results) && $results != NULL)
 	{
 		//var_dump($results);
 		//die();
-		echo '<h1>'.$results['0']['name'].' ('.$results['0']['date'].')</h1>';
-		echo '<h2>'.$results['0']['category'].'</h2>'; ?>
+		echo '<h2>'.$results['0']['name'].' ('.$results['0']['date'].')</h2>';
+		echo '<h3> <i class="fa fa-angle-right"></i> '.$results['0']['category'].'</h3>'; ?>
 		<table class="Statistics" border="1px">
 		<tr>
 			<?php 
@@ -118,10 +116,9 @@
 
 			?>
 		</table>
+
 <?php }
 	//print_r($results); ?>
   
   
-</div>
-</body>
-</html>
+<?php $this->load->view('footer'); ?>
