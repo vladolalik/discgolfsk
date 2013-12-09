@@ -92,6 +92,11 @@ option:checked { background-color: #00AFAF; }
 	color: #ffffff;
 	padding: 5px;
 }
+#flash-data{
+	color: #00AFAF;
+	font-weight: bold;
+	padding-left: 20px;
+}
 /* HEADER
 ------------------------------------------------------------*/
 #header{

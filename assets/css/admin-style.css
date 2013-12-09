@@ -77,7 +77,11 @@ input[type=submit]{
 	color: #ffffff;
 	padding: 5px;
 }
-
+#flash-data{
+	color: #5A8EB6;
+	font-weight: bold;
+	padding-left: 20px;
+}
 /* NAVIGATION
 ------------------------------------------------------------*/
 nav i{

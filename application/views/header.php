@@ -55,7 +55,7 @@
 		</nav>
 
 		<section id="content">
-		<?php	echo $this->session->flashdata('message');
-			  	echo '<h1>'.$caption.'</h1>';
-		?>
-	
+		<h1><?php echo $caption; ?></h1>
+		<div id="flash-data">
+			<?php echo $this->session->flashdata('message'); ?>
+		</div>

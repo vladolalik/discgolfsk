@@ -554,7 +554,8 @@ class Tournaments extends CI_Controller {
 
 			}
 		}
-		$this->redirect('tournamets/view_results');
+		$this->session->set_flashdata('message', 'data imported');
+		redirect('tournaments/admin_view_tournaments');
 	}
 
 
