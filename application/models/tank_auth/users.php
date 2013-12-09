@@ -115,9 +115,9 @@ class Users extends CI_Model
 
 		$query = $this->db->get($this->table_name);
 		*/
-		$query = $this->db->query("SELECT u.users.id 
+		$query = $this->db->query("SELECT u.id 
 								   FROM statistics_users u 
-								   WHERE (u.users.id = $id AND (u.users.username='auto' OR u.users.activated='2'))");
+								   WHERE (u.id = $id AND (u.username='auto' OR u.activated='2'))");
 
 		if ($query->num_rows() == 1) return TRUE;
 		return FALSE;
