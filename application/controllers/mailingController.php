@@ -20,18 +20,18 @@ class MailingController extends CI_Controller {
   
   function send(){
     $this->load->library('form_validation');    
-    $this->form_validation->set_rules('from', 'sender adress', 'required|xss_clean|htmlspecialchars|valid_email');
-    $this->form_validation->set_rules('to', 'destination adress', 'required|xss_clean|htmlspecialchars|valid_emails');
-    $this->form_validation->set_rules('message', 'message text', 'required|xss_clean|htmlspecialchars');
-    $this->form_validation->set_rules('subject', 'subject', 'required|xss_clean|htmlspecialchars');
+    $this->form_validation->set_rules('input_from', 'sender adress', 'required|xss_clean|htmlspecialchars|valid_email');
+    $this->form_validation->set_rules('input_to', 'destination adress', 'required|xss_clean|htmlspecialchars|valid_emails');
+    $this->form_validation->set_rules('input_subject', 'subject', 'required|xss_clean|htmlspecialchars');
+    $this->form_validation->set_rules('message', 'message text', 'required|xss_clean|htmlspecialchars');     
     
     if ($this->form_validation->run()) {
       $config = array(
         'protocol' => "smtp",
         'smtp_host' => "ssl://smtp.googlemail.com",
         'smtp_port' => 465,
-        'smtp_user' => "tguncaga@gmail.com",
-        'smtp_pass' => "xxxxxxxxxxxtajne",
+        'smtp_user' => "email here",
+        'smtp_pass' => "password here",
         'mailtype'  => "html", 
         'charset'   => "utf-8"
       );
@@ -39,9 +39,9 @@ class MailingController extends CI_Controller {
       $this->email->set_newline("\r\n");  
       
       $params = array(
-        'from' =>$_POST['from'],
-        'to' =>$_POST['to'],
-        'subject' =>$_POST['subject'],
+        'from' =>$_POST['input_from'],
+        'to' =>$_POST['input_to'],
+        'subject' =>$_POST['input_subject'],
         'message' =>$_POST['message'],
       );  
       
@@ -77,14 +77,13 @@ class MailingController extends CI_Controller {
         $data['sent_cc'] = $cc_unique;        
       }                       
           
-      //$this->mail_model->send($params);
+      $this->mail_model->send($params);
       
-      $data['sent_to'] = $_POST['to'];      
+      $data['sent_to'] = $_POST['input_to'];      
       $data['user'] = $this->mail_model->selectAll();    
       $data['tournaments'] = $this->mail_model->selectTournaments();  
       $data['cathegories'] = $this->mail_model->selectCathegories();  
-      $this->load->view('mail_view', $data);
-      //$this->load->view('mail_send_view');      
+      $this->load->view('mail_view', $data);  
     } else {
       $data['user'] = $this->mail_model->selectAll();    
       $data['tournaments'] = $this->mail_model->selectTournaments();  
