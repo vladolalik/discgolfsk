@@ -213,7 +213,6 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`registered_players` (
   `accommodation` TINYINT(1) NULL ,
   `nutrition` TINYINT(1) NULL DEFAULT NULL ,
   `user_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`user_id`) ,
   INDEX `fk_REGISTERED_PLAYERS_TOURNAMENTS1` (`tournament_id` ASC) ,
   INDEX `fk_REGISTERED_PLAYERS_CATEGORIES1` (`category_id` ASC) ,
   CONSTRAINT `fk_REGISTERED_PLAYERS_CATEGORIES1`
