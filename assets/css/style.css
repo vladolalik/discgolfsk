@@ -79,7 +79,7 @@ select{
 option:hover,
 option:focus,
 option:active,
-option:checked { background-color: red; }
+option:checked { background-color: #00AFAF; }
 #pagination .next a{
 	margin-left: 5px;
 }
