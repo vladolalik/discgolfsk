@@ -137,13 +137,13 @@ class Tournament extends CI_Model{
         return NULL;
     }
 
-    function get_all_players()
+     function get_all_players()
     {
 
-        $query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, users.username, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
-                                    FROM users, user_profiles 
-                                    WHERE (users.activated = '1' OR users.activated = '2' OR LOWER(users.username) = 'auto' ) AND users.id = user_profiles.user_id
-                                    ORDER BY LOWER(user_profiles.last_name)
+        $query = $this->db->query( "SELECT statistics_users.id as user_id, statistics_user_profiles.first_name, statistics_users.username, statistics_user_profiles.last_name, statistics_user_profiles.club, statistics_user_profiles.gender, statistics_user_profiles.birth_date, statistics_users.email 
+                                    FROM statistics_users, statistics_user_profiles 
+                                    WHERE (statistics_users.activated = '1' OR statistics_users.activated = '2' OR LOWER(statistics_users.username) = 'auto' ) AND statistics_users.id = statistics_user_profiles.user_id
+                                    ORDER BY LOWER(statistics_user_profiles.last_name)
                                  ");
         if ($query->num_rows > 0) return $query->result_array();
     
@@ -154,8 +154,8 @@ class Tournament extends CI_Model{
 
         $player = ($player_id != 'ALL')? 'AND p.user_id ='.$player_id : '';
         $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name, n.*
-                                    FROM tournaments t, categories c, results r, user_profiles u, players_has_tournaments p, 
-                                    number_of_baskets n
+                                    FROM statistics_tournaments t, statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
+                                    statistics_number_of_baskets n
                                     WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id AND
                                          p.category_id = c.category_id AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
                                           $player AND c.category_id = '$category_id' AND r.result_id = n.result_id
@@ -185,8 +185,8 @@ class Tournament extends CI_Model{
     {
 
         $query = $this->db->query(" SELECT u.*, c.category, c.category_id, r.*, p.final, p.disqualified, t.*, n.*
-                                    FROM tournaments t, categories c, results r, user_profiles u, players_has_tournaments p, 
-                                    number_of_baskets n
+                                    FROM statistics_tournaments t, statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
+                                    statistics_number_of_baskets n
                                     WHERE u.user_id=p.user_id AND c.category_id = p.category_id AND t.tournament_id = p.tournament_id AND
                                           p.category_id=c.category_id AND r.tournament_id=p.tournament_id AND p.user_id=r.user_id AND
                                           p.user_id='$player_id' AND r.result_id=n.result_id
@@ -251,10 +251,10 @@ function update_photo($tournament_id, $filename, $thumb){
     if ($query->num_rows == 1) 
     {
         $old_data = $query->row_array(); 
-        if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
+        if ($old_data['thumb'] != '' && $old_data['photo'] != '') 
         {
-            unlink('uploads/images/'.$old_data['thumb']);
-            unlink('uploads/images/'.$old_data['photo']);
+            unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['thumb']);
+            unlink($_SERVER['DOCUMENT_ROOT'] .'/statistics/uploads/images/'.$old_data['photo']);
         }
         $this->db->where('tournament_id', $tournament_id);
         $arr = array(
