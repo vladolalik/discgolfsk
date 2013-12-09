@@ -157,8 +157,8 @@ class Auth extends CI_Controller
 	/**
 	* Function reject request for activation
 	* auto created will be set to default and others will be deleted
-	*
-	*
+	* @author Vladimir Lalik
+	* @return void
 	*/
 	function admin_reject_activation()
 	{
@@ -188,7 +188,7 @@ class Auth extends CI_Controller
 
 	/**
 	* Function for update user's profile
-	*
+	* @author Vladimir Lalik
 	*
 	* @return void
 	*/
@@ -199,13 +199,13 @@ class Auth extends CI_Controller
 		{
 			$id = $this->session->userdata('id');
 			$data = $this->users->get_user_profile($id);
-			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
-			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
-			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
-			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean|strip_tags');
 			
 			if ($this->form_validation->run())  // update profile
 			{	
@@ -258,11 +258,11 @@ class Auth extends CI_Controller
 			redirect();
 		}
 		
-		$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
-		$this->form_validation->set_rules('gender', 'Gender', 'trim|xss_clean');
-		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean|strip_tags');
+		$this->form_validation->set_rules('gender', 'Gender', 'trim|xss_clean|strip_tags');
+		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|xss_clean|strip_tags');
 
 		if ($this->form_validation->run()){
 			$data = array(
@@ -535,14 +535,14 @@ class Auth extends CI_Controller
 			if ($use_username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
-			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
-			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
-			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
-			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
-			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email|strip_tags');
+			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean|strip_tags');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
 
@@ -649,7 +649,7 @@ class Auth extends CI_Controller
 					$this->config->item('use_username', 'tank_auth'));
 			$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
 
-			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean||strip_tags');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('remember', 'Remember me', 'integer');
 
@@ -689,11 +689,13 @@ class Auth extends CI_Controller
 					$user_profile['role'] = $role;
 					unset($user_session);		
 					$this->session->set_userdata($user_profile);
+					$this->session->set_flashdata('message', '<p class="success">Welcome '.$user_profile['first_name'].' '.$user_profile['last_name'].'!</p>');
 					if ($this->help_functions->is_admin())
 					{
+						
 						redirect('auth/admin_get_all_players');
 					}
-					redirect('');
+					redirect('tournaments/view_results');
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
@@ -745,7 +747,7 @@ class Auth extends CI_Controller
 					$this->config->item('use_username', 'tank_auth'));
 			$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');
 
-			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean|strip_tags');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 			$this->form_validation->set_rules('remember', 'Remember me', 'integer');
 
@@ -783,13 +785,13 @@ class Auth extends CI_Controller
 					$user_profile['id'] = $id;
 					$user_profile['email'] = $email;
 					$user_profile['role'] = $role;
-					unset($user_session);		
-					$this->session->set_userdata($user_profile);
+					unset($user_session);
+					$this->session->set_flashdata('message', '<p class="success">Welcome '.$user_profile['first_name'].' '.$user_profile['last_name'].'!</p>');
 					if ($this->help_functions->is_admin())
 					{
 						redirect('auth/admin_get_all_players');
 					}
-					//redirect('');
+					redirect('tournaments/view_results');
 
 				} else {
 					$errors = $this->tank_auth->get_error_message();
@@ -852,14 +854,14 @@ class Auth extends CI_Controller
 			if ($use_username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->config->item('username_min_length', 'tank_auth').']|max_length['.$this->config->item('username_max_length', 'tank_auth').']|alpha_dash');
 			}
-			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
-			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean');
-			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean');
-			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email');
-			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean');
-			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('club', 'Club', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('about', 'About', 'trim|xss_clean|strip_tags');
+			$this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email|strip_tags');
+			$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean|strip_tags');
+			$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|required|xss_clean|strip_tags');
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean|matches[password]');
 
