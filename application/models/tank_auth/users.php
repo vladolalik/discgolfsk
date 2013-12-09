@@ -93,8 +93,8 @@ class Users extends CI_Model
 			$old_data = $query->row_array(); 
 			if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
 			{
-				unlink('uploads/images/'.$old_data['thumb']);
-				unlink('uploads/images/'.$old_data['photo']);
+				unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['thumb']);
+				unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['photo']);
 			}
 			$this->db->where('user_id', $user_id);
 			$arr = array(
@@ -115,9 +115,9 @@ class Users extends CI_Model
 
 		$query = $this->db->get($this->table_name);
 		*/
-		$query = $this->db->query("SELECT users.id 
-								   FROM users 
-								   WHERE (users.id = $id AND (users.username='auto' OR users.activated='2'))");
+		$query = $this->db->query("SELECT u.users.id 
+								   FROM statistics_users u 
+								   WHERE (u.users.id = $id AND (u.users.username='auto' OR u.users.activated='2'))");
 
 		if ($query->num_rows() == 1) return TRUE;
 		return FALSE;
@@ -126,22 +126,23 @@ class Users extends CI_Model
 
 	function get_inactive_users($from = 0, $count = 0)
 	{
-		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, users.username, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email 
-									FROM users, user_profiles 
-									WHERE users.activated = 0 AND users.id = user_profiles.user_id
-									ORDER BY user_profiles.last_name
+		$query = $this->db->query( "SELECT u.id as user_id, p.first_name, u.username, p.last_name, p.club, 
+										   p.gender, p.birth_date, u.email 
+									FROM statistics_users u, statistics_user_profiles p
+									WHERE u.activated = 0 AND u.id = p.user_id
+									ORDER BY p.last_name
 									LIMIT $from,$count");
 		if ($query->num_rows > 0) return $query->result_array();
 	}
 
 	function __get_all_users($from = 0, $count = 0)
 	{
-		$query = $this->db->query( "SELECT users.id as user_id, 
-									user_profiles.first_name, user_profiles.thumb, user_profiles.photo, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date, users.email, users.activated, 
-									users.created
-									FROM users, user_profiles 
-									WHERE users.id = user_profiles.user_id /*AND users.role!='admin'*/
-									ORDER BY LOWER(user_profiles.last_name)  /*, users.activated*/
+		$query = $this->db->query( "SELECT u.id as user_id, 
+									p.first_name, p.thumb, p.photo, p.last_name, p.club, p.gender, p.birth_date, u.email, u.activated, 
+									u.created
+									FROM statistics_users u, statistics_user_profiles p 
+									WHERE u.id = p.user_id /*AND users.role!='admin'*/
+									ORDER BY LOWER(p.last_name)  /*, users.activated*/
 									LIMIT $from,$count");
 		if ($query->num_rows() > 0) return $query->result_array();
 		return NULL;
@@ -157,10 +158,10 @@ class Users extends CI_Model
 	function get_autocreated_profiles($from = 0, $count = 0)
 	{
 
-		$query = $this->db->query( "SELECT users.id as user_id, user_profiles.first_name, user_profiles.last_name, user_profiles.club, user_profiles.gender, user_profiles.birth_date  
-									FROM users, user_profiles 
-									WHERE users.activated = 2 AND users.id = user_profiles.user_id
-									ORDER BY user_profiles.last_name
+		$query = $this->db->query( "SELECT u.id as user_id, p.first_name, p.last_name, p.club, p.gender, p.birth_date  
+									FROM statistics_users u, statistics_user_profiles p
+									WHERE u.activated = 2 AND u.id = p.user_id
+									ORDER BY p.last_name
 									LIMIT $from,$count");
 		if ($query->num_rows > 0) return $query->result_array();
 
@@ -175,7 +176,9 @@ class Users extends CI_Model
 	*/
 	function __exists_profile($first_name, $last_name, $birth_date)
 	{
-		$query = $this->db->query("SELECT users.id as user_id FROM users, user_profiles WHERE users.id = user_profiles.user_id AND LOWER(user_profiles.first_name) = '".strtolower($first_name)."' AND LOWER(user_profiles.last_name) = '".strtolower($last_name)."' AND LOWER(user_profiles.birth_date) = '".strtolower($birth_date)."'");
+		$query = $this->db->query("SELECT u.id as user_id 
+								   FROM statistics_users u, statistics_user_profiles p
+								   WHERE u.id = p.user_id AND LOWER(p.first_name) = '".strtolower($first_name)."' AND LOWER(user_profiles.last_name) = '".strtolower($last_name)."' AND LOWER(user_profiles.birth_date) = '".strtolower($birth_date)."'");
 		if ($query->num_rows == 1)
 		{
 			$data = $query->row_array();
