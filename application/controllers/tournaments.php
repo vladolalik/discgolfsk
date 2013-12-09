@@ -589,9 +589,9 @@ class Tournaments extends CI_Controller {
   function view_results()
   {
 
-  	 $this->form_validation->set_rules('tournaments', 'Tournaments', 'trim|required|xss_clean');
-  	 $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean');
-  	 $this->form_validation->set_rules('categories', 'Categories', 'trim|required|xss_clean');
+  	 $this->form_validation->set_rules('tournaments', 'Tournaments', 'trim|required|xss_clean|strip_tags');
+  	 $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean|strip_tags');
+  	 $this->form_validation->set_rules('categories', 'Categories', 'trim|required|xss_clean|strip_tags');
 
   	if ($this->form_validation->run())
   	{
@@ -966,7 +966,7 @@ function view_tournaments()
 	$this->load->library('pagination');
 	$config['base_url'] = base_url().'index.php/tournaments/view_tournaments/'	;
 	$config['total_rows'] = $this->tournament->get_nmbr_tournaments();
-	$config['per_page'] = 3; 
+	$config['per_page'] = 3;  
 	$config['full_tag_open'] = '<div id="pagination">';
 	$config['full_tag_close'] = '</div>';
 						
