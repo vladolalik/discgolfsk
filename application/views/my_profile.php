@@ -1,6 +1,5 @@
 <?php $this->load->view('header', array('title' => 'My profile', 'caption' => 'My profile')); ?>
 <div id="thumb"><?php echo '<img src="'.PATH_TO_USERS_AVATAR.$thumb.'" width="128px" title="profile_picture_'.$last_name.'" />'; ?> </div>
-<div id="content">
 <h2> <?php echo $first_name.' '.$last_name; ?> </h2>
 <table class="my_profile">
 	<tr>
@@ -20,5 +19,3 @@
 		<td><?php echo $about; ?></td>
 	</tr>
 </table>
-
-</div>
