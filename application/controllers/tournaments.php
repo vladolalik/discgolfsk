@@ -547,7 +547,7 @@ class Tournaments extends CI_Controller {
 					if( !isset($final_laps_data[$key]) ){
 						$final_laps_data[$key] = null;						
 					}
-					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname']);
+					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname'], null, null, $player['birth_date']);
 					$this->__save_player_data($tournament_id, $new_player_id, $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
 				}

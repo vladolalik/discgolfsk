@@ -4,6 +4,7 @@
 */
  $this->load->view('admin/admin_header', array('title'=>'Import tournament | Discgolf', 'caption'=>'Import tournament')); 
  ?>
+ <?php debug($players);?>
 <?php echo form_open('tournaments/save_import_data');?>
 <?php 	
 	if( isset( $validation_errors ) ){
