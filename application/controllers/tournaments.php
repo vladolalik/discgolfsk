@@ -99,7 +99,8 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		if($this->form_validation->run()){
-			if ($this->form_validation->set_value('allow_registration') == NULL)
+			$allow_registration=$this->form_validation->set_value('allow_registration');
+			if ($allow_registration == NULL)
 			{
 				$allow_registration = 0;	
 			}
