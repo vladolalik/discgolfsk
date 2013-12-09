@@ -382,4 +382,30 @@ nav #main-nav li ul{
 	display: block;
 	width: 80px;
 }
+#my-profile{
+ 	padding-bottom: 15px;
+}
+#my-profile h2{
+	margin-bottom: 20px;
+}
+#my-profile-image img{
+	display: block;
+	
+}
+#my-profile-image{
+	width: 128px;
+	float: left;
+	border: 1px solid #00AFAF;
+	padding: 5px;
+	background-color: #ffffff;
+}
+#my-profile-info{
+	float: left;
+	margin-left: 20px;
+	width: 520px;
+	text-align: left;
+}
+#my-profile-info table td{
+	padding-left: 10px;
+}
 
