@@ -569,7 +569,7 @@ class Auth extends CI_Controller
 				'gender' => $this->form_validation->set_value('gender'),
 				'club' => $this->form_validation->set_value('club'),
 				'about' => $this->form_validation->set_value('about'),
-				'country' => $this->form_validation->set_value(\'country'),
+				'country' => $this->form_validation->set_value('country'),
 			);	
 
 			$user_data = array(
@@ -893,7 +893,18 @@ class Auth extends CI_Controller
 			);
 
 
-			if ($this->form_validation->run()) {								// validation ok
+			if ($this->form_validation->run()) {
+
+				$user_info = array(
+					'first_name' =>  $this->form_validation->set_value('first_name'),
+					'last_name'  => $this->form_validation->set_value('last_name'),
+					'birth_date' => $this->form_validation->set_value('birth_date'),
+					'gender' => $this->form_validation->set_value('gender'),
+					'club' => $this->form_validation->set_value('club'),
+					'about' => $this->form_validation->set_value('about'),
+					'country' => $this->form_validation->set_value('country')
+				);
+											// validation ok
 				if (!is_null($data = $this->tank_auth->create_user(
 						$use_username ? $this->form_validation->set_value('username') : '',
 						$this->form_validation->set_value('email'),
