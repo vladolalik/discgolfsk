@@ -406,7 +406,10 @@ class Auth extends CI_Controller
 	*/
 	function admin_get_all_players()
 	{
-	
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_all_players/'	;
 		$config['total_rows'] = $this->users->get_nmbr_all();
@@ -560,13 +563,13 @@ class Auth extends CI_Controller
 			$email_activation = $this->config->item('email_activation', 'tank_auth');
 			/* edit by Vlado profile attributes for user*/
 			$user_info = array(
-				'first_name' =>  $this->input->post('first_name'),
-				'last_name'  => $this->input->post('last_name'),
-				'birth_date' => $this->input->post('birth_date'),
-				'gender' => $this->input->post('gender'),
-				'club' => $this->input->post('club'),
-				'about' => $this->input->post('about'),
-				'country' => $this->input->post('country'),
+				'first_name' =>  $this->form_validation->set_value('first_name'),
+				'last_name'  => $this->form_validation->set_value('last_name'),
+				'birth_date' => $this->form_validation->set_value('birth_date'),
+				'gender' => $this->form_validation->set_value('gender'),
+				'club' => $this->form_validation->set_value('club'),
+				'about' => $this->form_validation->set_value('about'),
+				'country' => $this->form_validation->set_value(\'country'),
 			);	
 
 			$user_data = array(
@@ -603,7 +606,8 @@ class Auth extends CI_Controller
 					//	}
 						unset($data['password']); // Clear password (just for any case)
 
-						$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+						//$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+						$this->session->set_flashdata('message', '<p class="success">Your registration was successfull. Now wait for activation of your profile</p>');
 					}
 				} else {
 					$errors = $this->tank_auth->get_error_message();
@@ -828,8 +832,8 @@ class Auth extends CI_Controller
 	function logout()
 	{
 		$this->tank_auth->logout();
-
-		$this->_show_message($this->lang->line('auth_message_logged_out'));
+		redirect('tournaments/view_results');
+		//$this->_show_message($this->lang->line('auth_message_logged_out'));
 	}
 
 	/**
@@ -879,13 +883,13 @@ class Auth extends CI_Controller
 			$email_activation = $this->config->item('email_activation', 'tank_auth');
 			/* edit by Vlado profile attributes for user*/
 			$user_info = array(
-				'first_name' =>  $this->input->post('first_name'),
-				'last_name'  => $this->input->post('last_name'),
-				'birth_date' => $this->input->post('birth_date'),
-				'gender' => $this->input->post('gender'),
-				'club' => $this->input->post('club'),
-				'about' => $this->input->post('about'),
-				'country' => $this->input->post('country')
+				'first_name' =>  $this->form_validation->set_value('first_name'),
+				'last_name'  => $this->form_validation->set_value('last_name'),
+				'birth_date' => $this->form_validation->set_value('birth_date'),
+				'gender' => $this->form_validation->set_value('gender'),
+				'club' => $this->form_validation->set_value('club'),
+				'about' => $this->form_validation->set_value('about'),
+				'country' => $this->form_validation->set_value('country')
 			);
 
 
