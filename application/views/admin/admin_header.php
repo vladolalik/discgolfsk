@@ -9,11 +9,19 @@
 <script type="text/javascript" src="<?= base_url() ?>tinymce/tinymce.min.js"></script>	
 <script type="text/javascript" src="<?= base_url() ?>assets/js/scripts.js"></script>	
 
-	<script type="text/javascript">
-		tinymce.init({
-		selector: "textarea.tinymc"
-			});
-	</script>
+	<script>
+tinymce.init({
+    selector: "textarea.tinymc",
+    theme: "modern",
+    plugins: [
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+         "save table contextmenu directionality emoticons template paste textcolor"
+   ],
+   content_css: "css/content.css",
+   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
+ }); 
+</script>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
 <body>
 	<section id="header">
@@ -40,6 +48,7 @@
 						<li><?php echo anchor('tournaments/admin_registered_players', '<i class="fa fa-angle-right"></i>Registered players', 'title="Registered players"'); ?></li>
 					</ul>
 				</li>
+				<li><?php echo anchor('mailingController', 'Mailing List', 'title="Mailing list"'); ?></li>
 				<li><?php echo anchor('auth/logout', '<i class="fa fa-key"></i>Logout', 'title="Logout"');?> </li>
 			</ul>		
 		</nav>
