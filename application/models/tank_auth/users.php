@@ -258,6 +258,15 @@ class Users extends CI_Model
 		return NULL;
 	}
 
+	function get_all_user_by_id($user_id)
+	{
+		$this->db->where('id', $user_id);
+
+		$query = $this->db->get($this->table_name);
+		if ($query->num_rows() == 1) return $query->row();
+		return NULL;
+	}
+
 	/**
 	 * Get user profile record by Id
 	 *
@@ -692,7 +701,7 @@ class Users extends CI_Model
 	private function __delete_profile($user_id)
 	{
 
-		$data = $this->get_user_by_id($user_id);
+		$data = $this->get_all_user_by_id($user_id);
 		if ($data->role != 'admin') 
 		{	
 			$this->db->where('user_id', $user_id);
