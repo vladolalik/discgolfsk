@@ -160,10 +160,10 @@ class Tournament extends CI_Model{
                                          p.category_id = c.category_id AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
                                           $player AND c.category_id = '$category_id' AND r.result_id = n.result_id
                                     ORDER BY 
-                                            CASE WHEN ISNULL (r.final_3) THEN 9999 END,
-                                            CASE WHEN ISNULL (r.final_2) THEN 99999 END,
-                                            CASE WHEN ISNULL (r.final_1) THEN 999999 END,
-                                            ISNULL(p.disqualified) DESC, r.points
+                                            CASE WHEN (r.final_3 IS NULL) THEN 9999 END,
+                                            CASE WHEN (r.final_2 IS NULL) THEN 99999 END,
+                                            CASE WHEN (r.final_1 IS NULL) THEN 999999 END,
+                                            (case when p.disqualified is null then 1 else 0 end) DESC, r.points
 
                                 ");
         if ($query->num_rows()>0)
@@ -191,10 +191,11 @@ class Tournament extends CI_Model{
                                           p.category_id=c.category_id AND r.tournament_id=p.tournament_id AND p.user_id=r.user_id AND
                                           p.user_id='$player_id' AND r.result_id=n.result_id
                                     ORDER BY  
-                                            CASE WHEN ISNULL (r.final_3) THEN 9999 END,
-                                            CASE WHEN ISNULL (r.final_2) THEN 99999 END,
-                                            CASE WHEN ISNULL (r.final_1) THEN 999999 END,
-                                            ISNULL(p.disqualified) DESC, r.points
+                                            CASE WHEN  (r.final_3 IS NULL) THEN 9999 END,
+                                            CASE WHEN  (r.final_2 IS NULL) THEN 99999 END,
+                                            CASE WHEN  (r.final_1 IS NULL) THEN 999999 END,
+                                            (case when p.disqualified is null then 1 else 0 end)
+                                             DESC, r.points
 
                                 ");
         if ($query->num_rows()>0)
@@ -253,8 +254,8 @@ function update_photo($tournament_id, $filename, $thumb){
         $old_data = $query->row_array(); 
         if ($old_data['thumb'] != '' && $old_data['photo'] != '') 
         {
-            unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['thumb']);
-            unlink($_SERVER['DOCUMENT_ROOT'] .'/statistics/uploads/images/'.$old_data['photo']);
+            unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/tournaments/'.$old_data['thumb']);
+            unlink($_SERVER['DOCUMENT_ROOT'] .'/statistics/uploads/tournaments/'.$old_data['photo']);
         }
         $this->db->where('tournament_id', $tournament_id);
         $arr = array(
