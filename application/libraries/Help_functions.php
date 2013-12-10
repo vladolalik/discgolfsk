@@ -32,7 +32,10 @@ class Help_functions{
 	{
 		$this->ci = & get_instance();
 		$this->ci->load->model('tank_auth/users');
-		$data = $this->ci->users->get_user_by_id($user_id, 1);
+		$data = $this->ci->users->get_all_user_by_id($user_id);
+		if ($data == NULL){
+			return false;
+		}
 		if ($data->role == 'admin')
 		{
 			return true;
