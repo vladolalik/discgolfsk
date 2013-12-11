@@ -65,6 +65,28 @@
 	<tr>
 	<?php
 		$options=array(
+			'name'	=>'lat',
+			'id'	=>'lat',
+			'value' => set_value('lat', $lat)
+		); 
+		echo '<td>'.form_label('Lattitude: ','lat').'</td>';
+		echo '<td>'.form_input($options).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
+			'name'	=>'lng',
+			'id'	=>'lng',
+			'value' => set_value('lng', $lng)
+		); 
+		echo '<td>'.form_label('Longtitude: ','lng').'</td>';
+		echo '<td>'.form_input($options).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
 			'name'	=>'allow_registration',
 			'id'	=>'allow_registration',
 			'value' => '1',

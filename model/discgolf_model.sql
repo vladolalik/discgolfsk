@@ -50,6 +50,8 @@ CREATE  TABLE IF NOT EXISTS `discgolf`.`statistics_tournaments` (
   `photo` VARCHAR(200) NULL DEFAULT NULL ,
   `thumb` VARCHAR(200) NULL DEFAULT NULL ,
   `allow_registration` INT NULL DEFAULT 0 ,
+  `lat` DOUBLE NULL DEFAULT NULL ,
+  `lng` DOUBLE NULL DEFAULT NULL ,
   PRIMARY KEY (`tournament_id`) )
 ENGINE = InnoDB;
 

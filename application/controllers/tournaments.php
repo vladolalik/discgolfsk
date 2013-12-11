@@ -97,6 +97,8 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 		$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+		$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
+		$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		if($this->form_validation->run()){
 			$allow_registration=$this->form_validation->set_value('allow_registration');
@@ -112,7 +114,9 @@ class Tournaments extends CI_Controller {
 					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
 					'about' => $this->form_validation->set_value('about'),
-					'allow_registration' => $allow_registration
+					'allow_registration' => $allow_registration,
+					'lat'=>$this->form_validation->set_value('lat'),
+					'lng'=>$this->form_validation->set_value('lng'),
 				);
 			
 				
@@ -905,6 +909,8 @@ function view_individual_results()
 	$this->form_validation->set_rules('location','Location','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+	$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
 	$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 	if($this->form_validation->run()){
 		$allow_registration = $this->form_validation->set_value('allow_registration');
@@ -920,7 +926,9 @@ function view_individual_results()
 					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
 					'about' => $this->form_validation->set_value('about'),
-					'allow_registration' => $allow_registration
+					'allow_registration' => $allow_registration,
+					'lat'=>$this->form_validation->set_value('lat'),
+					'lng'=>$this->form_validation->set_value('lng')
 				);
 			
 				

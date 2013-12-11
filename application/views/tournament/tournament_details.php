@@ -1,6 +1,37 @@
 
 <?php  $this->load->view('header', array('title'=>$name.' ('.$date.')', 'caption'=>$name.' ('.$date.')')); ?>
+	<?php if ($lat!=NULL && $lng!=NULL) 
+		{?>
+				<script type="text/javascript"
+						src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpi1dR8C9bQijGV6L3nC7xxwKNI2sCDA&sensor=false">
+		    </script>
+		    	</script>
+				<script>
+					var myCenter=new google.maps.LatLng(<?php echo $lat  ?>,<?php echo $lng ?>);
+					var marker;
 
+					function initialize()
+					{
+					var mapProp = {
+					  center:myCenter,
+					  zoom:15,
+					  mapTypeId:google.maps.MapTypeId.HYBRID
+					  };
+
+					var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+					marker=new google.maps.Marker({
+					  position:myCenter,
+					  icon:'http://discgolf.sk/statistics/uploads/icon.png',
+					  animation:google.maps.Animation.BOUNCE
+					  });
+
+					marker.setMap(map);
+					}
+
+					google.maps.event.addDomListener(window, 'load', initialize);
+				</script>
+	<?php } ?>
 	<div class="tournament-review">
 		<div class="tournament-picture"><?php echo '<a href="'.PATH_TO_TOURNAMENT_THUMB.$photo.'" ><img src="'.PATH_TO_TOURNAMENT_THUMB.$thumb.'"  title="tournament_avatar_'.$name.'" /></a>'; ?> </div>
 		<div class="tournament-info">
@@ -14,6 +45,7 @@
 			<div>About:</div>
 			<?php echo $about; ?>
 		</div>
+   		<div id="googleMap" style="width:650px;height:380px;"></div>
 		<div id="regist_form">
 			<?php
 			//print_r($will);

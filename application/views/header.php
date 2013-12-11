@@ -6,7 +6,9 @@
  
 <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
 <link href='http://fonts.googleapis.com/css?family=Exo+2&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+</head> 
 <body>
 	<section id="header">
 		<div class="container">
