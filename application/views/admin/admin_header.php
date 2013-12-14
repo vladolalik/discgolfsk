@@ -48,6 +48,11 @@ tinymce.init({
 						<li><?php echo anchor('tournaments/admin_registered_players', '<i class="fa fa-angle-right"></i>Registered players', 'title="Registered players"'); ?></li>
 					</ul>
 				</li>
+				<li><?php echo anchor('tournaments/admin_get_categories', 'Categories', 'title="Categories"'); ?>
+					<ul>
+						<li><?php echo anchor('tournaments/admin_add_category', 'Add new category', 'title="Add new category"'); ?></li>
+					</ul>
+				</li>
 				<li><?php echo anchor('mailingController', 'Mailing List', 'title="Mailing list"'); ?></li>
 				<li><?php echo anchor('auth/logout', '<i class="fa fa-key"></i>Logout', 'title="Logout"');?> </li>
 			</ul>		

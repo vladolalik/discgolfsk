@@ -1109,7 +1109,126 @@ function admin_registered_players()
 	}
 
 }
+
+/**
+* Function that view all categories
+* @author Vladimir Lalik
+* @return void
+*/
+function admin_get_categories()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$data['categories'] = $this->tournament->get_categories();
+	$this->load->view('categories_view', $data);
+}
+
+/**
+* Function for update category name
+* @author Vladimir Lalik
+*
+* @return void
+*/
+function admin_update_cat()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$category_id = $this->uri->segment(3);
+	$this->form_validation->set_rules('category', 'Category_name', 'trim|required|min_length[2]|xss_clean');
+	if ($this->form_validation->run())
+	{
+		$data = array(
+			'category'=>$this->form_validation->set_value('category')
+		);
+
+		if ($this->tournament->udpate_category($category_id, $data))
+		{
+			$this->session->set_flashdata('message', '<p class="success">Category was updated</p>');
+			redirect('tournaments/admin_get_categories');
+		}
+		else
+		{
+			$this->session->set_flashdata('message', '<p class="fail">Category was not updated</p>');
+			$this->load->view('update_category', $data);
+		}
+	}
+	else 
+	{	
+		$data = $this->tournament->get_category_by_id($category_id);
+		if ($data==NULL)
+		{
+			redirect('tournaments/admin_get_categories');
+		}
+		$this->load->view('update_category', $data);
+	}
+}
+
+/**
+* Function add new category 
+*
+* @author Vladimir Lalik
+* @return void
+*/
   
+function admin_add_category()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$this->form_validation->set_rules('category', 'Category_name', 'trim|required|min_length[2]|xss_clean');
+	if ($this->form_validation->run())
+	{
+		$data = array(
+			'category'=>$this->form_validation->set_value('category')
+		);
+
+		if ($this->tournament->add_category($data))
+		{
+			$this->session->set_flashdata('message', '<p class="success">New category was added.</p>');
+			redirect('tournaments/admin_get_categories');
+		}
+		else
+		{
+			$this->session->set_flashdata('message', '<p class="fail">Category was not added.</p>');
+			redirect('tournaments/add_category');
+		}
+	}
+	else 
+	{	
+		$this->load->view('add_category');
+	}
+}
+
+/**
+* Function delete category
+* 
+*@author Vladimir Lalik
+* @return void
+*/
+function admin_delete_cat()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$category_id = $this->uri->segment(3);
+	if ($this->tournament->delete_cat($category_id))
+	{
+		$this->session->set_flashdata('message', '<p class="success">Category was deleted</p>');
+		redirect('tournaments/admin_get_categories');
+	}
+	else 
+	{
+		$this->session->set_flashdata('message', '<p class="fail">Category was not deleted</p>');
+		redirect('tournaments/admin_get_categories');	
+	}
+}
+
 }
 
 ?>

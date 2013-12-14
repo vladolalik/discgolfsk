@@ -137,6 +137,81 @@ class Tournament extends CI_Model{
         return NULL;
     }
 
+    /** 
+    * Function return category data by id
+    * 
+    * @param int
+    * @return array
+    */
+    function get_category_by_id($category_id)
+    {
+        $select=$this->db->where('category_id', $category_id)
+                         ->get('categories');
+        if ($select->num_rows()==1)
+        {
+            return $select->row_array();
+        }
+        return NULL;
+    }
+
+    /**
+    * Function update category
+    * 
+    * @param int
+    * @return bool
+    */
+    function udpate_category($category_id, $data)
+    {
+        $this->db->where('category_id', $category_id)
+                 ->update('categories', $data);
+        if ($this->db->affected_rows()==1)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Function add new category
+    *
+    * @param string
+    */
+    function add_category($data)
+    {
+        $query=$this->db->insert('categories', $data);
+        if ($this->db->affected_rows()==1)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Function delete category by id
+    * 
+    * 
+    * @param int
+    * @return bool
+    */
+    function delete_cat($category_id)
+    {
+        $this->db->where('category_id', $category_id)
+                 ->delete('categories');
+
+        if($this->db->affected_rows()==1)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Function return all activated or auto-created players
+    *
+    * @author Vladimir Lalik
+    * @return array
+    */
+
      function get_all_players()
     {
 
