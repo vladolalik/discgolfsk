@@ -136,9 +136,9 @@ $config['captcha_case_sensitive'] = TRUE;
 | You can get reCAPTCHA keys by registering at http://recaptcha.net
 |--------------------------------------------------------------------------
 */
-$config['use_recaptcha'] = FALSE;
-$config['recaptcha_public_key'] = '';
-$config['recaptcha_private_key'] = '';
+$config['use_recaptcha'] = TRUE;
+$config['recaptcha_public_key'] = '6LeSkesSAAAAAPQwW7NWg4mh2g-UwZ0Z4UzYts1h';
+$config['recaptcha_private_key'] = '6LeSkesSAAAAABFY__1JNiY_CdbTe6M4kdT-42_u';
 
 /*
 |--------------------------------------------------------------------------
