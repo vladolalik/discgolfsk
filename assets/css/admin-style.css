@@ -135,6 +135,9 @@ nav ul li a:hover{
 nav li ul a{
 	padding-left: 27px
 }
+nav li a:hover i{
+	color: #446986;
+}
 nav #main-nav li ul{
 
 }

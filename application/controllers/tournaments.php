@@ -434,10 +434,10 @@ class Tournaments extends CI_Controller {
 
 
 	/**
-	* Funkcia
+	* Funkcia ktorá, zisťuje existenciu kategórie
 	*
 	*
-	* @return void
+	* @return array
 	* @author Branislav Ballon
 	*/
 	function __check_categories_existence($players){
@@ -474,7 +474,13 @@ class Tournaments extends CI_Controller {
 		return $maximum_laps;
 	}
 
-
+	/**
+	* Function to save player imported data
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
 	function __save_player_data( $tournament_id, $user_id, $player_laps_data, $player_final_laps_data = NULL, $number_of_laps, $number_of_final_laps, $category_id ){
 		$points = 0;
 		$data = array();
@@ -517,7 +523,7 @@ class Tournaments extends CI_Controller {
 	}
 
 	/**
-	* Funkcia
+	* Fumction to save loaded data
 	*
 	*
 	* @return void
@@ -1228,6 +1234,39 @@ function admin_delete_cat()
 		redirect('tournaments/admin_get_categories');	
 	}
 }
+
+
+/**
+* Function mual add results 
+*@author Branislav Ballon
+* @return void
+*/
+function admin_add_result(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('player_id', 'trim|required');
+		
+		if ($this->form_validation->run()){
+			// ulozime
+			debug($_POST);
+			// $data = array(
+			// 	'text' => $_POST['text'],
+			// );
+			
+			// $this->notes_model->addNote($data);
+			
+			// redirect('notes');
+		}
+		else{
+			// chyba
+			$data['tournaments'] 	= $this->tournament->get_all_tournaments();
+			$data['players'] 		= $this->tournament->get_all_players();
+			$this->load->view( 'tournament/add_results', $data );
+		}
+
+	
+}
+
+
 
 }
 

@@ -170,7 +170,9 @@ nav ul li a:hover{
 nav li ul a{
 	padding-left: 27px
 }
-
+nav li a:hover i{
+	color: #008F8F;
+}
 nav #main-nav li ul{
 
 }
