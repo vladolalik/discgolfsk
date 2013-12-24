@@ -755,6 +755,7 @@ function compute_rank($player_id, $tournament_id, $category_id)
 function view_individual_results()
 {
 	$player_id = $this->uri->segment(3);
+
 	$data = $this->tournament->get_user_data($player_id);
 	$data['results'] = $this->tournament->get_player_stats($player_id);
 	foreach ($data['results'] as $key => $row)
@@ -768,6 +769,9 @@ function view_individual_results()
 					$data['results'][$key]['rank'] = $this->compute_rank($player_id, $row['tournament_id'], $row['category_id']);
 				}
 	}
+	//get stats for every round and basket
+	$data['laps'] = $this->tournament->get_lap_info($player_id);
+	//
 	$this->load->view('individual_stats', $data);
 }
   
@@ -1262,11 +1266,80 @@ function admin_add_result(){
 			$data['players'] 		= $this->tournament->get_all_players();
 			$this->load->view( 'tournament/add_results', $data );
 		}
-
-	
 }
 
 
+/**
+* Function that set par for laps
+* @author Vladimir Lalik
+* @return void
+*/
+
+function admin_set_par_lap()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$tournament_id = $this->uri->segment(3);
+	
+	
+	$this->form_validation->set_rules('category_id','Category','trim|required|xss_clean|strip_tags');
+	$data['categories']=$this->tournament->get_categories();
+
+	// set validation rules for all fields
+	foreach($data['categories'] as $category)
+	{
+		for ($i=1; $i<=20; $i++)
+		{
+			$this->form_validation->set_rules('basket_'.$i.'_'.$category['category_id'], 'Basket '.$i, 'trim|xss_clean|is_numeric');
+		}
+	}
+	if ($this->form_validation->run())
+	{
+		//zapis
+		//skotrolujem vsetky kategorie
+		foreach ($data['categories'] as $key => $value) {
+			if ($this->form_validation->set_value('basket_1_'.$value['category_id'])!=NULL)
+			{	
+				$result = FALSE;
+				for ($i=1; $i<=20; $i++)
+				{
+					if ($this->form_validation->set_value('basket_'.$i.'_'.$value['category_id'])!=NULL)
+					{
+						
+						$result = $result || $this->tournament->set_lap_par($tournament_id, $value['category_id'], $this->form_validation->set_value('basket_'.$i.'_'.$value['category_id']),$i);
+						
+					}
+				}
+			}
+		}
+		if ($result)
+		{
+			$this->session->set_flashdata('message', '<p class="success">Par was updated</p>');
+		}
+		else 
+		{
+			$this->session->set_flashdata('message', '<p class="fail">Som date was probably not updated. Please check it</p>');	
+		}
+		redirect('tournaments/admin_set_par_lap/'.$tournament_id);
+	}
+	 else
+	{
+		$par = $this->tournament->get_par_by_id($tournament_id);
+		foreach ($par as $key => $value){
+			//$row['basket_'.$value['number'].$value['category_id']] =array('par'=>$value['par'], 'category_id'=>$value['category_id']);
+			$row['basket_'.$value['number'].$value['category_id']] =$value['par'];
+		}
+		$data['unique_par'] = NULL;
+		if (isset($row)){
+			$data['unique_par'] = $row;	
+		}
+		print_r($data['unique_par']);
+		$this->load->view('tournament/admin_set_par', $data);
+	} 
+
+}
 
 }
 

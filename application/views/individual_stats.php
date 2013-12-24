@@ -25,9 +25,12 @@
 
 
 <?php
+			//print_r($laps);
+			//print_r($results);
 			foreach($results as $key => $row)
 			{
 				echo '<h2>Tournament: '.$row['name'].' ('.$row['date'].')</h2>';
+				echo '<h3>Category: '.$row['category'].'</h3>';
 				echo '<table class="profile-table">';
 				echo '<tr> 
 						<th>Rank</th>';
@@ -82,6 +85,86 @@
 			 	}
 
 			 	echo '</tr>';
+			 	echo '</table>';
+
+			 	// lap statistics
+			 	echo '<table border="1px">
+			 							<tr>
+			 								<th>Basket no.</th>
+			 								<th>1</th>
+			 								<th>2</th>
+			 								<th>3</th>
+			 								<th>4</th>
+			 								<th>5</th>
+			 								<th>6</th>
+			 								<th>7</th>
+			 								<th>8</th>
+			 								<th>9</th>
+			 								<th>10</th>
+			 								<th>11</th>
+			 								<th>12</th>
+			 								<th>13</th>
+			 								<th>14</th>
+			 								<th>15</th>
+			 								<th>16</th>
+			 								<th>17</th>
+			 								<th>18</th>
+			 								<th>19</th>
+			 								<th>20</th>
+			 							</tr>';
+
+
+			 	// normal laps
+			 	for ($i = 1; $i <= $row['nmbr_of_round']; $i++ )
+			 	{	
+			 		if ($i==1)
+			 		{
+				 		$par = '<tr><th>Par</th>';
+				 		$stats = '<tr><th> Round 1</th>';
+				 	} 
+				 	else 
+				 	{
+				 		echo '<tr><th>Round '.$i.'</th>';
+				 	}
+				 	$count = 1; // pocitadlo kol, aby som mohol vypisat par pre vsetky kose 
+			 		foreach ($laps as $key => $value) 
+			 		{
+			 			if ($row['tournament_id'] == $value['tournament_id'] && $value['final']==NULL)
+			 			{
+				 			if ($i == 1 && $value['count'] == $count)
+				 			{
+				 				$par = $par.'<td>'.$value['par'].'</td>';
+				 				$count++;
+				 				if ($value['number'] == $i)
+				 				{
+				 					$stats  = $stats.'<td>'.$value['shots'].'</td>';
+				 				}
+				 			}
+				 			else if ($value['number'] == $i)
+				 			{
+				 				echo '<td>'.$value['shots'].'</td>';
+				 			}
+				 		}
+			 		}
+			 		if ($i == 1){
+			 			echo $par.'</tr>';
+			 			echo $stats.'</tr>';
+			 		}
+			 	}
+
+			 	//final laps
+			 	for ($i = 1; $i <= $row['nmbr_of_fnl_laps']; $i++ )
+			 	{	
+			 		echo '<tr><th>Final round '.$i.'</th>';
+			 		foreach ($laps as $key => $value) 
+			 		{
+			 			if ($row['tournament_id'] == $value['tournament_id'] && $value['number'] == $i && $value['final']==1)
+			 			{
+			 				echo '<td>'.$value['shots'].'</td>';
+			 			}
+			 		}
+			 		echo '</tr>';
+			 	}
 			 	echo '</table>';
 			 }
 

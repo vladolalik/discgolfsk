@@ -454,4 +454,58 @@ function get_by_date($date)
     return $query->result_array();
 }
 
+/**
+* Function return data about every lap for player with id from parameter.
+* @author Vladimir Lalik
+* @param int
+* @return array
+*/
+function get_lap_info($player_id)
+{
+    $select = $this->db->query("SELECT l.tournament_id, b.par, b.shots, l.number, l.final, t.nmbr_of_round, t.nmbr_of_fnl_laps, b.number count 
+                                FROM statistics_lap l, statistics_basket b, statistics_tournaments t
+                                WHERE l.user_id='$player_id' AND l.lap_id=b.lap_id AND t.tournament_id=l.tournament_id
+                                ORDER BY tournament_id, l.final, l.number, b.number");
+    if ($select->num_rows()>0){
+        return $select->result_array();
+    }
+    return NULL;
+}
+
+
+/**
+* Function return par for one tournament and category
+*
+*
+*
+*/
+
+function get_par_by_id($tournament_id)
+{
+    $select = $this->db->query("SELECT b.number, b.par, l.final, p.category_id, t.name  
+                                FROM statistics_basket b, statistics_lap l, statistics_players_has_tournaments p, statistics_tournaments t
+                                WHERE b.lap_id=l.lap_id AND l.tournament_id=p.tournament_id AND t.tournament_id=p.tournament_id
+                                AND l.tournament_id='$tournament_id'
+                                order by p.category_id, l.final, b.number");
+    return $select->result_array();
+}
+
+function set_lap_par($tournament_id, $category_id, $par, $number)
+{
+    /*var_dump($tournament_id);
+    var_dump($category_id);
+    var_dump($par);
+    var_dump($number);
+    die();*/
+    $query = $this->db->query("UPDATE statistics_basket b, statistics_players_has_tournaments p, statistics_lap l
+                              SET b.par='$par'
+                              WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.tournament_id=p.tournament_id AND p.category_id='$category_id'
+                                    AND b.number='$number' ");
+    print_r($query);
+    if ($this->db->affected_rows()>0){
+        return TRUE;
+    }
+    return FALSE;
+}
+
 }
