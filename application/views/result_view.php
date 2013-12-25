@@ -23,21 +23,7 @@
   	endforeach;
   ?>
 </select>
-<select name="categories" id="result-categories" size="5">
-  <?php
-  	var_dump($categories);
-  	foreach($categories as $key=>$row):
-  		if ($key==0)
-  		{ 
-  			echo '<option value="'.$row['category_id'].'"'. set_select('categories', $row['category_id'], TRUE).'>'.$row['category'].'</option>';
-  		}
-  		else 
-  		{
-  			echo '<option value="'.$row['category_id'].'"'. set_select('categories', $row['category_id']).'>'.$row['category'].'</option>';	
-  		}
-  	endforeach;
-  ?>
-</select>
+
 
 <input id="results-submit" type="submit" value="show">
 <br class="clear"/>
@@ -46,81 +32,85 @@
 <?php 
 	if (isset($results) && $results != NULL)
 	{
-		//var_dump($results);
-		//die();
-		echo '<h2>'.$results['0']['name'].' ('.$results['0']['date'].')</h2>';
-		echo '<h3> <i class="fa fa-angle-right"></i> '.$results['0']['category'].'</h3>'; ?>
-		<table id="results-table" class="statistics table-row-diff">
-		<tr>
-			<?php 
-			if ($results != NULL)
+		foreach ($results as $key => $result_cat) {
+		
+			//var_dump($results);
+			//die();
+			if ($result_cat != NULL)
 			{
-				echo '<tr> 
-						<th>Rank</th>
-						<th>Player</th>';
-			 	for ($i=1; $i<=$results['0']['nmbr_of_round'];$i++)
-			 	{
-			 		echo '<th>'.$i.' <span>('.$results['0']['no_bskts_'.$i].')</span></th>';
-			 	}																//header of table
-			 	echo '<th>Total</th>';
-			 	for ($i=1; $i<=$results['0']['nmbr_of_fnl_laps'];$i++)
-			 	{
-			 		echo '<th>Final'.$i.'<span>('.$results['0']['no_final_'.$i].')</span></th>';
-			 	}
+				echo '<h2>'.$result_cat['0']['name'].' ('.$result_cat['0']['date'].')</h2>';
+				echo '<h3> <i class="fa fa-angle-right"></i> '.$result_cat['0']['category'].'</h3>'; ?>
+				<table id="results-table" class="statistics table-row-diff">
+				<tr>
+					<?php 
+						echo '<tr> 
+								<th>Rank</th>
+								<th>Player</th>';
+					 	for ($i=1; $i<=$result_cat['0']['nmbr_of_round'];$i++)
+					 	{
+					 		echo '<th>'.$i.' <span>('.$result_cat['0']['no_bskts_'.$i].')</span></th>';
+					 	}																//header of table
+					 	echo '<th>Total</th>';
+					 	for ($i=1; $i<=$result_cat['0']['nmbr_of_fnl_laps'];$i++)
+					 	{
+					 		echo '<th>Final'.$i.'<span>('.$result_cat['0']['no_final_'.$i].')</span></th>';
+					 	}
 
-			 	echo '<th>Total</th>
-			 		</tr>';
-			 	
-			 	foreach ($results as $key=>$row_array)
-			 	{
-			 		echo '<tr>';
-			 		echo '<td class="text-center" >'.$row_array['rank'].'</td>';
-			 		echo '<td>'.anchor('/tournaments/view_individual_results/'.$row_array['user_id'], $row_array['first_name'].' '.$row_array['last_name'], 'target="blank"').'</td>';
-			 		$total = 0;
-			 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
-			 		{
-			 			if ($row_array['lap_'.$i] == NULL)
-			 			{
-			 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
-			 			} 
-			 			else 
-			 			{
-			 				echo '<td class="text-center" >'.$row_array['lap_'.$i].'</td>';
-			 				$total = $total + $row_array['lap_'.$i];
-			 			}
-			 		}
-			 		echo '<td class="text-center" >'.$total.'</td>';
+					 	echo '<th>Total</th>
+					 		</tr>';
+					 	
+					 	foreach ($result_cat as $key=>$row_array)
+					 	{
+					 		echo '<tr>';
+					 		echo '<td class="text-center" >'.$row_array['rank'].'</td>';
+					 		echo '<td>'.anchor('/tournaments/view_individual_results/'.$row_array['user_id'], $row_array['first_name'].' '.$row_array['last_name'], 'target="blank"').'</td>';
+					 		$total = 0;
+					 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
+					 		{
+					 			if ($row_array['lap_'.$i] == NULL)
+					 			{
+					 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
+					 			} 
+					 			else 
+					 			{
+					 				echo '<td class="text-center" >'.$row_array['lap_'.$i].'</td>';
+					 				$total = $total + $row_array['lap_'.$i];
+					 			}
+					 		}
+					 		echo '<td class="text-center" >'.$total.'</td>';
 
-			 		for ($i=1; $i<=$row_array['nmbr_of_fnl_laps'];$i++)
-			 		{	
-			 			if ($row_array['final_'.$i] == NULL)
-			 			{
-			 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
-			 			} 
-			 			else 
-			 			{	
-			 				$total = $total + $row_array['final_'.$i];
-			 				echo '<td class="text-center" >'.$row_array['final_'.$i].'</td>';
-			 			}
-			 			
-			 		}
-			 		$i = $i-1;
-			 		if ($row_array['final_'.$i] != NULL)
-			 		{
-			 			echo '<td class="text-center" >'.$total.'</td>';
-			 		}else{
-			 			echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
-			 		}
+					 		for ($i=1; $i<=$row_array['nmbr_of_fnl_laps'];$i++)
+					 		{	
+					 			if ($row_array['final_'.$i] == NULL)
+					 			{
+					 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
+					 			} 
+					 			else 
+					 			{	
+					 				$total = $total + $row_array['final_'.$i];
+					 				echo '<td class="text-center" >'.$row_array['final_'.$i].'</td>';
+					 			}
+					 			
+					 		}
+					 		$i = $i-1;
+					 		if ($row_array['final_'.$i] != NULL)
+					 		{
+					 			echo '<td class="text-center" >'.$total.'</td>';
+					 		}else{
+					 			echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
+					 		}
 
-			 		echo '</tr>';
-			 	}
-			 	
-			}
+					 		echo '</tr>';
+					 	}
+					 	
+					echo '</table>';
+				}
 
-			?>
-		</table>
+		
+			
 
-<?php }
+		 }
+	}
 	//print_r($results); ?>
   
   

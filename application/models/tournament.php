@@ -508,4 +508,55 @@ function set_lap_par($tournament_id, $category_id, $par, $number)
     return FALSE;
 }
 
+/** 
+* Function return all players from tournament who were not disqualified
+*
+* @author Vladimir Lalik
+* @param int
+* @return array
+*/
+function get_not_disq_players($tournament_id, $category_id)
+{
+    $select=$this->db->query("SELECT u.user_id 
+                              FROM statistics_user_profiles u, statistics_players_has_tournaments p
+                              WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND p.category_id='$category_id' AND p.disqualified IS NULL");
+    if ($select->num_rows()>0){
+        return $select->result_array(); 
+    }
+    return NULL;
+}
+
+/**
+* Function update score of player in tournament
+* @author Vladimir Lalik
+* @param int
+* @param int
+* @param int
+* @return void
+*/
+function update_score($tournament_id, $user_id, $score)
+{
+    $where = array(
+        'tournament_id'=>$tournament_id,
+        'user_id'=>$user_id
+    );
+    $this->db->where($where)
+             ->update('players_has_tournaments', array('score'=>$score));
+}
+
+
+function get_score_actual_year($player_id)
+{
+    $select=$this->db->query("SELECT SUM(score) sum
+                              FROM statistics_players_has_tournaments p, statistics_tournaments t
+                              WHERE p.user_id='$player_id' AND p.tournament_id=t.tournament_id AND YEAR(t.date) = YEAR(CURDATE())" );
+    return $select->row_array();
+}
+
+function update_year_score($user_id, $score)
+{
+    $this->db->where('user_id', $user_id)
+             ->update('user_profiles', array('year_score'=>$score));
+}
+
 }

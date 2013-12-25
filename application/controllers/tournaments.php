@@ -603,8 +603,7 @@ class Tournaments extends CI_Controller {
 
   	 $this->form_validation->set_rules('tournaments', 'Tournaments', 'trim|required|xss_clean|strip_tags');
   	 $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean|strip_tags');
-  	 $this->form_validation->set_rules('categories', 'Categories', 'trim|required|xss_clean|strip_tags');
-
+  
   	if ($this->form_validation->run())
   	{
   		
@@ -614,44 +613,48 @@ class Tournaments extends CI_Controller {
 
 		 $tournament_id = $this->input->post('tournaments');
 		 $player_id = $this->input->post('players');
-		 $category_id = $this->input->post('categories');
-		 if ($tournament_id!=NULL && $category_id!=NULL)
+		 
+		 if ($tournament_id!=NULL && $data['categories']!=NULL)
 		 {
-		  	 $data['results'] = $this->tournament->get_all_results($tournament_id, $player_id, $category_id);
-		  	 // compute ranking
-		  	 //print_r($data['results']);
-		  	 if ($data['results'] != NULL)
-		  	 {
-			  	  if ($player_id != 'ALL')
-			  	  {
-			  	 	if ($data['results']['0']['disqualified'] == '1')
-			  	 	{
-			  	 		$data['results']['0']['rank'] = '';	
-			  	 	}
-			  	 	else
-			  	 	{
-			  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category_id);
-			  	 	}
-			  	 }
-			  	 else 
+		 	 foreach ($data['categories'] as $key => $category) {
+		 	 	
+		 	 
+			  	 $data['results'][$category['category_id']] = $this->tournament->get_all_results($tournament_id, $player_id, $category['category_id']);
+			  	 // compute ranking
+			  	 //print_r($data['results']);
+			  	 if ($data['results'][$category['category_id']] != NULL)
 			  	 {
-				  	 $rank = 0;
-					 foreach ($data['results'] as $key => $row)
-					 {
-					 	if ($row['disqualified'] != NULL)
-					 	{
-					 		$data['results'][$key]['rank'] = NULL;
-					 	} 
-					 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
-					 	{
-					 		$data['results'][$key]['rank'] = $rank;	
-					 	} 
-					 	else 
-					 	{
-					 		$rank = $rank + 1;
-					 		$data['results'][$key]['rank'] = $rank;	
-					 	}
-					 }
+				  	  if ($player_id != 'ALL')
+				  	  {
+				  	 	if ($data['results'][$category['category_id']]['0']['disqualified'] == '1')
+				  	 	{
+				  	 		$data['results'][$category['category_id']]['0']['rank'] = '';	
+				  	 	}
+				  	 	else
+				  	 	{
+				  	 		$data['results'][$category['category_id']]['0']['rank'] = $this->compute_rank($player_id, $tournament_id, $category['category_id']);
+				  	 	}
+				  	 }
+				  	 else 
+				  	 {
+					  	 $rank = 0;
+						 foreach ($data['results'][$category['category_id']] as $key => $row)
+						 {
+						 	if ($row['disqualified'] != NULL)
+						 	{
+						 		$data['results'][$category['category_id']][$key]['rank'] = NULL;
+						 	} 
+						 	elseif ($key!=0 && $data['results'][$category['category_id']][$key-1]['points'] == $data['results'][$category['category_id']][$key]['points'])
+						 	{
+						 		$data['results'][$category['category_id']][$key]['rank'] = $rank;	
+						 	} 
+						 	else 
+						 	{
+						 		$rank = $rank + 1;
+						 		$data['results'][$category['category_id']][$key]['rank'] = $rank;	
+						 	}
+						 }
+					}
 				}
 			}
 			//print_r($data['results']);
@@ -669,44 +672,47 @@ class Tournaments extends CI_Controller {
 	  	 $data['users'] = $this->tournament->get_all_players();
 	  	 $data['categories'] = $this->tournament->get_categories();
 	  	 $last_tournament_id = $data['tournaments']['0']['tournament_id'];
-	  	 $category_id = $data['categories']['0']['category_id'];
 	  	 $player_id = 'ALL';
 
-	  	if ($last_tournament_id!=NULL && $category_id!=NULL)
+	  	if ($last_tournament_id!=NULL && $data['categories']!=NULL)
 		{
-		  	 $data['results'] = $this->tournament->get_all_results($last_tournament_id, $player_id, $category_id);
-		  	 if ($data['results'] != NULL)
-		  	 {
-			  	  if ($player_id != 'ALL')
-			  	  {
-			  	 	if ($data['results']['0']['disqualified'] == '1')
-			  	 	{
-			  	 		$data['results']['0']['rank'] = '';	
-			  	 	}
-			  	 	else
-			  	 	{
-			  	 		$data['results']['0']['rank'] = $this->compute_rank($player_id, $last_tournament_id, $category_id);
-			  	 	}
-			  	 }
-			  	 else 
+		  	 
+			 foreach ($data['categories'] as $key => $category) {
+
+			  	 $data['results'][$category['category_id']] = $this->tournament->get_all_results($last_tournament_id, $player_id, $category['category_id']);
+			  	 if ($data['results'][$category['category_id']] != NULL)
 			  	 {
-				  	 $rank = 0;
-					 foreach ($data['results'] as $key => $row)
-					 {
-					 	if ($row['disqualified'] != NULL)
-					 	{
-					 		$data['results'][$key]['rank'] = NULL;
-					 	} 
-					 	elseif ($key!=0 && $data['results'][$key-1]['points'] == $data['results'][$key]['points'])
-					 	{
-					 		$data['results'][$key]['rank'] = $rank;	
-					 	} 
-					 	else 
-					 	{
-					 		$rank = $rank + 1;
-					 		$data['results'][$key]['rank'] = $rank;	
-					 	}
-					 }
+				  	  if ($player_id != 'ALL')
+				  	  {
+				  	 	if ($data['results'][$category['category_id']]['0']['disqualified'] == '1')
+				  	 	{
+				  	 		$data['results'][$category['category_id']]['0']['rank'] = '';	
+				  	 	}
+				  	 	else
+				  	 	{
+				  	 		$data['results'][$category['category_id']]['0']['rank'] = $this->compute_rank($player_id, $last_tournament_id, $category['category_id']);
+				  	 	}
+				  	 }
+				  	 else 
+				  	 {
+					  	 $rank = 0;
+						 foreach ($data['results'][$category['category_id']] as $key => $row)
+						 {
+						 	if ($row['disqualified'] != NULL)
+						 	{
+						 		$data['results'][$category['category_id']][$key]['rank'] = NULL;
+						 	} 
+						 	elseif ($key!=0 && $data['results'][$category['category_id']][$key-1]['points'] == $data['results'][$category['category_id']][$key]['points'])
+						 	{
+						 		$data['results'][$category['category_id']][$key]['rank'] = $rank;	
+						 	} 
+						 	else 
+						 	{
+						 		$rank = $rank + 1;
+						 		$data['results'][$category['category_id']][$key]['rank'] = $rank;	
+						 	}
+						 }
+					}
 				}
 			}
 		}
@@ -744,6 +750,7 @@ function compute_rank($player_id, $tournament_id, $category_id)
 			return $rank;
 		}
 	}
+	return NULL;
 }
 
 /**
@@ -1307,8 +1314,8 @@ function admin_set_par_lap()
 				{
 					if ($this->form_validation->set_value('basket_'.$i.'_'.$value['category_id'])!=NULL)
 					{
-						
-						$result = $result || $this->tournament->set_lap_par($tournament_id, $value['category_id'], $this->form_validation->set_value('basket_'.$i.'_'.$value['category_id']),$i);
+						$res = $this->tournament->set_lap_par($tournament_id, $value['category_id'], $this->form_validation->set_value('basket_'.$i.'_'.$value['category_id']),$i);
+						$result = $result || $res;
 						
 					}
 				}
@@ -1339,6 +1346,50 @@ function admin_set_par_lap()
 		$this->load->view('tournament/admin_set_par', $data);
 	} 
 
+}
+
+/**
+* Function that compute score of players
+*
+* @author Vladimir Lalik
+*
+*/
+
+function compute_year_rank()
+{
+	$tournaments = $this->tournament->get_tournaments();
+	$categories = $this->tournament->get_categories();
+	foreach ($tournaments as $key => $tournament) {
+		// ziskat vsetkych nediskvalifikovanych hracov
+		foreach ($categories as $category) {
+			var_dump($tournament['tournament_id']);
+			var_dump($category['category_id']);
+			$players = $this->tournament->get_not_disq_players($tournament['tournament_id'], $category['category_id']);
+			var_dump($players);
+			if ($tournament['par'] != NULL)
+			{
+				$count = count($players); // pocet zucasntenych hracov
+				if ($players!=NULL)
+				{
+					foreach ($players as $player) {
+						$rank = $this->compute_rank($player['user_id'], $tournament['tournament_id'], $category['category_id']);
+						$score = (($count-$rank+1)/$count)*$tournament['par'];
+						var_dump($rank);
+						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
+					}
+				}
+			}
+		}
+	}
+
+	// vypocitam score za rok pre kazdeho hraca
+	$players = $this->tournament->get_all_players();
+	foreach ($players as $player) {
+		$sum = $this->tournament->get_score_actual_year($player['user_id']);
+		print_r($sum['sum']);
+		$this->tournament->update_year_score($player['user_id'], $sum['sum']);
+	}
+	redirect('tournaments/admin_view_tournaments');
 }
 
 }
