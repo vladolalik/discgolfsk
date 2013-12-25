@@ -248,6 +248,40 @@ class Tournament extends CI_Model{
         return NULL;
     }
 
+    /**
+    * Function return all results by gender
+    * @author Vladimir Lalik
+    */
+
+    function get_all_results_gender($tournament_id, $player_id, $gender)
+    {
+
+        if ($gender==0){
+            $gen = "male";
+        } else {
+            $gen = "female";
+        }
+        $player = ($player_id != 'ALL')? 'AND p.user_id ='.$player_id : '';
+        $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name, n.*
+                                    FROM statistics_tournaments t, statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
+                                    statistics_number_of_baskets n
+                                    WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id 
+                                          AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
+                                          $player AND LOWER(u.gender)='$gen' AND r.result_id = n.result_id
+                                    ORDER BY 
+                                            CASE WHEN (r.final_3 IS NULL) THEN 9999 END,
+                                            CASE WHEN (r.final_2 IS NULL) THEN 99999 END,
+                                            CASE WHEN (r.final_1 IS NULL) THEN 999999 END,
+                                            (case when p.disqualified is null then 1 else 0 end) DESC, r.points
+
+                                ");
+        if ($query->num_rows()>0)
+        {
+            return $query->result_array();
+        }
+        return NULL;
+    }
+
 
     /**
     * Function return all player stats
@@ -509,7 +543,7 @@ function set_lap_par($tournament_id, $category_id, $par, $number)
 }
 
 /** 
-* Function return all players from tournament who were not disqualified
+* Function return all players from tournament who were not disqualified by category
 *
 * @author Vladimir Lalik
 * @param int
@@ -517,9 +551,33 @@ function set_lap_par($tournament_id, $category_id, $par, $number)
 */
 function get_not_disq_players($tournament_id, $category_id)
 {
+    
     $select=$this->db->query("SELECT u.user_id 
                               FROM statistics_user_profiles u, statistics_players_has_tournaments p
                               WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND p.category_id='$category_id' AND p.disqualified IS NULL");
+    if ($select->num_rows()>0){
+        return $select->result_array(); 
+    }
+    return NULL;
+}
+
+/** 
+* Function return all players from tournament who were not disqualified by gender
+*
+* @author Vladimir Lalik
+* @param int
+* @return array
+*/
+function get_not_disq_players_gender($tournament_id, $gender)
+{
+    if ($gender==0){
+        $gen = "male";
+    } else {
+        $gen = "female";
+    }
+    $select=$this->db->query("SELECT u.user_id 
+                              FROM statistics_user_profiles u, statistics_players_has_tournaments p
+                              WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND LOWER(u.gender)='$gen' AND p.disqualified IS NULL");
     if ($select->num_rows()>0){
         return $select->result_array(); 
     }
@@ -557,6 +615,26 @@ function update_year_score($user_id, $score)
 {
     $this->db->where('user_id', $user_id)
              ->update('user_profiles', array('year_score'=>$score));
+}
+
+/**
+* Function return year ranking with score from all tournaments in current year
+* @author Vladimir Lalik
+* @return array
+*/
+function get_year_ranking($gender)
+{
+   // var_dump($gender);
+    $gender=strtolower($gender);
+    $select = $this->db->query("SELECT u.year_score, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+                                FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
+                                WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') 
+                                ORDER BY u.year_score DESC");
+    if ($select->num_rows()>0){
+        return $select->result_array();
+    }
+    return NULL;
+
 }
 
 }
