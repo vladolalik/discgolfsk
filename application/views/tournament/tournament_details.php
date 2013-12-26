@@ -22,7 +22,7 @@
 
 					marker=new google.maps.Marker({
 					  position:myCenter,
-					  icon:'http://discgolf.sk/statistics/uploads/icon.png',
+					  icon:"<?= base_url() ?>assets/img/map-pointer.png",
 					  animation:google.maps.Animation.BOUNCE
 					  });
 
