@@ -2,7 +2,7 @@
 <?php 
 if ($players ==NULL)
 {
-	echo '<p>No auto created profiles profiles</p>';
+	echo '<p class="general-message">No auto created profiles profiles</p>';
 } 
 else
 {
@@ -15,3 +15,4 @@ else
 	echo $this->pagination->create_links();
 }
 ?>
+<?php $this->load->view('footer'); ?>

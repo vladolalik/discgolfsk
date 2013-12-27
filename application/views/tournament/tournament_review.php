@@ -8,5 +8,5 @@
 			<p><span class="att">Number of final rounds: </span><?php echo $nmbr_of_fnl_laps; ?></p>
 		</div>
 		<br class="clear"/>
-		<a  class="tournament-detail" href="<?php echo base_url()?>index.php/tournaments/tournament_details/<?php echo $tournament_id; ?>">Details</a>
+		<a class="button" href="<?php echo base_url()?>index.php/tournaments/tournament_details/<?php echo $tournament_id; ?>">Details</a>
 </div>

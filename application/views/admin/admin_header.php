@@ -35,14 +35,14 @@ tinymce.init({
 			<ul id="main-nav">
 				<li><?php echo anchor('tournaments/admin_view_tournaments', 'ADMINISTRATION', 'title="Tournaments", id="navigation-header"'); ?></li>
 				<li><?php echo anchor('', '<i class="fa fa-home"></i>Home', 'home'); ?> </li>
-				<li><?php echo anchor('/tournaments/compute_year_rank_gender', '<i class="fa fa-home"></i>Update rank list', 'title="Update rank list"'); ?> </li>
+				<li><?php echo anchor('/tournaments/compute_year_rank_gender', '<i class="fa fa-signal"></i>Update rank list', 'title="Update rank list"'); ?> </li>
 				<li><?php echo anchor('auth/admin_get_all_players', '<i class="fa fa-users"></i>Players', 'title="Players"'); ?> </a> 
 					<ul> 
 						<li><?php echo anchor('auth/admin_get_inactive_players', '<i class="fa fa-angle-right"></i>Activate new players', 'title="Activate new players"'); ?> </li>
 						<li><?php echo anchor('auth/admin_get_autocreated_profile', '<i class="fa fa-angle-right"></i>Autocreated profiles', 'title="Auto created profiles"'); ?> </li>
 					</ul>
 				</li>
-				<li><?php echo anchor('tournaments/set_nmbr_acc_tourn', 'Slovak champ options', 'title="Set number of acceptable tournament for Slovak champ"'); ?></li>
+				<li><?php echo anchor('tournaments/set_nmbr_acc_tourn', '<i class="fa fa-trophy"></i>Slovak champ options', 'title="Set number of acceptable tournament for Slovak champ"'); ?></li>
 				<li><?php echo anchor('tournaments/admin_view_tournaments', '<i class="fa fa-sitemap"></i>Tournaments', 'title="Tournaments"'); ?> 
 					<ul>
 						<li><?php echo anchor('tournaments/admin_add_tournament', '<i class="fa fa-angle-right"></i>Add new tournament', 'title="Add new tournament"'); ?></li>

@@ -82,6 +82,26 @@ input[type=submit]{
 	font-weight: bold;
 	padding-left: 20px;
 }
+
+input[type=submit]{
+	border-radius: none;
+	border: 1px solid #5A8EB6;
+	background-color: inherit;
+	cursor: pointer;
+	color:  #446986;
+	padding: 5px;
+	display: block;
+}
+input[type=submit]:hover{
+	border-radius: none;
+	border: 1px solid #5A8EB6;
+	background-color: inherit;
+	cursor: pointer;
+	background-color: #5A8EB6;
+	color: #ffffff;
+	padding: 5px;
+	display: block;
+}
 /* NAVIGATION
 ------------------------------------------------------------*/
 nav i{
@@ -300,4 +320,34 @@ nav #main-nav li ul{
 }
 .table-line-height{
 	line-height: 25px;
+}
+/** Mailing list-style: 
+---------------------------------------------------*/
+#mailing-list{
+	padding: 0px 20px;
+}
+#mailing-list label{
+	display: block;
+}
+#mailing-list input{
+	/*width: 60%;*/
+	/*float: ledf;*/
+}
+#mailing-list table{
+	display: block;
+}
+#mailing-list table tbody{
+	display: block;
+}
+#mailing-list table tbody tr{
+	display: block;
+}
+#mailing-list table  tr td{
+	text-align: center; /* center checkbox horizontally */
+    vertical-align: middle; /* center checkbox vertically */
+    	height: 16px;
+	line-height: 16px;
+}
+.mailing-single-tournament{
+	padding-left: 10px;
 }

@@ -42,7 +42,7 @@
 </head>
 <body>
 
-<div id="container">
+<div id="mailing-list">
   
   <?php 
     if (isset($sent_to)) {                           
@@ -55,24 +55,26 @@
            
     echo form_open('mailingController/send'); 
     $tmp_data = array('name' => "input_from",  'id' => "input_from",);
-    echo form_label('from: ', 'input_from'), form_input($tmp_data), '<br />';
+    echo form_label('From: ', 'input_from'), form_input($tmp_data);
     
     $tmp_data = array('name' => "input_to",  'id' => "input_to",);
-    echo form_label('to: ', 'input_to'), form_input($tmp_data), '<br />';
+    echo form_label('To: ', 'input_to'), form_input($tmp_data), '<br />';
     echo '<br />';
     
-    $tmp_data = array('name' => "input_subject",  'id' => "input_subject",);
-    echo form_label('subject: ', 'input_subject'), form_input($tmp_data), '<br />';
-    echo form_textarea('message'), '<br />';
+    $tmp_data = array('name' => "input_subject",  'id' => "input_subject");
+    echo form_label('Subject: ', 'input_subject'), form_input($tmp_data), '<br />';
+    echo form_label('Message: ', 'message');
+    echo form_textarea(array('name'=>'message', 'id'=>'message'));
     
 
     //tournaments
-    echo '<table border="1px">
-                <tr>';
+    echo '<table>';
+    echo '<tr>';
     $tmp_data = array('name' => "all_tournaments", 'value' => 'all_tournaments', 'id' => 'all_tournaments');
-    echo '<td>'.form_label("<br />send to all tournaments:", 'all_tournaments').'</td>'; 
+    echo '<td>'.form_label("<br />Send to all tournaments:", 'all_tournaments').'</td>'; 
     echo '<td>'.form_checkbox($tmp_data).'</td>';
     //echo '<br />send to selected tournaments: <br />';
+    echo '</tr>';
     $counter = 0;
 
 
@@ -81,14 +83,15 @@
       $tmp_data = array('name' => "mail_tournaments[]",
                         'id' => "tournament_checkbox_".$counter,
                         'value' => $obj->name);
-      echo '<tr>';
-      echo '<td>'.form_label($obj->name, 'tournament_checkbox_'.$counter).'</td><td>'.form_checkbox($tmp_data).'</td>';
+      echo '<tr class="mailing-single-tournament">';
+      echo '<td>'.form_label('<i class="fa fa-chevron-circle-right"></i> '.$obj->name, 'tournament_checkbox_'.$counter).'</td><td>'.form_checkbox($tmp_data).'</td>';
       $counter = $counter + 1;
+      echo '</tr>';
     } 
     echo '</table>';
     
     // categories
-    echo '<table border="1px">
+    echo '<table>
                     <tr>';
     $tmp_data = array('name' => "all_cathegories", 'value' => 'all_cathegories', 'id' => 'all_cathegories'); 
     echo '<td>'.form_label("<br />send to all categories:", 'all_cathegories').'</td>';
@@ -104,7 +107,7 @@
     }     
     echo '</table>';
     
-    echo '<table border="1px">
+    echo '<table>
                   <tr>';
 
     $tmp_data = array('name' => "all_users", 'value' => 'all_users', 'id' => 'all_users');
@@ -126,7 +129,5 @@
     echo '<br />', form_submit($tmp_data);
     echo form_close();
   ?>
-</div>
-
-</body>
-</html>
+</div> <!-- #mailing-list -->
+<?php $this->load->view('admin/admin_footer'); ?>

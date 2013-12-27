@@ -397,6 +397,7 @@ class Tournaments extends CI_Controller {
 
 		$players = $this->__check_players_existence($players);
 		$players = $this->__check_categories_existence($players);
+		$players = $this->__check_players_has_tournament($players, $data['tournament_id']);
 
 		$data['players'] = $players;
 		$data['laps_data'] = $laps_data;
@@ -429,6 +430,29 @@ class Tournaments extends CI_Controller {
 				$players[$key]['exist'] = -1;
 				//$this->help_functions->__create_auto_profile( $player['name'], $player['surname']);
 				// vytvorime noveho hravca
+			}
+		}
+		return $players;
+	}
+
+	/**
+	* Funkcia
+	*
+	*
+	* @return void
+	* @author Branislav Ballon
+	*/
+	function __check_players_has_tournament($players, $tournament_id){
+		foreach ($players as $key => $player) {
+			$data['user_id'] = $player['exist'];
+			$data['tournament_id'] = $tournament_id;
+			$data['category_id'] = $player['category_exist'];
+
+			$player_has_tournament = $this->tournament->player_has_tournament($data);
+			if( $player_has_tournament ){
+				$players[$key]['has_tournament'] =  1;
+			}else{
+				$players[$key]['has_tournament'] = -1;
 			}
 		}
 		return $players;
@@ -550,13 +574,13 @@ class Tournaments extends CI_Controller {
 
 
 			foreach ($players as $key => $player) {
-				if( ( $player['exist'] != -1 ) && ($player['category_exist'] != -1) && isset($_POST[$player['exist']]) ){
+				if(    ( ( $player['exist'] != -1 ) && ($player['category_exist'] != -1) ) && (isset($_POST[$player['exist']]) ||  ($player['has_tournament'] == -1) ) ){
 					if( !isset($final_laps_data[$key]) ){
 						$final_laps_data[$key] = null;						
 					}
 					$this->__save_player_data( $tournament_id, $player['exist'], $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 				}
-				if( ( $player['exist'] == -1 ) && ($player['category_exist'] != -1) ){
+				if( ( ( $player['exist'] == -1 ) && ($player['category_exist'] != -1)  && (isset($_POST[$player['exist']]) ||  ($player['has_tournament'] == -1) ) ) ){
 					if( !isset($final_laps_data[$key]) ){
 						$final_laps_data[$key] = null;						
 					}
@@ -570,6 +594,7 @@ class Tournaments extends CI_Controller {
 		$this->session->set_flashdata('message', 'data imported');
 		redirect('tournaments/admin_view_tournaments');
 	}
+
 
 
   

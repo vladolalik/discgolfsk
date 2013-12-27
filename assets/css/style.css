@@ -30,14 +30,14 @@ table,th, td{
 legend{
 	padding: 5px;
 	color: #ffffff;
-	background-color: #5A8EB6;
-	border: 1px solid #446986;
+	background-color: #00AFAF;
+	border: 1px solid #008F8F;
 /*	-webkit-box-shadow: 1px 2px 10px 0px #444444;
 	-moz-box-shadow: 1px 2px 10px 0px #444444;
 	box-shadow: 1px 2px 10px 0px #444444;*/
 }
 fieldset{
-	border: 1px solid #446986;
+	border: 1px solid #008F8F;
 
 /*	-webkit-box-shadow: 1px 2px 10px 0px #444444;
 	-moz-box-shadow: 1px 2px 10px 0px #444444;
@@ -96,6 +96,48 @@ option:checked { background-color: #00AFAF; }
 	color: #00AFAF;
 	font-weight: bold;
 	padding-left: 20px;
+}
+a{
+	border-radius: none;
+	cursor: pointer;
+	color:  #008F8F;
+}
+a:hover{
+	border-radius: none;
+	background-color: inherit;
+}
+a.button{
+	text-decoration: none;
+	border-radius: none;
+	border: 1px solid #00AFAF;
+	cursor: pointer;
+	color:  #008F8F;
+	padding: 5px;
+	line-height:  30px;
+}
+a.button:hover{
+	border-radius: none;
+	border: 1px solid #00AFAF;
+	background-color: inherit;
+	cursor: pointer;
+	background-color: #00AFAF;
+	color: #ffffff;
+	padding: 5px;
+}
+.general-message{
+	color: #00AFAF;
+	border-left: 10px solid #008F8F;
+	border-top: 1px solid #008F8F;
+	border-bottom: 1px solid #008F8F;
+	border-right: 1px solid #008F8F;
+	font-weight: bold;
+	padding-left: 20px;
+	padding: 10px 20px;
+}
+div.clear{
+	clear: both;
+	width: 0px;
+	height: 0px;
 }
 /* HEADER
 ------------------------------------------------------------*/
@@ -221,7 +263,7 @@ nav #main-nav li ul{
 	margin-bottom: 25px;
 	float: left;
 }
-#content a{
+#content a.button{
 	text-decoration: none;
 	border-radius: none;
 	border: 1px solid #00AFAF;
@@ -230,7 +272,7 @@ nav #main-nav li ul{
 	padding: 5px;
 	line-height:  30px;
 }
-#content a:hover{
+#content a.button:hover{
 	border-radius: none;
 	border: 1px solid #00AFAF;
 	background-color: inherit;
@@ -337,6 +379,7 @@ nav #main-nav li ul{
 	padding: 5px;
 	border: 2px solid #00AFAF;
 	background-color: #ffffff;
+	margin-bottom: 10px;
 }
 .tournament-review .tournament-picture img{
 	width: 300px;

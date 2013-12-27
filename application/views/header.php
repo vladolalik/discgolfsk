@@ -8,6 +8,10 @@
 <link href='http://fonts.googleapis.com/css?family=Exo+2&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<!-- DATEPICKER jQuery UI -->
+<link href="<?= base_url() ?>assets/css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/jquery-1.9.1.js"></script>
+<script src="<?= base_url() ?>assets/js/jquery-ui-1.10.3.custom.js"></script>
 </head> 
 <body>
 	<section id="header">
@@ -27,10 +31,10 @@
 			<?php
 				echo '<li>'.anchor('/tournaments/view_results', 'NAVIGATION', 'title="NAVIGATION", id="navigation-header"').'</li>';
 				echo '<li>'.anchor('/tournaments/view_results', '<i class="fa fa-bar-chart-o"></i> Results', 'title="Results"').'</li>'.
-					 '<li>'.anchor('/tournaments/year_ranking', '<i class="fa fa-bar-chart-o"></i> Ranking', 'title="Ranking"').'</li>'.
-					 '<li>'.anchor('/tournaments/slovak_champ_rank', '<i class="fa fa-bar-chart-o"></i> Slovak championship', 'title="Slovak championship"').'</li>'.
+					 '<li>'.anchor('/tournaments/year_ranking', '<i class="fa fa-signal"></i> Ranking', 'title="Ranking"').'</li>'.
+					 '<li>'.anchor('/tournaments/slovak_champ_rank', '<i class="fa fa-trophy"></i> Slovak championship', 'title="Slovak championship"').'</li>'.
 					 '<li>'.anchor('/tournaments/view_tournaments', '<i class="fa fa-sitemap"></i> Tournaments', 'title="Tournaments"').'</li>'.
-					 '<li>'.anchor('tournaments/registered_players', 'Registered players', 'title="Registered players"').'</li>';
+					 '<li>'.anchor('tournaments/registered_players', '<i class="fa fa-book"></i>Registered players', 'title="Registered players"').'</li>';
 				if ($this->tank_auth->is_logged_in(TRUE))
 					{
 						echo '<li>'.anchor('auth/my_profile', '<i class="fa fa-user"></i> My profile', 'title="profile"').' 
@@ -51,7 +55,7 @@
 					{
 						echo '<li>'.anchor('/auth/login', '<i class="fa fa-key"></i> Login', 'title="login"').'</li>
 							  <li>'.anchor('/auth/register', '<i class="fa fa-sign-in"></i> Register', 'title="register"').'</li>
-							  <li>'.anchor('/auth/get_autocreated_profile', '<i class="fa fa-book"></i> Find yourself', 'title="Find your name in autocreated profiles and get your profile"').'</li>';
+							  <li>'.anchor('/auth/get_autocreated_profile', '<i class="fa fa-eye"></i> Find yourself', 'title="Find your name in autocreated profiles and get your profile"').'</li>';
 							  
 					}
 

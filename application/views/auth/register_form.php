@@ -1,4 +1,14 @@
 <?php $this->load->view('header', array('title' => 'Register', 'caption' => 'Register')) ?>
+<script type="text/javascript">
+$(function() {		
+	//DATEPICKER jQuery UI
+	$( "#birth_date" ).datepicker({
+		inline: true,
+		dateFormat: "dd.mm.yy"
+	});
+});
+</script>
+
 <?php
 if ($use_username) {
 	$username = array(
@@ -110,7 +120,7 @@ echo $this->input->post('first_name');
 	</tr>
 	<tr>
 		<td><?php echo form_label('Day of birth', $birth['id']); ?></td>
-		<td><input type="date" name="birth_date" value="<?php echo set_value('birth_date')?>" id="birth_date"></td>
+		<td><input type="text" name="birth_date" value="<?php echo set_value('birth_date')?>" id="birth_date"></td>
 		<td style="color: red;"><?php echo form_error($birth['name']); ?><?php echo isset($errors[$birth['name']])?$errors[$birth ['name']]:''; ?></td>
 	</tr>
 	<tr>
@@ -183,3 +193,4 @@ echo $this->input->post('first_name');
 </table>
 <?php echo form_submit('register', 'Register', 'id="registration-submit"'); ?>
 <?php echo form_close(); ?>
+<?php $this->load->view('footer'); ?>

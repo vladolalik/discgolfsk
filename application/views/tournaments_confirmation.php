@@ -4,7 +4,7 @@
 */
  $this->load->view('admin/admin_header', array('title'=>'Import tournament | Discgolf', 'caption'=>'Import tournament')); 
  ?>
- <?php debug($players);?>
+ <?php //debug($players);?>
 <?php echo form_open('tournaments/save_import_data');?>
 <?php 	
 	if( isset( $validation_errors ) ){
@@ -22,6 +22,7 @@
 			<th>Birth date</th>
 			<th>Connect</th>
 			<th>Category</th>
+			<th>Tournament</th>
 		</tr>
 	
 		<?php
@@ -34,14 +35,19 @@
 				$string .= '<td>'.$player['nationality'].'</td>';
 				$string .= '<td>'.$player['birth_date'].'</td>';
 				if( $player['exist'] != -1){ //moznost parovania ak este nie je vytvoreny
-					$string .= '<td><input type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
+					$string .= '<td class="ok-icon"><i class="fa fa-check"></i></td>';
 				}else{
 					$string .= '<td>new</td>';
 				}
 				if( $player['category_exist'] != -1){ // napise ci existuje dana kategoria
-					$string .= '<td>'.$player['category'].'</td>';
+					$string .= '<td>'.'<i class="fa fa-check"></i> - '.$player['category'].'</td>';
 				}else{
-					$string .= '<td>X</td>';
+					$string .= '<td class="error-icon"><i class="fa fa-times"></i></td>';
+				}
+				if( $player['has_tournament'] == -1){ // napise ci chceme zapisat ak dany hrac uz ma turnaj
+					$string .= '<td><i class="fa fa-check"></i> </td>';
+				}else{
+					$string .= '<td> <input type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
 				}
 				$string .= '</tr>';
 			}
