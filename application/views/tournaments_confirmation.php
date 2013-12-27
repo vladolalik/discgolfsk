@@ -18,7 +18,7 @@
 		<tr>
 			<th>Name</th>
 			<th>Surname</th>
-			<th>Nationality</th>
+			<th>Gender</th>
 			<th>Birth date</th>
 			<th>Connect</th>
 			<th>Category</th>
@@ -32,7 +32,7 @@
 				$string .= '<tr>';
 				$string .= '<td>'.$player['name'].'</td>';
 				$string .= '<td>'.$player['surname'].'</td>';
-				$string .= '<td>'.$player['nationality'].'</td>';
+				$string .= '<td>'.$player['gender'].'</td>';
 				$string .= '<td>'.$player['birth_date'].'</td>';
 				if( $player['exist'] != -1){ //moznost parovania ak este nie je vytvoreny
 					$string .= '<td class="ok-icon"><i class="fa fa-check"></i></td>';

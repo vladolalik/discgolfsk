@@ -24,11 +24,11 @@ tinymce.init({
 </script>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
 <body>
-	<section id="header">
+	<header id="header">
 		<div class="container">
 			<h1>Discgolf.sk</h1>
 		</div>		
-	</section>
+	</header>
 
 	<div class="container">
 		<nav>
@@ -63,8 +63,8 @@ tinymce.init({
 
 		<section id="content">
 			<h1><?php echo $caption; ?></h1>
-			<div id="flash-data">
-				<?php echo $this->session->flashdata('message'); ?>
-			</div>
+				<div id="flash-data">
+					<?php echo $this->session->flashdata('message'); ?>
+				</div>
 
 			

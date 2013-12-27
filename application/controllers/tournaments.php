@@ -238,6 +238,17 @@ class Tournaments extends CI_Controller {
 
 	}
 
+	/**
+	* Player validation help function if gender is valid
+	*
+	*
+	* @return boolean
+	* @author Branislav Ballon
+	*/
+	function validate_gender($gender){
+		return ($gender == "Male" || $gender == "Female");
+	}
+
 
 	/**
 	* Interná funkcia slúťiaca na validáciu dát hráča pri importe, na vstupe sú dané všetky atribúty pre hráča
@@ -247,21 +258,23 @@ class Tournaments extends CI_Controller {
 	* @return string
 	* @author Branislav Ballon
 	*/
-	function __validete_player($name = "", $surname = "", $nationality = "", $category = "",$birth_date = "", $line_number = 0, $player_number = 0 ){
+	function __validete_player($name = "", $surname = "", $gender = "", $category = "",$birth_date = "", $line_number = 0, $player_number = 0 ){
 		$v_errors = "";
 
 		$_POST['name'] 			= $name;					//ulozime
 		$_POST['surname']		= $surname;
-		$_POST['nationality'] 	= $nationality;
+		$_POST['gender'] 		= $gender;
 		$_POST['category']		= $category;
 		$_POST['birth_date']	= $birth_date;
 
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('surname', '', 'trim|required|xss_clean|htmlspecialchars');
-		$this->form_validation->set_rules('nationality', '', 'trim|required|xss_clean|htmlspecialchars');
+		$this->form_validation->set_rules('gender', '', 'trim|required|xss_clean|htmlspecialchars|callback_validate_gender');
 		$this->form_validation->set_rules('category', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('birth_date', '', 'trim|required|xss_clean|htmlspecialchars');
+
+		$this->form_validation->set_message('validate_gender','Gender is not valid! Please use only Male or Female.');
 
 		if ($this->form_validation->run())
 		{
@@ -325,16 +338,16 @@ class Tournaments extends CI_Controller {
 					/*tu doplnat udaje ktore chceme ukladat*/
 					$name					= $values[0];					
 					$surname				= $values[1];
-					$nationality 			= $values[2];   
+					$gender 				= $values[2];   
 					$category				= $values[3];
 					$birth_date				= $values[4];
 
 					// volanie validacie
-					$player_errors = $this->__validete_player($name ,$surname ,$nationality ,$category, $birth_date, $line_number, $player_number );
+					$player_errors = $this->__validete_player($name ,$surname ,$gender ,$category, $birth_date, $line_number, $player_number );
 					if( $player_errors == ""){ // ak nie su errory ulozim ho a zapamatam si jeho id
 						$valid_players[$player_number]['name'] 			= $name;
 						$valid_players[$player_number]['surname'] 		= $surname;
-						$valid_players[$player_number]['nationality'] 	= $nationality;
+						$valid_players[$player_number]['gender'] 	= $gender;
 						$valid_players[$player_number]['category'] 		= $category;
 						$valid_players[$player_number]['birth_date'] 	= $birth_date;
 					}else{
@@ -518,12 +531,34 @@ class Tournaments extends CI_Controller {
 			$data['lap_'.($lap_key+1)] = array_sum( $lap );
 			$baskets_data['no_bskts_'.($lap_key+1)] = count( $lap );
 			$lap_count++;
+
+
+			//NEW BASKETS
+			$lap_id = $this->tournament->save_lap( $tournament_id, $user_id, $lap_key+1, FALSE );
+			//debug($lap_id);
+			foreach ( $lap as $basket_key => $basket ) {
+				$this->tournament->save_basket( $basket, $lap_id, $basket_key );
+			}
+			
+			//NEW BASKETS
+
+
 		}
 		if( $player_final_laps_data != NULL){
 			foreach ($player_final_laps_data as $lap_key => $lap) {
 				$points += array_sum( $lap );
 				$data['final_'.($lap_key+1)] = array_sum( $lap );
 				$baskets_data['no_final_'.($lap_key+1)] = count( $lap );
+
+
+			//NEW BASKETS
+			$lap_id = $this->tournament->save_lap( $tournament_id, $user_id, $lap_key+1, TRUE );
+			//debug($lap_id);
+			foreach ( $lap as $basket_key => $basket ) {
+				$this->tournament->save_basket( $basket, $lap_id, $basket_key );
+			}
+			
+			//NEW BASKETS
 			}
 		}
 		if( ( $number_of_laps + $number_of_final_laps )  == count( $data ) ){
@@ -573,6 +608,7 @@ class Tournaments extends CI_Controller {
 			$this->__save_tournamet_properties( $tournament_id, $number_of_laps, $number_of_final_laps );
 
 
+
 			foreach ($players as $key => $player) {
 				if(    ( ( $player['exist'] != -1 ) && ($player['category_exist'] != -1) ) && (isset($_POST[$player['exist']]) ||  ($player['has_tournament'] == -1) ) ){
 					if( !isset($final_laps_data[$key]) ){
@@ -584,7 +620,7 @@ class Tournaments extends CI_Controller {
 					if( !isset($final_laps_data[$key]) ){
 						$final_laps_data[$key] = null;						
 					}
-					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname'], null, null, $player['birth_date']);
+					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname'],  $player['gender'], null, $player['birth_date']);
 					$this->__save_player_data($tournament_id, $new_player_id, $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
 				}

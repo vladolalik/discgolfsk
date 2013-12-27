@@ -1,7 +1,7 @@
 <?php  $this->load->view('admin/admin_header', array('title'=>'Categories', 'caption'=>'Categories')); ?>
 <?php 
 	
-	echo '<table border="1px">
+	echo '<table>
 			<tr>
 				<th>Category</th>
 				<th>Change category</th>

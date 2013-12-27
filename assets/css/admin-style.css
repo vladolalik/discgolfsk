@@ -48,6 +48,9 @@ input[type=text], input[type=date]{
 	height: 25px;
 	line-height: 25px;
 }
+textarea{
+	border: 1px solid #5A8EB6;
+}
 input[type=submit]{
 	border-radius: none;
 }
@@ -166,6 +169,26 @@ nav #main-nav li ul{
 	width:  960px;
 	margin: auto;
 }
+.general-message{
+	color: #00AFAF;
+	border-left: 10px solid #008F8F;
+	border-top: 1px solid #008F8F;
+	border-bottom: 1px solid #008F8F;
+	border-right: 1px solid #008F8F;
+	font-weight: bold;
+	padding-left: 20px;
+	padding: 10px 20px;
+}
+.general-error{
+	color: #00AFAF;
+	border-left: 10px solid #FF0000;
+	border-top: 1px solid #008F8F;
+	border-bottom: 1px solid #008F8F;
+	border-right: 1px solid #008F8F;
+	font-weight: bold;
+	padding-left: 20px;
+	padding: 10px 20px;
+}
 
 /* CONTENT
 ------------------------------------------------------------*/
@@ -191,6 +214,9 @@ nav #main-nav li ul{
 	padding-left: 0px; 
 	margin-bottom: 20px;
 }
+#content-inner{
+	padding: 0px 20px 10px 20px;
+}
 #header{
 	background-color: #5A8EB6;
 	height: 50px;
@@ -202,7 +228,6 @@ nav #main-nav li ul{
 	line-height: 50px;
 	padding-left: 20px;
 }
-
 /* ADMIN - SPECIFIC
 ------------------------------------------------------------*/
 .admin-tournaments-table{
@@ -326,8 +351,11 @@ nav #main-nav li ul{
 #mailing-list{
 	padding: 0px 20px;
 }
-#mailing-list label{
+#mailing-list #form-top label{
 	display: block;
+	margin-top: 10px;
+	margin-bottom:5px; 
+	color: #446986;
 }
 #mailing-list input{
 	/*width: 60%;*/
@@ -348,6 +376,30 @@ nav #main-nav li ul{
     	height: 16px;
 	line-height: 16px;
 }
-.mailing-single-tournament{
+.mailing-single-item{
 	padding-left: 10px;
+}
+#mailing-list textarea{
+	width: 100%;
+}
+#mailing-errors p{
+	color: red;
+	border-left: 10px solid #FF0000;
+	font-weight: bold;
+	padding-left: 20px;
+	padding: 10px 20px;
+	margin-bottom: 5px;
+	font-weight: normal;
+	font-size: 14px;
+}
+/** CATEGORIES
+-------------------------------------------*/
+#add-category{
+	overflow: hidden;
+}
+#add-category table{
+	float: left;
+}
+#add-category input[type=submit]{
+	float: right;
 }

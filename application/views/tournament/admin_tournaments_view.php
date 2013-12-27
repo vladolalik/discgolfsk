@@ -45,4 +45,5 @@
 		echo '<p>There are no created tournaments.'.anchor('/tournaments/admin_add_tournament/', 'Create new', 'title="Create  new tournament"').'</p>';
 	}
 ?>
-</div>
+
+<?php $this->load->view('admin/admin_footer'); ?>

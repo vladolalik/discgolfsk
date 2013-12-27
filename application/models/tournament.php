@@ -47,13 +47,32 @@ class Tournament extends CI_Model{
         $this->db->update( 'tournaments' ); 
     }
 
-    function save_lap( $tournament_id, $order, $baskets_number, $is_final = FALSE ){
+    function save_lap( $tournament_id, $user_id, $number, $is_final = FALSE ){
         $this->db->set( 'tournament_id', $tournament_id );
-        $this->db->set( 'nmbr_of_bskts', $baskets_number );
-        $this->db->set( 'is_final', $is_final );
-        $this->db->set( 'order', $order );
-        $this->db->insert( 'laps' );
+        $this->db->set( 'user_id',  $user_id );
+        $this->db->set( 'number',   $number );
+        $this->db->set( 'final',    $is_final );
+        $this->db->insert( 'lap' );
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
     }
+
+    function save_basket( $shots, $lap_id, $number){
+        $this->db->set('shots', $shots);
+        $this->db->set('lap_id', $lap_id);
+        $this->db->set('number', $number);
+        $this->db->insert( 'basket' );
+    }
+
+
+    //  function save_lap( $tournament_id, $order, $baskets_number, $is_final = FALSE ){
+    //     $this->db->set( 'tournament_id', $tournament_id );
+    //     $this->db->set( 'nmbr_of_bskts', $baskets_number );
+    //     $this->db->set( 'is_final', $is_final );
+    //     $this->db->set( 'order', $order );
+    //     $this->db->insert( 'laps' );
+    // }
     
     function save_result( $data ){
         $this->db->insert( 'results', $data );

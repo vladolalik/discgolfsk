@@ -1,8 +1,6 @@
 <?php $this->load->view('admin/admin_header', array('title'=>'Update tournament', 'caption'=>'Update tournament')); ?>
-	<?php 
-		
-		echo form_open($this->uri->uri_string()); ?>
-	<br />
+<div id="content-inner">
+	<?php echo form_open($this->uri->uri_string()); ?>
 	<table>
 		<tr>
 	<?php
@@ -132,8 +130,5 @@
 </table>
 	<?php echo form_submit('mysubmit', 'Submit'); ?>
 
-	
-
-	
-</body>
-</html>
+</div> <!-- #content-inner -->
+<?php $this->load->view('admin/admin_footer'); ?>
