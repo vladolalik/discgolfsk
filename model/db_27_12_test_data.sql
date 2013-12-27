@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 27, 2013 at 02:24 PM
+-- Generation Time: Dec 27, 2013 at 06:03 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.4.3
 
@@ -137,8 +137,8 @@ CREATE TABLE IF NOT EXISTS `statistics_ci_sessions` (
 --
 
 INSERT INTO `statistics_ci_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
-('8c428eac511c4bd14aa9197fd8e567a6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0', 1388152449, ''),
-('be46c3b7d6040c3138f0711bc7620ff0', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36', 1388153837, 'a:18:{s:9:"user_data";s:0:"";s:7:"user_id";s:2:"12";s:8:"username";s:0:"";s:6:"status";s:1:"1";s:2:"id";s:2:"12";s:7:"country";s:8:"Slovakia";s:7:"website";N;s:10:"first_name";s:4:"Fero";s:9:"last_name";s:6:"Taraba";s:10:"birth_date";s:10:"1986-02-05";s:5:"photo";s:36:"905553fb6a893f79a9145bd411aa5de2.jpg";s:5:"thumb";s:42:"905553fb6a893f79a9145bd411aa5de2_thumb.jpg";s:6:"gender";s:6:"Female";s:4:"club";s:6:"Matfyz";s:5:"about";s:12:"Hi I am Fero";s:10:"year_score";s:3:"150";s:5:"email";s:14:"fero@taraba.sk";s:4:"role";s:5:"admin";}');
+('835a07ea55b430f364191779d2caec03', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36', 1388156304, 'a:18:{s:9:"user_data";s:0:"";s:7:"user_id";s:2:"12";s:8:"username";s:0:"";s:6:"status";s:1:"1";s:2:"id";s:2:"12";s:7:"country";s:8:"Slovakia";s:7:"website";N;s:10:"first_name";s:4:"Fero";s:9:"last_name";s:6:"Taraba";s:10:"birth_date";s:10:"1986-02-05";s:5:"photo";s:36:"905553fb6a893f79a9145bd411aa5de2.jpg";s:5:"thumb";s:42:"905553fb6a893f79a9145bd411aa5de2_thumb.jpg";s:6:"gender";s:4:"Male";s:4:"club";s:6:"Matfyz";s:5:"about";s:12:"Hi I am Fero";s:10:"year_score";s:3:"150";s:5:"email";s:14:"fero@taraba.sk";s:4:"role";s:5:"admin";}'),
+('8c428eac511c4bd14aa9197fd8e567a6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0', 1388152449, '');
 
 -- --------------------------------------------------------
 
@@ -250,8 +250,8 @@ CREATE TABLE IF NOT EXISTS `statistics_players_has_tournaments` (
 
 INSERT INTO `statistics_players_has_tournaments` (`tournament_id`, `category_id`, `user_id`, `final`, `disqualified`, `score`) VALUES
 (1, 1, 12, 1, NULL, 130),
-(1, 1, 13, 1, NULL, 130),
-(1, 2, 14, 1, NULL, 65),
+(1, 1, 13, 1, NULL, 65),
+(1, 2, 14, 1, NULL, 130),
 (2, 2, 12, 1, NULL, 100);
 
 -- --------------------------------------------------------
@@ -455,9 +455,9 @@ CREATE TABLE IF NOT EXISTS `statistics_user_profiles` (
 --
 
 INSERT INTO `statistics_user_profiles` (`id`, `country`, `website`, `first_name`, `last_name`, `birth_date`, `photo`, `thumb`, `gender`, `club`, `about`, `user_id`, `year_score`, `slovak_champ_score`) VALUES
-(11, 'Slovakia', NULL, 'Fero', 'Taraba', '1986-02-05', '905553fb6a893f79a9145bd411aa5de2.jpg', '905553fb6a893f79a9145bd411aa5de2_thumb.jpg', 'Female', 'Matfyz', 'Hi I am Fero', 12, 230, 130),
-(12, NULL, NULL, 'Jan', 'Slovak', '2013-12-19', 'default.png', 'default-thumb.png', 'Male', 'Slovaci', NULL, 13, 130, 130),
-(13, 'Slovakia', NULL, 'Vlado', 'Lalik', '1992-07-09', 'default.png', 'default-thumb.png', 'Female', 'Club', 'Vladoooooooooo', 14, 65, 65),
+(11, 'Slovakia', NULL, 'Fero', 'Taraba', '1986-02-05', '905553fb6a893f79a9145bd411aa5de2.jpg', '905553fb6a893f79a9145bd411aa5de2_thumb.jpg', 'Male', 'Matfyz', 'Hi I am Fero', 12, 230, 130),
+(12, NULL, NULL, 'Jan', 'Slovak', '2013-12-19', 'default.png', 'default-thumb.png', 'Male', 'Slovaci', NULL, 13, 65, 65),
+(13, 'Slovakia', NULL, 'Vlado', 'Lalik', '1992-07-09', 'default.png', 'default-thumb.png', 'Female', 'Club', 'Vladoooooooooo', 14, 130, 130),
 (14, 'fewf', NULL, 'Adam', 'Velky', '2013-12-05', 'default.png', 'default-thumb.png', 'Male', 'sdfaf', 'seafb rea arg ', 15, 0, NULL);
 
 --
