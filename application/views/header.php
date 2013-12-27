@@ -29,7 +29,8 @@
 				echo '<li>'.anchor('/tournaments/view_results', '<i class="fa fa-bar-chart-o"></i> Results', 'title="Results"').'</li>'.
 					 '<li>'.anchor('/tournaments/year_ranking', '<i class="fa fa-bar-chart-o"></i> Ranking', 'title="Ranking"').'</li>'.
 					 '<li>'.anchor('/tournaments/slovak_champ_rank', '<i class="fa fa-bar-chart-o"></i> Slovak championship', 'title="Slovak championship"').'</li>'.
-					 '<li>'.anchor('/tournaments/view_tournaments', '<i class="fa fa-sitemap"></i> Tournaments', 'title="Tournaments"').'</li>';
+					 '<li>'.anchor('/tournaments/view_tournaments', '<i class="fa fa-sitemap"></i> Tournaments', 'title="Tournaments"').'</li>'.
+					 '<li>'.anchor('tournaments/registered_players', 'Registered players', 'title="Registered players"').'</li>';
 				if ($this->tank_auth->is_logged_in(TRUE))
 					{
 						echo '<li>'.anchor('auth/my_profile', '<i class="fa fa-user"></i> My profile', 'title="profile"').' 

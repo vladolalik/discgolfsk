@@ -1,5 +1,5 @@
 
-<?php $this->load->view('header', array('title' => 'Change email', 'caption' => 'Chagne email')) ?>
+<?php $this->load->view('header', array('title' => 'Change email', 'caption' => 'Change email')) ?>
 <?php
 $password = array(
 	'name'	=> 'password',

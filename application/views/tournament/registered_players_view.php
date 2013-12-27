@@ -1,10 +1,17 @@
-<?php  $this->load->view('admin/admin_header', array('title'=>'Registered players', 'caption'=>'Registered players')); ?>
+<?php  
+
+if (!$this->help_functions->is_admin()){
+	$this->load->view('header', array('title' => 'Results', 'caption' => 'Results'));
+} else {
+ 	$this->load->view('admin/admin_header', array('title'=>'Registered players', 'caption'=>'Registered players')); 	
+}
+?>
 <fieldset>
 	<legend>Select tournament</legend>
 <table>
 	<tr>
 <?php //print_r($tournaments); 
-	echo form_open('/tournaments/admin_registered_players');
+	echo form_open('/tournaments/registered_players');
 	echo '<td>'.form_label('Tournaments', 'tournament_id').'</td>';
 	echo '<td><select name="tournament_id" id="tournament_id">';
 	foreach ($tournaments as $key => $value) {

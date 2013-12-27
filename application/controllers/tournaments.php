@@ -1108,12 +1108,9 @@ function tournament_details()
 * @return void
 *
 */
-function admin_registered_players()
+function registered_players()
 {
-	if (!($this->help_functions->is_admin()))
-	{
-		redirect();
-	}
+	
 	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
 	$data['tournaments']=$this->tournament->get_tournaments();
 	
@@ -1503,10 +1500,10 @@ function compute_year_rank_gender()
 	foreach ($tournaments as $key => $tournament) {
 		// ziskat vsetkych nediskvalifikovanych hracov
 		for ($i=0; $i<2; $i++) {
-			var_dump($tournament['tournament_id']);
+			//var_dump($tournament['tournament_id']);
 			//var_dump($category['category_id']);
 			$players = $this->tournament->get_not_disq_players_gender($tournament['tournament_id'], $i);
-			var_dump($players);
+			//var_dump($players);
 			if ($tournament['par'] != NULL)
 			{
 				$count = count($players); // pocet zucasntenych hracov
@@ -1515,7 +1512,7 @@ function compute_year_rank_gender()
 					foreach ($players as $player) {
 						$rank = $this->__compute_rank_gender($player['user_id'], $tournament['tournament_id'], $i);
 						$score = (($count-$rank+1)/$count)*$tournament['par'];
-						var_dump($rank);
+						
 						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
 					}
 				}
@@ -1528,7 +1525,7 @@ function compute_year_rank_gender()
 	foreach ($players as $player) {
 		$sum = $this->tournament->get_score_actual_year($player['user_id']);
 		$slovak_champ_sum=$this->tournament->get_score_actual_slovak($player['user_id']);
-		print_r($sum['sum']);
+		//print_r($sum['sum']);
 		$this->tournament->update_year_score($player['user_id'], $sum['sum'], $slovak_champ_sum['sum']);
 	}
 	redirect('tournaments/admin_view_tournaments');
@@ -1605,6 +1602,29 @@ function tournaments_score()
 	$user_id=$this->uri->segment(3);
 	$data['score']=$this->tournament->get_score_tournaments($user_id);
 	$this->load->view('tournament/tournaments_score', $data);
+}
+
+function set_nmbr_acc_tourn()
+{
+	$this->form_validation->set_rules('nmbr_accept_tourn', 'Number of tournaments which count to Slovak championship ranklist ', 'trim|required|is_int|xss_clean');
+	if ($this->form_validation->run())
+	{
+		if ($this->tournament->set_nmbr_acc_tourn($this->form_validation->set_value('nmbr_accept_tourn')))
+		{
+			$this->session->set_flashdata('message', '<p class="succes">Number of tournaments which count to Slovak championship ranklist was updated</p>');
+		} 
+		else
+		{
+			$this->session->set_flashdata('message', '<p class="succes">Number of tournaments which count to Slovak championship ranklist was updated</p>');	
+		}
+		redirect('tournaments/set_nmbr_acc_tourn');
+
+	} 
+	else
+	{
+		$data = $this->tournament->get_nmbr_accept_tourn();
+		$this->load->view('tournament/set_nmbr_acc_tourn', $data); 
+	}
 }
 
 }

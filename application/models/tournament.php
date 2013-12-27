@@ -735,5 +735,30 @@ function get_slovak_ranking($gender)
     return NULL;
                      
 }
+/**
+* Function set number of acceptable tournaments for slovak champ ranklist
+* @author Vladimir Lalik
+* @param int
+* @return bool
+*/
+
+function set_nmbr_acc_tourn($number)
+{
+    $this->db->empty_table('slovak_champ');
+    $this->db->insert('slovak_champ', array('nmbr_accept_tourn'=>$number) );
+             
+    if ($this->db->affected_rows()==1)
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function get_nmbr_accept_tourn()
+{
+    $select=$this->db->select('nmbr_accept_tourn')
+                    ->get('slovak_champ');
+    return $select->row_array();
+}
 
 }
