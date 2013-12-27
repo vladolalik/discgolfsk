@@ -510,9 +510,19 @@ function get_lap_info($player_id)
 /**
 * Function return par for one tournament and category
 *
-*
+* @author Vladimir Lalik
 *
 */
+function get_par_by_id_gender($tournament_id, $gender)
+{
+    $gender=strtolower($gender);
+    $select = $this->db->query("SELECT b.number, b.par, l.final, p.category_id, t.name  
+                                FROM statistics_basket b, statistics_lap l, statistics_players_has_tournaments p, statistics_tournaments t, statistics_user_profiles u
+                                WHERE b.lap_id=l.lap_id AND l.tournament_id=p.tournament_id AND t.tournament_id=p.tournament_id
+                                AND l.tournament_id='$tournament_id' AND u.user_id=p.user_id AND LOWER(u.gender)='$gender' AND l.user_id=p.user_id
+                                order by l.final, b.number");
+    return $select->result_array();
+}
 
 function get_par_by_id($tournament_id)
 {
@@ -524,6 +534,8 @@ function get_par_by_id($tournament_id)
     return $select->result_array();
 }
 
+
+
 function set_lap_par($tournament_id, $category_id, $par, $number)
 {
     /*var_dump($tournament_id);
@@ -534,6 +546,24 @@ function set_lap_par($tournament_id, $category_id, $par, $number)
     $query = $this->db->query("UPDATE statistics_basket b, statistics_players_has_tournaments p, statistics_lap l
                               SET b.par='$par'
                               WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.tournament_id=p.tournament_id AND p.category_id='$category_id'
+                                    AND b.number='$number' ");
+    if ($this->db->affected_rows()>0){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function set_lap_par_gender($tournament_id, $gender, $par, $number)
+{
+    /*var_dump($tournament_id);
+    var_dump($category_id);
+    var_dump($par);
+    var_dump($number);
+    die();*/
+    $gender=strtolower($gender);
+    $query = $this->db->query("UPDATE statistics_basket b, statistics_players_has_tournaments p, statistics_lap l, statistics_user_profiles u
+                              SET b.par='$par'
+                              WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.user_id=p.user_id AND l.tournament_id=p.tournament_id AND u.user_id=p.user_id AND LOWER(u.gender)='$gender'
                                     AND b.number='$number' ");
     print_r($query);
     if ($this->db->affected_rows()>0){
@@ -611,10 +641,26 @@ function get_score_actual_year($player_id)
     return $select->row_array();
 }
 
-function update_year_score($user_id, $score)
+
+function get_score_actual_slovak($player_id)
+{
+   $select=$this->db->select('nmbr_accept_tourn')
+                    ->get('slovak_champ');
+   $nmbr_accept_tourn=$select->row_array('nmbr_accept_tourn'); 
+   $nmbr_accept_tourn=$nmbr_accept_tourn['nmbr_accept_tourn'];
+   var_dump($nmbr_accept_tourn);
+   $select=$this->db->query("SELECT SUM(score) sum 
+                              FROM (SELECT p.score FROM statistics_players_has_tournaments p, statistics_tournaments t
+                              WHERE p.user_id='$player_id' AND p.tournament_id=t.tournament_id AND YEAR(t.date) = YEAR(CURDATE())
+                              ORDER BY p.score DESC
+                              LIMIT 0, $nmbr_accept_tourn) as subt" );
+    return $select->row_array();
+}
+
+function update_year_score($user_id, $score, $slovak_score)
 {
     $this->db->where('user_id', $user_id)
-             ->update('user_profiles', array('year_score'=>$score));
+             ->update('user_profiles', array('year_score'=>$score, 'slovak_champ_score'=>$slovak_score));
 }
 
 /**
@@ -626,7 +672,7 @@ function get_year_ranking($gender)
 {
    // var_dump($gender);
     $gender=strtolower($gender);
-    $select = $this->db->query("SELECT u.year_score, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+    $select = $this->db->query("SELECT u.year_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
                                 FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
                                 WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') 
                                 ORDER BY u.year_score DESC");
@@ -635,6 +681,59 @@ function get_year_ranking($gender)
     }
     return NULL;
 
+}
+
+/**
+* Function return score in all tournaments in current year
+* @author Vladimir Lalik
+* @param int
+* @return array
+*/
+function get_score_tournaments($user_id)
+{
+    //for rank by gender
+    $where=$this->db->select('gender')
+                    ->where('user_id', $user_id)
+                    ->get('user_profiles');
+    $gender=strtolower($where->row('gender'));
+    
+
+    $select=$this->db->query("SELECT u.first_name, u.last_name, t.name, t.date, p.score, u.year_score, u.slovak_champ_score, ranking.rank
+                              FROM statistics_user_profiles u, statistics_tournaments t, statistics_players_has_tournaments p,
+                                  (SELECT u.year_score, u.user_id,  u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+                                    FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
+                                    WHERE LOWER(u.gender)='$gender'  AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') 
+                                    ORDER BY u.year_score DESC) ranking
+                              WHERE u.user_id='$user_id' AND  ranking.user_id=u.user_id AND u.user_id=p.user_id AND t.tournament_id=p.tournament_id AND YEAR(t.date) = YEAR(CURDATE())
+                              ORDER BY p.score DESC, t.date DESC");
+    if ($select->num_rows()>0)
+    {
+        return $select->result_array();
+    }
+    return NULL;
+}
+
+/**
+* Function that return data for slovak ranking
+* @author Vladimir Lalik
+* @param string
+* @return array
+*
+*/
+function get_slovak_ranking($gender)
+{
+    
+   
+    $gender=strtolower($gender);
+    $select = $this->db->query("SELECT u.slovak_champ_score year_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+                                FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
+                                WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') 
+                                ORDER BY u.slovak_champ_score DESC");
+    if ($select->num_rows()>0){
+        return $select->result_array();
+    }
+    return NULL;
+                     
 }
 
 }

@@ -1,4 +1,4 @@
-<?php $this->load->view('header', array('title' => 'Ranking '.date('Y'), 'caption' => 'Ranking '.date('Y'))); ?>
+<?php $this->load->view('header', array('title' => $name.' '.date('Y'), 'caption' => $name.' '.date('Y'))); ?>
 <?php
  	//print_r($male);
  	//print_r($female);
@@ -22,7 +22,7 @@ if ($male!=NULL)
 	 			<td>'.$m_results['rank'].'</td>
 	 			<td>'.round($m_results['year_score'],2).'</td>
 	 			<td>'.$m_results['first_name'].' '.$m_results['last_name'].'</td>
-	 			<td>Show</td>
+	 			<td>'.anchor('tournaments/tournaments_score/'.$m_results['user_id'], 'Show', 'title="Score details"').'</td>
 	 		  </tr>';
  	}
 }
@@ -42,12 +42,11 @@ if ($male!=NULL)
  if ($female!=NULL){
  	foreach ($female as $key => $f_results) 
  	{
- 		//print_r($m_results);
  		echo '<tr>
 	 			<td>'.$f_results['rank'].'</td>
 	 			<td>'.round($f_results['year_score'],2).'</td>
 	 			<td>'.$f_results['first_name'].' '.$f_results['last_name'].'</td>
-	 			<td>Show</td>
+	 			<td>'.anchor('tournaments/tournaments_score/'.$f_results['user_id'], 'Show', 'title="Score details"').'</td>
 	 		  </tr>';
  	}
 }

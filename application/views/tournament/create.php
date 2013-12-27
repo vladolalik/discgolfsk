@@ -2,7 +2,7 @@
 	<fieldset>
 		<legend>Tournament data</legend>
 		<?php 
-			echo validation_errors();
+		//	echo validation_errors();
 			echo form_open($this->uri->uri_string()); ?>
 		<br />
 		
@@ -16,7 +16,8 @@
 			'value' =>set_value('name')
 		); 
 		echo '<td>'.form_label('Tournament Name: ','name').'</td>';
-		echo '<td>'.form_input($options).'</td>'; 
+		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -28,7 +29,8 @@
 			'type'	=>'date',
 			'value' => set_value('date')
 		);
-		echo '<td>'.form_input($options).'</td>';  
+		echo '<td>'.form_input($options).'</td>'; 
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -41,6 +43,7 @@
 		);  
 		echo '<td>'.form_label('Tournament Location: ','location').'</td>';
 		echo '<td>'.form_input($options).'</td>'; 
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -52,6 +55,7 @@
 		);
 		echo '<td>'.form_label('Number of Rounds: ','rounds').'</td>';
 		echo '<td>'.form_input($options).'</td>'; 
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -63,6 +67,19 @@
 		); 
 		echo '<td>'.form_label('Number of Rounds in Final: ','rounds_final').'</td>';
 		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
+			'name'	=>'par',
+			'id'	=>'par',
+			'value' => set_value('par')
+		); 
+		echo '<td>'.form_label('Parameter of tournament: ','par').'</td>';
+		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -74,6 +91,7 @@
 		); 
 		echo '<td>'.form_label('Lattitude: ','lat').'</td>';
 		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -85,6 +103,7 @@
 		); 
 		echo '<td>'.form_label('Longtitude: ','lng').'</td>';
 		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 	<tr>
@@ -98,8 +117,11 @@
 		); 
 		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';
 		echo '<td>'.form_checkbox($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
+</table>
+<table>
 	<tr>
 	<?php
 		$options=array(
@@ -110,6 +132,7 @@
 		); 
 		echo '<td>'.form_label('About: ','about').'</td>';
 		echo '<td>'.form_textarea($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
 </table>

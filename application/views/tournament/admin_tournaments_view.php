@@ -33,7 +33,7 @@
 					<td class="text-center">'.anchor('/tournaments/admin_upload_photo/'.$row['tournament_id'], '<i class="fa fa-plus"></i>', 'title="Add_photo"').'</td>
 					<td class="text-center">'.anchor('/tournaments/tournament_details/'.$row['tournament_id'], 'Details', 'title="show tournament details"').'</td>
 					<td class="text-center">'.anchor('/tournaments/admin_update_tournament/'.$row['tournament_id'], 'Update', 'title="update tournament"').'</td>
-					<td class="text-center">'.anchor('/tournaments/admin_set_par_lap/'.$row['tournament_id'], 'Set par', 'title="Set par"').'</td>
+					<td class="text-center">'.anchor('/tournaments/admin_set_par_lap_gender/'.$row['tournament_id'], 'Set par', 'title="Set par"').'</td>
 					<td class="text-center"><form action="'.base_url().'index.php/tournaments/admin_delete_tournament/'.$row['tournament_id'].'"><input type="submit" name="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete touranment: '.$row['name'].' ('.$row['date'].') ?\')" /></form></td>
 				  </tr>';
 		}

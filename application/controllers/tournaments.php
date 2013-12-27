@@ -99,6 +99,7 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 		$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
 		$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
+		$this->form_validation->set_rules('par','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		if($this->form_validation->run()){
 			$allow_registration=$this->form_validation->set_value('allow_registration');
@@ -117,6 +118,7 @@ class Tournaments extends CI_Controller {
 					'allow_registration' => $allow_registration,
 					'lat'=>$this->form_validation->set_value('lat'),
 					'lng'=>$this->form_validation->set_value('lng'),
+					'par'=>$this->form_validation->set_value('par')
 				);
 			
 				
@@ -602,33 +604,34 @@ class Tournaments extends CI_Controller {
   {
 
   	 $this->form_validation->set_rules('tournaments', 'Tournaments', 'trim|required|xss_clean|strip_tags');
-  	 $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean|strip_tags');
+  	// $this->form_validation->set_rules('players', 'Players', 'trim|required|xss_clean|strip_tags'); // if selecting players is enabled
   
   	if ($this->form_validation->run())
   	{
   		
 	   	 $data['tournaments'] = $this->tournament->get_tournaments();
-		 $data['users'] = $this->tournament->get_all_players();
+		// $data['users'] = $this->tournament->get_all_players();
 		 $data['categories'] = $this->tournament->get_categories();
 
 		 $tournament_id = $this->input->post('tournaments');
-		 $player_id = $this->input->post('players');
+		 //$player_id = $this->input->post('players');
 		 
 		 if ($tournament_id!=NULL && $data['categories']!=NULL)
 		 {
 		 	 foreach ($data['categories'] as $key => $category) {
 		 	 	
 		 	 	 $category_id = $category['category_id'];
-			  	 $data['results'][$category_id] = $this->tournament->get_all_results($tournament_id, $player_id, $category_id);
+			  	 //$data['results'][$category_id] = $this->tournament->get_all_results($tournament_id, $player_id, $category_id); // if selecting players is enabled
+			  	 $data['results'][$category_id] = $this->tournament->get_all_results($tournament_id, 'ALL', $category_id);
 			  	 // compute ranking
 			  	 //print_r($data['results']);
 			  	 if ($data['results'][$category_id] != NULL)
 			  	 {
-				  	  if ($player_id != 'ALL')
+				  	 /* if ($player_id != 'ALL')
 				  	  {
 				  	 	if ($data['results'][$category_id]['0']['disqualified'] == '1')
 				  	 	{
-				  	 		$data['results'][$category_id]['0']['rank'] = '';	
+				  	 		$data['results'][$category_id]['0']['rank'] = '';	// if selecting players is enabled
 				  	 	}
 				  	 	else
 				  	 	{
@@ -636,7 +639,7 @@ class Tournaments extends CI_Controller {
 				  	 	}
 				  	 }
 				  	 else 
-				  	 {
+				  	 {*/
 					  	 $rank = 0;
 						 foreach ($data['results'][$category_id] as $key => $row)
 						 {
@@ -654,7 +657,7 @@ class Tournaments extends CI_Controller {
 						 		$data['results'][$category_id][$key]['rank'] = $rank;	
 						 	}
 						 }
-					}
+					//}
 				}
 			}
 			//print_r($data['results']);
@@ -683,11 +686,11 @@ class Tournaments extends CI_Controller {
 			  	 $data['results'][$category_id] = $this->tournament->get_all_results($last_tournament_id, $player_id, $category_id);
 			  	 if ($data['results'][$category_id] != NULL)
 			  	 {
-				  	  if ($player_id != 'ALL')
+				  	 /* if ($player_id != 'ALL')
 				  	  {
 				  	 	if ($data['results'][$category_id]['0']['disqualified'] == '1')
 				  	 	{
-				  	 		$data['results'][$category_id]['0']['rank'] = '';	
+				  	 		$data['results'][$category_id]['0']['rank'] = '';	// if selecting players is enabled
 				  	 	}
 				  	 	else
 				  	 	{
@@ -695,7 +698,7 @@ class Tournaments extends CI_Controller {
 				  	 	}
 				  	 }
 				  	 else 
-				  	 {
+				  	 {*/
 					  	 $rank = 0;
 						 foreach ($data['results'][$category_id] as $key => $row)
 						 {
@@ -714,7 +717,7 @@ class Tournaments extends CI_Controller {
 						 	}
 						 }
 					}
-				}
+				//}
 			}
 		}
 	  	$this->load->view('result_view', $data);
@@ -929,6 +932,7 @@ function view_individual_results()
 	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('par','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
 	$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 	if($this->form_validation->run()){
 		$allow_registration = $this->form_validation->set_value('allow_registration');
@@ -946,7 +950,8 @@ function view_individual_results()
 					'about' => $this->form_validation->set_value('about'),
 					'allow_registration' => $allow_registration,
 					'lat'=>$this->form_validation->set_value('lat'),
-					'lng'=>$this->form_validation->set_value('lng')
+					'lng'=>$this->form_validation->set_value('lng'),
+					'par'=>$this->form_validation->set_value('par'),
 				);
 			
 				
@@ -1278,12 +1283,12 @@ function admin_add_result(){
 
 
 /**
-* Function that set par for laps
+* Function that set par for laps by categories
 * @author Vladimir Lalik
 * @return void
 */
 
-function admin_set_par_lap()
+function __admin_set_par_lap()
 {
 	if (!($this->help_functions->is_admin()))
 	{
@@ -1343,11 +1348,105 @@ function admin_set_par_lap()
 		if (isset($row)){
 			$data['unique_par'] = $row;	
 		}
-		print_r($data['unique_par']);
 		$this->load->view('tournament/admin_set_par', $data);
 	} 
 
 }
+
+
+/**
+* Function that set par for laps by categories
+* @author Vladimir Lalik
+* @return void
+*/
+
+function admin_set_par_lap_gender()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$tournament_id = $this->uri->segment(3);
+	
+	
+	$this->form_validation->set_rules('gender','Gender','trim|required|xss_clean|strip_tags');
+	//$data['categories']=$this->tournament->get_categories();
+
+	// set validation rules for all fields
+	for ($j=0; $j<2; $j++)
+	{
+		if ($j==0){
+			$gender="male";
+		}else{
+			$gender="female";
+		}
+		for ($i=1; $i<=20; $i++)
+		{
+			$this->form_validation->set_rules('basket_'.$i.'_'.$gender, 'Basket '.$i, 'trim|xss_clean|is_numeric');
+		}
+	}
+	if ($this->form_validation->run())
+	{
+		//zapis
+		//skotrolujem vsetky kategorie
+			$result = FALSE;
+			for ($j=0; $j<2; $j++)
+			{
+				if ($j==0){
+					$gender="male";
+				}else{
+					$gender="female";
+				}
+
+				
+				for ($i=1; $i<=20; $i++)
+				{
+					if ($this->form_validation->set_value('basket_'.$i.'_'.$gender)!=NULL)
+					{
+						$res = $this->tournament->set_lap_par_gender($tournament_id, $gender, $this->form_validation->set_value('basket_'.$i.'_'.$gender),$i);
+						$result = $result || $res;
+						
+					}
+				}
+		}
+		if ($result)
+		{
+			$this->session->set_flashdata('message', '<p class="success">Par was updated</p>');
+		}
+		else 
+		{
+			$this->session->set_flashdata('message', '<p class="fail">Par was probably not updated. Please check it</p>');	
+		}
+		redirect('tournaments/admin_set_par_lap_gender/'.$tournament_id);
+	}
+	 else
+	{
+		for ($j=0; $j<2; $j++)
+			{
+				if ($j==0){
+					$gender="male";
+				}else{
+					$gender="female";
+				}
+
+			$par = $this->tournament->get_par_by_id_gender($tournament_id, $gender);
+			foreach ($par as $key => $value){
+				//$row['basket_'.$value['number'].$value['category_id']] =array('par'=>$value['par'], 'category_id'=>$value['category_id']);
+				$row['basket_'.$value['number'].'_'.$gender] =$value['par'];
+			}
+		}
+		$data['unique_par'] = NULL;
+		if (isset($row)){
+			$data['unique_par'] = $row;	
+		}
+		$data['tournament'] = $this->tournament->get_tournament_by_id($tournament_id);
+
+		$this->load->view('tournament/admin_set_par_gender', $data);
+	} 
+
+}
+
+
 
 /**
 * Function that compute score of players by category
@@ -1428,8 +1527,9 @@ function compute_year_rank_gender()
 	$players = $this->tournament->get_all_players();
 	foreach ($players as $player) {
 		$sum = $this->tournament->get_score_actual_year($player['user_id']);
+		$slovak_champ_sum=$this->tournament->get_score_actual_slovak($player['user_id']);
 		print_r($sum['sum']);
-		$this->tournament->update_year_score($player['user_id'], $sum['sum']);
+		$this->tournament->update_year_score($player['user_id'], $sum['sum'], $slovak_champ_sum['sum']);
 	}
 	redirect('tournaments/admin_view_tournaments');
 }
@@ -1479,10 +1579,33 @@ function year_ranking()
  	$data['male'] = $this->tournament->get_year_ranking('male');
  	$data['female'] = $this->tournament->get_year_ranking('female');
  	//print_r($data);
+ 	$data['name']="Ranking";
  	$this->load->view('tournament/year_ranking', $data);
 
 }
 
+
+function slovak_champ_rank()
+{
+	$data['male'] = $this->tournament->get_slovak_ranking('male');
+ 	$data['female'] = $this->tournament->get_slovak_ranking('female');
+ 	$data['name']="Slovak championship";
+ 	$this->load->view('tournament/year_ranking', $data);
+}
+
+
+/** 
+* Function that show user score in tournaments from current year 
+* @author Vladimir Lalik
+* @return void
+*
+*/
+function tournaments_score()
+{
+	$user_id=$this->uri->segment(3);
+	$data['score']=$this->tournament->get_score_tournaments($user_id);
+	$this->load->view('tournament/tournaments_score', $data);
+}
 
 }
 

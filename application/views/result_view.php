@@ -15,14 +15,14 @@
    endforeach; ?>
 </select>
 
-<select name="players" id="result-players" size="5">
-  <option value='ALL' <?php echo set_select('players', 'ALL', TRUE);?>> ALL PLAYERS </option>
+<!--<select name="players" id="result-players" size="5">
+  <option value='ALL' <?php //echo set_select('players', 'ALL', TRUE);?>> ALL PLAYERS </option>
   <?php
-  	foreach($users as $key=>$row): 
-  		echo '<option value="'.$row['user_id'].'"'. set_select('players', $row['user_id']).'>'.$row['last_name'].' '.$row['first_name'].'</option>';
-  	endforeach;
+  	//foreach($users as $key=>$row): 
+  	//	echo '<option value="'.$row['user_id'].'"'. set_select('players', $row['user_id']).'>'.$row['last_name'].' '.$row['first_name'].'</option>';
+  	//endforeach;
   ?>
-</select>
+</select>-->
 
 
 <input id="results-submit" type="submit" value="show">
@@ -63,7 +63,7 @@
 					 	{
 					 		echo '<tr>';
 					 		echo '<td class="text-center" >'.$row_array['rank'].'</td>';
-					 		echo '<td>'.anchor('/tournaments/view_individual_results/'.$row_array['user_id'], $row_array['first_name'].' '.$row_array['last_name'], 'target="blank"').'</td>';
+					 		echo '<td>'.anchor('/tournaments/view_individual_results/'.$row_array['user_id'], $row_array['first_name'].' '.$row_array['last_name'], 'target="_blank"').'</td>';
 					 		$total = 0;
 					 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
 					 		{
