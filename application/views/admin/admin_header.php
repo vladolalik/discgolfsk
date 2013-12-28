@@ -48,7 +48,6 @@ tinymce.init({
 						<li><?php echo anchor('tournaments/admin_add_tournament', '<i class="fa fa-angle-right"></i>Add new tournament', 'title="Add new tournament"'); ?></li>
 						<li><?php echo anchor('tournaments/import', '<i class="fa fa-angle-right"></i>Import tournament', 'title="Add new tournament"'); ?></li>
 						<li><?php echo anchor('tournaments/registered_players', '<i class="fa fa-angle-right"></i>Registered players', 'title="Registered players"'); ?></li>
-						<li><?php echo anchor('tournaments/admin_set_par_lap', '<i class="fa fa-angle-right"></i>Set par for baskets', 'title="Set par for baskets"'); ?></li>
 					</ul>
 				</li>
 				<li><?php echo anchor('tournaments/admin_get_categories', '<i class="fa fa-tags"></i>Categories', 'title="Categories"'); ?>
