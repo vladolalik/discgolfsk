@@ -12,3 +12,4 @@ if ($tournaments != NULL)
 	echo '<p> There are no tournaments</p>';
 }
 ?>
+<?php  $this->load->view('footer'); 

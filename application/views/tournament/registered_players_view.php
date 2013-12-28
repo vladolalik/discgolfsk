@@ -64,3 +64,4 @@ if (!$this->help_functions->is_admin()){
 
 ?>
 </div>
+<?php $this->load->view('footer'); ?>

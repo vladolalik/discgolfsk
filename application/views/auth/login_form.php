@@ -96,3 +96,4 @@ echo $this->session->flashdata('message');
 </table>
 
 <?php echo form_close(); ?>
+<?php $this->load->view('footer') ?>

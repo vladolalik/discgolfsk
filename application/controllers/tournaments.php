@@ -627,6 +627,7 @@ class Tournaments extends CI_Controller {
 
 			}
 		}
+		$this->compute_year_rank_gender();
 		$this->session->set_flashdata('message', 'Data imported, set pars data');
 		// redirect('tournaments/admin_view_tournaments');
 		redirect('tournaments/admin_set_par_lap_gender/'.$tournament_id);
@@ -653,16 +654,13 @@ class Tournaments extends CI_Controller {
 
 		if( isset($_POST['player_id']) && isset($_POST['delete']) ){
 			if( $this->tournament->delete_player_results_in_tournament($_POST['tournament_id'], $_POST['player_id'] ) ){
-				$this->session->set_flashdata('message', 'Data deleted');
 				
+				$this->session->set_flashdata('message', 'Data deleted');
 			}
-			$this->load->view('tournament/admin_delete_results');
+			$this->session->set_flashdata('message', 'Data deleted');
+			$this->load->view('tournament/admin_view_tournaments');
 		}
-		$this->load->view('tournament/admin_delete_results', $data);
-		
-
-
-		
+		$this->load->view('tournament/admin_delete_results', $data);	
 	}
 
 

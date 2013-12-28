@@ -788,7 +788,7 @@ function get_nmbr_accept_tourn()
     return $select->row_array();
 }
 
-}
+
 
 /**
 * Function delete all player results in selected tournament
@@ -796,21 +796,24 @@ function get_nmbr_accept_tourn()
 * @param int
 * @return bool
 */
-function delete_player_results_in_tournament($tournament_id, $player_id)
-{
+function delete_player_results_in_tournament($tournament_id, $player_id){
     if (!$this->help_functions->is_admin())
     {
-        redirect();
+        redirect($tournament_id, $player_id);
     }
-    $query = $this->db  ->where('tournament_id', $tournament_id)
+     $this->db->where('tournament_id', $tournament_id)
                         ->where('user_id', $player_id)
                         ->delete('players_has_tournaments');
-    $query = $this->db  ->where('tournament_id', $tournament_id)
+
+    $query = $this->db->query("DELETE statistics_number_of_baskets FROM statistics_number_of_baskets LEFT JOIN statistics_results ON statistics_results.result_id = statistics_number_of_baskets.result_id WHERE statistics_results.tournament_id = '$tournament_id' 
+        AND statistics_results.user_id = '$player_id'");
+
+     $this->db->where('tournament_id', $tournament_id)
                         ->where('user_id', $player_id)
                         ->delete('results');
-    // $query = $this->db->query("DELETE  FROM statistics_basket LEFT JOIN statistics_lap ON statistics_lap.lap_id = statistics_baskter.lap_id WHERE statistics_lap.tournament_id = '$tournament_id' 
-    //     AND statistics_lap.user_id = '$player_id'");
-    $query = $this->db  ->where('tournament_id', $tournament_id)
+    $query = $this->db->query("DELETE statistics_basket FROM statistics_basket LEFT JOIN statistics_lap ON statistics_lap.lap_id = statistics_basket.lap_id WHERE statistics_lap.tournament_id = '$tournament_id' 
+        AND statistics_lap.user_id = '$player_id'");
+     $this->db->where('tournament_id', $tournament_id)
                         ->where('user_id', $player_id)
                         ->delete('lap');
     if ($this->db->affected_rows()>0)
@@ -818,4 +821,5 @@ function delete_player_results_in_tournament($tournament_id, $player_id)
         return TRUE;
     }                
     return FALSE;
+    }
 }

@@ -70,6 +70,7 @@
 
 
 			<?php
+      echo anchor( base_url().'uploads/example_csv.csv', 'example.csv');
 
 			echo form_open_multipart('tournaments/import');
       echo form_label('Userfile', 'userfile');

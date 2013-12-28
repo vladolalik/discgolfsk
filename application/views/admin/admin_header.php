@@ -50,6 +50,7 @@ tinymce.init({
 						<li><?php echo anchor('tournaments/registered_players', '<i class="fa fa-angle-right"></i>Registered players', 'title="Registered players"'); ?></li>
 					</ul>
 				</li>
+				<li><?php echo anchor('tournaments/admin_delete_results', '<i class="fa fa-trash-o"></i>Delete results', 'title="Delete player results"'); ?> 
 				<li><?php echo anchor('tournaments/admin_get_categories', '<i class="fa fa-tags"></i>Categories', 'title="Categories"'); ?>
 					<ul>
 						<li><?php echo anchor('tournaments/admin_add_category', '<i class="fa fa-angle-right"></i>Add new category', 'title="Add new category"'); ?></li>

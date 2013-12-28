@@ -173,3 +173,4 @@
 			 }
 
 ?>
+<?php $this->load->view('footer'); ?>

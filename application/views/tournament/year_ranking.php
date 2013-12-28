@@ -3,6 +3,7 @@
  	//print_r($male);
  	//print_r($female);
 ?>
+<div id="ranking">
 	<h2>Male</h2>
  	<table class="statistics table-row-diff">
  		<tr>
@@ -52,3 +53,5 @@ if ($male!=NULL)
 }
 ?>
 </table>
+</div> <!-- #ranking-->
+<?php $this->load->view('footer'); ?>

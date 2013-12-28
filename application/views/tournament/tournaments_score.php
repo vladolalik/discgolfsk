@@ -7,7 +7,7 @@
 		echo '<h3>Total score: '.round($score['0']['year_score'],2).'</h3>';
 		echo '<h3>Score in Slovak championship: '.round($score['0']['slovak_champ_score'],2).'</h3>';
 		
-		echo '<table border="1px">
+		echo '<table id="tournament_score_table" class="table-row-diff">
 					<tr>
 						<th>Date</th>
 						<th>Tournament</th>
@@ -24,3 +24,4 @@
 		}
 		echo '</table>';
 	}
+$this->load->view('footer'); ?>

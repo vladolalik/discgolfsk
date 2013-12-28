@@ -80,6 +80,11 @@ option:hover,
 option:focus,
 option:active,
 option:checked { background-color: #00AFAF; }
+#pagination{
+	display: block;
+	text-align: center;
+	margin: 5px 0px;
+}
 #pagination .next a{
 	margin-left: 5px;
 }
@@ -459,4 +464,30 @@ nav #main-nav li ul{
 #my-profile-info table td{
 	padding-left: 10px;
 }
+/** RANKING
+----------------------------------------*/
+#ranking table{
+	text-align: center;
+	width: 100%;
+}
+#tournament_score_table{
+	width: 100%;
+	text-align: center;
+}
+/** FOOTER
+--------------------------------------*/
+footer{
+	text-align: center;
+	margin-top: 20px;
+	padding-bottom: 10px;
 
+}
+footer #authors{
+	color: #353535;
+	padding-top: 20px;
+}
+footer #des{
+	padding-top: 5px;
+	font-size: 12px;
+	color: #353535;
+}

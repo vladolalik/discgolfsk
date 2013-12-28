@@ -28,3 +28,4 @@
 </table>
 <?php echo form_submit('mysubmit', 'Submit');?>
 <?php echo form_close();?>
+<?php $this->load->view('footer'); ?>
