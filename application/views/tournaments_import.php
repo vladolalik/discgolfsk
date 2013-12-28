@@ -9,8 +9,14 @@
 	<fieldset>
 		<legend>Import tournament:</legend>
 		<?php 		
-			if(isset($upload_error)){ echo $upload_error['error'];}
+			if(isset($upload_error)){ 
+        echo '<div class="general_error">';
+        echo $upload_error['error'];
+        echo '</div>';
+      }
+      echo '<div id="validation-box">';
 		 	echo validation_errors();
+      echo "</div>";
 			$name_input = array(
               'name'        => 'name',
               'value'		=>  set_value('name'),
@@ -104,4 +110,6 @@
 		  ?>
 
 	</fieldset>
-	
+  <?php
+	 $this->load->view('admin/admin_footer'); 
+   ?>

@@ -627,10 +627,43 @@ class Tournaments extends CI_Controller {
 
 			}
 		}
-		$this->session->set_flashdata('message', 'data imported');
-		redirect('tournaments/admin_view_tournaments');
+		$this->session->set_flashdata('message', 'Data imported, set pars data');
+		// redirect('tournaments/admin_view_tournaments');
+		redirect('tournaments/admin_set_par_lap_gender/'.$tournament_id);
 	}
 
+	function admin_delete_results(){
+		if (!$this->tank_auth->is_logged_in())
+		{
+			redirect();
+		}
+		$data['players'] = $this->tournament->get_all_players();
+		
+
+		if( isset($_POST['player_id']) && isset($_POST['submit']) ){
+			$data['player_id'] = $_POST['player_id'];
+
+			$player_tournaments = $this->tournament->get_all_player_tournaments($_POST['player_id']);
+			$data['tournaments'] = array();
+			foreach ($player_tournaments as $key => $player_tournament) {
+				$data['tournaments'][] = $this->tournament->get_tournament_by_id( $player_tournament->tournament_id );
+			}
+		}
+
+
+		if( isset($_POST['player_id']) && isset($_POST['delete']) ){
+			if( $this->tournament->delete_player_results_in_tournament($_POST['tournament_id'], $_POST['player_id'] ) ){
+				$this->session->set_flashdata('message', 'Data deleted');
+				
+			}
+			$this->load->view('tournament/admin_delete_results');
+		}
+		$this->load->view('tournament/admin_delete_results', $data);
+		
+
+
+		
+	}
 
 
   

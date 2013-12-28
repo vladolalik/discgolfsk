@@ -92,6 +92,14 @@ class Tournament extends CI_Model{
         return $query->num_rows;
     }
 
+    function get_all_player_tournaments( $player_id ){
+        $this->db->select()
+                ->from( 'players_has_tournaments' )
+                ->where( 'user_id', $player_id );
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     /**
     * Function return all tournaments ordered by date DESC
     *
@@ -780,4 +788,34 @@ function get_nmbr_accept_tourn()
     return $select->row_array();
 }
 
+}
+
+/**
+* Function delete all player results in selected tournament
+* @author Branislav Ballon
+* @param int
+* @return bool
+*/
+function delete_player_results_in_tournament($tournament_id, $player_id)
+{
+    if (!$this->help_functions->is_admin())
+    {
+        redirect();
+    }
+    $query = $this->db  ->where('tournament_id', $tournament_id)
+                        ->where('user_id', $player_id)
+                        ->delete('players_has_tournaments');
+    $query = $this->db  ->where('tournament_id', $tournament_id)
+                        ->where('user_id', $player_id)
+                        ->delete('results');
+    // $query = $this->db->query("DELETE  FROM statistics_basket LEFT JOIN statistics_lap ON statistics_lap.lap_id = statistics_baskter.lap_id WHERE statistics_lap.tournament_id = '$tournament_id' 
+    //     AND statistics_lap.user_id = '$player_id'");
+    $query = $this->db  ->where('tournament_id', $tournament_id)
+                        ->where('user_id', $player_id)
+                        ->delete('lap');
+    if ($this->db->affected_rows()>0)
+    {
+        return TRUE;
+    }                
+    return FALSE;
 }
