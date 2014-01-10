@@ -90,7 +90,7 @@
 			 	if ($laps!=NULL)
 				{
 				 	// lap statistics
-				 	echo '<table border="1px">
+				 	echo '<table class="profile-table">
 				 							<tr>
 				 								<th>Basket no.</th>
 				 								<th>1</th>

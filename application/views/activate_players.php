@@ -9,7 +9,7 @@ if ($players ==NULL)
 else
 {
 	echo '<p class="note">Note: Reject activation means deleted new profile and if it is auto-created profile it will delete only users email and password and someone else can register this profile</p>';
-	echo '<table border="1">
+	echo '<table id="admin-autocreated-profiles-table" class="table-row-diff">
 			<tr>
 				<th>First Name</th>
 				<th>Last name</th>
@@ -26,7 +26,7 @@ else
 		echo '<tr>
 				<td>'.$player['first_name'].'</td>
 				<td>'.$player['last_name'].'</td>
-				<td>'.$player['birth_date'].'</td>
+				<td>'.date('F d, Y', strtotime($player['birth_date'])).'</td>
 				<td>'.$player['email'].'</td>
 				<td>'.$player['gender'].'</td>
 				<td>'.$player['club'].'</td>';
@@ -37,5 +37,6 @@ else
 	}
 	echo '</table>';
 	echo $this->pagination->create_links();
+	$this->load->view('admin/admin_footer');
 }
 ?>

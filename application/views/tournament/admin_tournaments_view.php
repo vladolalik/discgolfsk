@@ -26,7 +26,7 @@
 		{
 			echo '<tr>
 					<td>'.$row['name'].'</td>
-					<td>'.$row['date'].'</td>
+					<td>'.date('F d, Y', strtotime($row['date'])).'</td>
 					<td>'.$row['location'].'</td>
 					<td class="laps text-center" >'.$row['nmbr_of_round'].'</td>
 					<td class="fin-laps text-center">'.$row['nmbr_of_fnl_laps'].'</td>

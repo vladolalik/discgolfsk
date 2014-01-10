@@ -18,4 +18,7 @@
 		</tr>
 	</table>
 <?php echo form_submit('update', 'Update'); ?>
-<?php echo form_close(); ?>
+<?php echo form_close(); 
+$this->load->view('admin/admin_footer');
+
+?>

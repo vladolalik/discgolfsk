@@ -1,0 +1,58 @@
+Pripomienky:
+Turnaje
+FIXED T1) Datum turnaja - turnaje prebiehaju casto aj viac dni, treba dat udaje od ... , do ...
+
+spravil som to pre kategorie dufam ze je to to iste ako divizia T2) Jamky vo finale maju iny par pre kazdu diviziu, t.j. treba zadavat Par pre kazdu diviziu a potom pre finale kazdej divizie zvlast
+(prirodzenejsie by bolo zadavat par v riadku a nie v stlpci)
+
+pre istotu viac T3) finale ma vzdy len jedno kolo - netreba to zadavat
+
+to sa zadava pri importe nie? formular sa mi nehce vytvarat T4) Je potrebne pri vytvarani noveho turnaja zadavat pocet jamiek v kolach (kazde kolo osobitne), a potom zobrazovat pocet jamiek na stranke turnaja
+momentalne vobec nie je jasne, ako sa momentalne zadava pocet jamiek v kole
+
+T5) Moznosti pri registracii na turnaj: Accommodation, Food - treba rozsirit v nastaveniach - t.j. pri vytvarani noveho turnaja treba zadat ake kategorie
+ubytovania su (napr. Accommodation: Option 1, Option 2, None, Food: Option 1, Option 2, Option 3, None. Tiez treba pridat moznost pisat poznamku pri
+registracii.  Napokon, pri zobrazovani zoznamu reistroavnych, nie vsetko je public, co zobrazovat a co nie sa urci pri vytvarani turnaja
+
+FIXED T6) Registrácia na turnaj na stránku detailov turnaja hned hore! (najlepsie hned vedla obrazku)
+
+T7) novy parameter turnaja - kapacita turnaja (maximalny pocet hracov vo vsetkych diviziach dokopy)
+
+T8) novy parameter Riaditel turnaja Meno, priezvisko, email, telefonne cislo
+
+T7) zobrazovanie registrovanych hracov s poradovymi cislami.
+
+Ak sa prekroci kapacita turnaja - uvadzat hracov s poradovymi cialmi na Waiting liste
+T8) pridat adminovi pravomoc rusit registraciu hracov (ktori sa z turnaja odhlasia napr. emailom),
+ak by to slo, tak isto pridat moznost odhlasit sa hracovi turnaja (zaroven poslat upozornenie emailom na adresu TD)
+
+??T9) ako sa daju editovat vysledky turnaja, napr. ak sa vo vysledkoch jeden hrac objavi dvakrat? Pri mazani hracov po jednom (Delete Results) neviem
+idetifikovat, co presne som zmazal. Jednoduchsie by bolo, ak by sa pri Importovani dat zmazali predchadzajuce vysledky, pripadne tam treba dat moznost:
+prepisat povodne vysledky alebo doplnit povodne vysledky
+
+??? Dohodli sme sa ze tam bude datum T10) pri importe vysledkov nemusi byt znamy datum narodenia hracov, identifikatory by mali byt len meno, priezvisko, pohlavie, kategoria
+(t.j. ani narodnost), t.j. datum narodenia nesmie byt povinna polozka, t.j. mala by sa pri importovani nahradzat automaticky nejakou defaoultnou, napr.
+1.1.1900, aby bolo jasne, ze to nie je spravny datum.
+
+T11) ako zadat pri importe vysledkov udaje hraca, ktory hral len 2. a 3. kolo? Bude program evidovat jeho vysledok ako nekompletny?
+
+
+Profily hracov
+Datum FIXED, format krajiny? P1) Vytvaranie profilu hraca - uviest format krajiny, format datumu narodenia
+WTF? P2) ako spajat hracov, ako pridat vysledky hraca pridane Importom, ktore sa automaticky nepriradili k uctu k hracovi? 
+
+
+Ranking
+R1) Ranking je podla kategorii OPEN/WOMEN nie podla pohlavia Male/Female, napr. zena moze mat body aj v OPEN divizii
+ked tam da turnaje z roku 2000 a je to ranking za aktualny rok tak asi nie R2) Ranking / Details nezobrazuje momentalne ziadne udaje
+nie je moj problem :D R3) vobec som nepochopil ako funguje v programe rebricek Slovak Championships 
+
+Chyby
+FIXED C1) editor detailov turnaja neakceptuje viacere slovenske pismena: makke c, t, l, atd. Asi zly font. 
+Podobny problem je aj pri importe vysledkov. format csv nepovoluje mnoho slovenskych pismen. Hraci potom maju ine registrovane meno (kedze registracia
+uzivatelov na stranke podporuje plne diakritiku) a pod inym menom maju importovane vysledky
+FIXED C2) Chybova hlaska pri zadavani paru turnaja --FIXED
+C3) example.csv uvadzany ako priklad pri Importe turnajov nie je dostupny (a nenasiel som ho ani pomocou ftp nikde).
+FIXED C4) pri kliknuti na meno hraca vo vysledkoch turnaja sa neobjavuje spravny pocet jamiek a neobjavuju sa vysledky hraca na turnaji, aj ked boli spravne
+importovane (spravne sa zobrazuju len vysledky finale) -
+C5) pri importe vysledkov pri pohlavi "Female" hlasi program chybu a vysledky sa neimportuju

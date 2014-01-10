@@ -15,7 +15,7 @@ if (!$this->help_functions->is_admin()){
 	echo '<td>'.form_label('Tournaments', 'tournament_id').'</td>';
 	echo '<td><select name="tournament_id" id="tournament_id">';
 	foreach ($tournaments as $key => $value) {
-	 	echo '<option value="'.$value['tournament_id'].'">'.$value['name'].' ('.$value['date'].')</option>';
+	 	echo '<option value="'.$value['tournament_id'].'">'.$value['name'].' ('.date('F d, Y', strtotime($value['date'])).')</option>';
 	 } 
 	 echo '</select></td>';
 	 echo '<td>'.form_submit('view', 'View').'</td>';
@@ -31,7 +31,17 @@ if (!$this->help_functions->is_admin()){
 		//print_r($registered_players);
 		?>
 		<div id="table">
-		<table border="1px">
+		<?php
+			if (!$this->help_functions->is_admin())
+			{
+				echo '<table class="profile-table" style="margin-top:10px;">';
+			} 
+			else 
+			{
+				echo '<table id="admin-autocreated-profiles-table" class="table-row-diff">';
+			}
+		 ?>
+		
 			<tr>
 				<th>Player</th>
 				<th>Category</th>
@@ -59,9 +69,19 @@ if (!$this->help_functions->is_admin()){
 				{
 					echo '<td>Yes</td>';
 				}
+				echo '</tr>';
 			}
+		echo '</table>';
 	}
 
 ?>
 </div>
-<?php $this->load->view('footer'); ?>
+<?php 
+if (!$this->help_functions->is_admin()){
+	$this->load->view('footer');
+} 
+else 
+{
+	$this->load->view('admin/admin_footer');
+} 
+?>

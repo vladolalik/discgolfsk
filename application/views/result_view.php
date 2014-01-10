@@ -5,11 +5,11 @@
   <?php foreach($tournaments as $key=>$row):
   	if ($key == 0)
   	{
-  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id'], TRUE).'>'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';
+  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id'], TRUE).'>'.$row['name'].' ('.date('F d, Y', strtotime($row['date'])).'), '.$row['location'].'</option>';
   	} 
   	else 
   	{
-  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.$row['date'].'), '.$row['location'].'</option>';	
+  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.date('F d, Y', strtotime($row['date'])).'), '.$row['location'].'</option>';	
   	}
  	
    endforeach; ?>
@@ -30,6 +30,7 @@
 <div class="content-simple-line">&nbsp;</div>
 <?php echo form_close(); ?>
 <?php 
+	$first=TRUE;
 	if (isset($results) && $results != NULL)
 	{
 		foreach ($results as $key => $result_cat) {
@@ -37,8 +38,12 @@
 			//var_dump($results);
 			//die();
 			if ($result_cat != NULL)
-			{
-				echo '<h2>'.$result_cat['0']['name'].' ('.$result_cat['0']['date'].')</h2>';
+			{ 
+				if ($first)
+				{
+					echo '<h2>'.$result_cat['0']['name'].' ('.date('F d, Y', strtotime($result_cat['0']['date'])).')</h2>';
+					$first=FALSE;
+				}
 				echo '<h3> <i class="fa fa-angle-right"></i> '.$result_cat['0']['category'].'</h3>'; ?>
 				<table id="results-table" class="statistics table-row-diff">
 				<tr>

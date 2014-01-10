@@ -21,7 +21,7 @@ else
 		echo '<tr>
 				<td>'.$player['first_name'].'</td>
 				<td>'.$player['last_name'].'</td>
-				<td>'.$player['birth_date'].'</td>
+				<td>'.date('F d, Y', strtotime($player['birth_date'])).'</td>
 				<td>'.$player['gender'].'</td>
 				<td>'.$player['club'].'</td>
 				<td><a href="admin_update_auto_profile/'.$player['user_id'].'"> Update</a></td>

@@ -1,5 +1,5 @@
 
-<?php  $this->load->view('header', array('title'=>$name.' ('.$date.')', 'caption'=>$name.' ('.$date.')')); ?>
+<?php  $this->load->view('header', array('title'=>$name.' ('.date('F d, Y', strtotime($date)).')', 'caption'=>$name.' ('.date('F d, Y', strtotime($date)).')')); ?>
 	<?php if ($lat!=NULL && $lng!=NULL) 
 		{?>
 				<script type="text/javascript"
@@ -35,7 +35,7 @@
 	<div class="tournament-review">
 		<div class="tournament-picture"><?php echo '<a href="'.PATH_TO_TOURNAMENT_THUMB.$photo.'" ><img src="'.PATH_TO_TOURNAMENT_THUMB.$thumb.'"  title="tournament_avatar_'.$name.'" /></a>'; ?> </div>
 		<div class="tournament-info">
-			<p><span class="att">Date: </span><?php echo $date; ?></p>
+			<p><span class="att">Date: </span><?php echo date('F d, Y', strtotime($date)); ?></p>
 			<p><span class="att">Location: </span><?php echo $location; ?></p>
 			<p><span class="att">Number of rounds: </span><?php echo $nmbr_of_round; ?></p>
 			<p><span class="att">Number of final rounds: </span><?php echo $nmbr_of_fnl_laps; ?></p>
