@@ -2,8 +2,8 @@ Pripomienky:
 Turnaje
 FIXED T1) Datum turnaja - turnaje prebiehaju casto aj viac dni, treba dat udaje od ... , do ...
 
-spravil som to pre kategorie dufam ze je to to iste ako divizia T2) Jamky vo finale maju iny par pre kazdu diviziu, t.j. treba zadavat Par pre kazdu diviziu a potom pre finale kazdej divizie zvlast
-(prirodzenejsie by bolo zadavat par v riadku a nie v stlpci)
+spravil som to pre kategorie dufam ze je to to iste ako divizia ()  T2) Jamky vo finale maju iny par pre kazdu diviziu, t.j. treba zadavat Par pre kazdu diviziu a potom pre finale  kazdej divizie zvlast
+(prirodzenejsie by bolo zadavat par v riadku a nie v stlpci) 
 
 pre istotu viac T3) finale ma vzdy len jedno kolo - netreba to zadavat
 
