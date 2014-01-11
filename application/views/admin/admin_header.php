@@ -4,12 +4,25 @@
 <meta charset="utf-8" />
 <title><?php echo $title; ?></title>
  
-<link rel="stylesheet" href="<?= base_url() ?>assets/css/admin-style.css">
-<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>	
+<link rel="stylesheet" href="<?= base_url() ?>assets/css/admin-style.css" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
 <script type="text/javascript" src="<?= base_url() ?>tinymce/tinymce.min.js"></script>	
 <script type="text/javascript" src="<?= base_url() ?>assets/js/scripts.js"></script>	
 
-	<script>
+  <!-- Date picker Vladimir Lalik -->
+<script>
+	$(function() {
+	    $( "#date, #birth_date, #date_to" ).datepicker({
+	      dateFormat: 'yy-mm-dd',
+	      changeMonth: true,
+	      changeYear: true
+	    });
+	});
+</script>
+<script>
 tinymce.init({
     selector: "textarea.tinymc",
     theme: "modern",

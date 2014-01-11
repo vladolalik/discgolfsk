@@ -12,6 +12,19 @@
 <link href="<?= base_url() ?>assets/css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
 <script src="<?= base_url() ?>assets/js/jquery-1.9.1.js"></script>
 <script src="<?= base_url() ?>assets/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+
+<script>
+	$(function() {
+	    $( "#date, #birth_date" ).datepicker({
+	      dateFormat: 'yy-mm-dd',
+	      changeMonth: true,
+	      changeYear: true
+	    });
+	});
+</script>
 </head> 
 <body>
 	<section id="header">

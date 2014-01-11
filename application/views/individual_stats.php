@@ -132,7 +132,7 @@
 					 	$count = 1; // pocitadlo kol, aby som mohol vypisat par pre vsetky kose 
 				 		foreach ($laps as $key => $value) 
 				 		{
-				 			if ($row['tournament_id'] == $value['tournament_id'] && $value['final']==NULL)
+				 			if ($row['tournament_id'] == $value['tournament_id'] && ($value['final']==NULL || $value['final']=='0'))
 				 			{
 					 			if ($i == 1 && $value['count'] == $count)
 					 			{

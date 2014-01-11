@@ -390,8 +390,14 @@ function update_photo($tournament_id, $filename, $thumb){
         $old_data = $query->row_array(); 
         if ($old_data['thumb'] != '' && $old_data['photo'] != '') 
         {
-            unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/tournaments/'.$old_data['thumb']);
-            unlink($_SERVER['DOCUMENT_ROOT'] .'/statistics/uploads/tournaments/'.$old_data['photo']);
+            if (file_exists($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/tournaments/'.$old_data['thumb']))
+            {
+                unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/tournaments/'.$old_data['thumb']);    
+            }
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] .'/statistics/uploads/tournaments/'.$old_data['photo']))
+            {
+                unlink($_SERVER['DOCUMENT_ROOT'] .'/statistics/uploads/tournaments/'.$old_data['photo']);
+            }
         }
         $this->db->where('tournament_id', $tournament_id);
         $arr = array(
@@ -459,6 +465,12 @@ function delete_tournament($tournament_id)
 */
 function register_player($registration_data)
 {
+    $position = $this->db->where('tournament_id', $registration_data['tournament_id'])
+                       ->count_all_results('registered_players');
+                       
+    $position = $position+1;
+
+    $registration_data['position']=$position; // position in list of players registered to tournament
     $select = $this->db->where('user_id', $registration_data['user_id'])
                        ->where('tournament_id', $registration_data['tournament_id'])
                        ->get('registered_players');
@@ -482,17 +494,20 @@ function register_player($registration_data)
 * Function returns registerd players for tournament with id in param
 *
 * @author Vladimir Lalik
-* @param array
+* @param int
 * @return array
 */
-function get_registerd_players($data)
+function get_registerd_players($tournament_id)
 {
-    $select=$this->db->select('*')
-                     ->where($data)
-                     ->from('registered_players')
-                     ->join('user_profiles', 'registered_players.user_id=user_profiles.user_id')
-                     ->join('categories','registered_players.category_id=categories.category_id')
-                     ->get();
+    $select=$this->db->query("SELECT u.first_name, u.last_name, c.category, o_food.what food, r.position, o_accom.what accom, r.user_id
+                              FROM  statistics_registered_players r
+                              LEFT JOIN statistics_register_options AS o_food ON o_food.option_id=r.food_id
+                              LEFT JOIN statistics_register_options AS o_accom ON o_accom.option_id=r.accom_id
+                              LEFT JOIN statistics_user_profiles AS u ON u.user_id=r.user_id
+                              LEFT JOIN statistics_categories AS c ON c.category_id=r.category_id
+                              WHERE r.tournament_id='$tournament_id'"
+                            );
+
     if ($select->num_rows()>0)
     {
         return $select->result_array();
@@ -592,7 +607,7 @@ function set_lap_par_gender($tournament_id, $gender, $par, $number)
                               SET b.par='$par'
                               WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.user_id=p.user_id AND l.tournament_id=p.tournament_id AND u.user_id=p.user_id AND LOWER(u.gender)='$gender'
                                     AND b.number='$number' ");
-    print_r($query);
+    //print_r($query);
     if ($this->db->affected_rows()>0){
         return TRUE;
     }
@@ -675,7 +690,7 @@ function get_score_actual_slovak($player_id)
                     ->get('slovak_champ');
    $nmbr_accept_tourn=$select->row_array('nmbr_accept_tourn'); 
    $nmbr_accept_tourn=$nmbr_accept_tourn['nmbr_accept_tourn'];
-   var_dump($nmbr_accept_tourn);
+  
    $select=$this->db->query("SELECT SUM(score) sum 
                               FROM (SELECT p.score FROM statistics_players_has_tournaments p, statistics_tournaments t
                               WHERE p.user_id='$player_id' AND p.tournament_id=t.tournament_id AND YEAR(t.date) = YEAR(CURDATE())
@@ -822,4 +837,114 @@ function delete_player_results_in_tournament($tournament_id, $player_id){
     }                
     return FALSE;
     }
+
+
+
+/**
+* Function return options for registration on tournament for one tournament selected by tournament_id
+* @author Vladimir Lalik
+* @param int 
+* @return array
+*/
+function get_options_tournament($tournament_id)
+{
+    $select=$this->db->where('tournament_id', $tournament_id)
+                     ->get('register_options');
+    if ($select->num_rows()>0)
+    {
+        return $select->result_array();
+    }
+    else 
+    {
+        return NULL;
+    }
+}
+
+/**
+* Function update if exists this option or if not insert it
+* @author Vladimir Lalik
+* @param string
+* @param int
+* @param string
+* @param int
+* @return void
+*/
+function insert_option($what, $number, $type, $tournament_id)
+{
+    $this->db->where('number', $number)
+             ->where('type', $type)
+             ->where('tournament_id', $tournament_id);
+
+    if ($this->db->count_all_results('register_options')==0){
+        $data=array(
+            'number'=>$number,
+            'what'=>$what,
+            'type'=>$type,
+            'tournament_id'=>$tournament_id
+        );
+        $this->db->insert('register_options', $data);
+    } else {
+        $data=array(
+            'what'=>$what
+        );
+        $this->db->where('number', $number)
+                 ->where('type', $type)
+                 ->where('tournament_id', $tournament_id)
+                 ->update('register_options', $data);
+    }
+}
+
+/**
+* Function delete option
+* @author Vladimir Lalik
+* @param int
+* @param string
+* @param int
+* @return void
+*/
+function delete_option($number, $type, $tournament_id)
+{
+    $where=array(
+        'number'=>$number,
+        'type'=>$type,
+        'tournament_id'=>$tournament_id
+    );
+    $this->db->delete('register_options', $where);
+}
+
+/**
+* Function delete registration of player
+* @author Vladimir Lalik
+* @param int
+* @param int
+*
+*/
+function delete_registration($user_id, $tournament_id)
+{
+    $select=$this->db->select('position')
+                       ->where('user_id', $user_id)
+                       ->where('tournament_id', $tournament_id)
+                       ->get('registered_players');
+    $position=$select->row('position');
+    //print_r($position);
+   // die();
+
+    $this->db->delete('registered_players', array('user_id'=>$user_id, 'tournament_id'=>$tournament_id));
+    
+    // update positions after deleted record
+
+    $select=$this->db->where('position >', $position)
+                     ->get('registered_players');
+    
+    $data=$select->result_array();
+    
+    if ($data!=NULL){
+        foreach ($data as $record){
+            $pos=$record['position']-1;
+            $this->db->where('register_player_id', $record['register_player_id']);
+            $this->db->update('registered_players',array('position'=>$pos) );
+        }
+    }
+}
+
 }

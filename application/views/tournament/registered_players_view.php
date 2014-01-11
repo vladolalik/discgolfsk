@@ -10,7 +10,7 @@ if (!$this->help_functions->is_admin()){
 	<legend>Select tournament</legend>
 <table>
 	<tr>
-<?php //print_r($tournaments); 
+<?php
 	echo form_open('/tournaments/registered_players');
 	echo '<td>'.form_label('Tournaments', 'tournament_id').'</td>';
 	echo '<td><select name="tournament_id" id="tournament_id">';
@@ -30,6 +30,7 @@ if (!$this->help_functions->is_admin()){
 	{
 		//print_r($registered_players);
 		?>
+		<h3>Tournament capacity is: <?php echo $tournament['capacity'];  ?></h3>
 		<div id="table">
 		<?php
 			if (!$this->help_functions->is_admin())
@@ -43,31 +44,32 @@ if (!$this->help_functions->is_admin()){
 		 ?>
 		
 			<tr>
+				<th>Position</th>
 				<th>Player</th>
 				<th>Category</th>
+		<?php
+			if ($this->help_functions->is_admin()){
+		?>
 				<th>Accommodation</th>
 				<th>Food</th>
+				<th>De-register</th>
+		<?php } ?>
 			</tr>
 		<?php
 			foreach ($registered_players as $key => $value) {
-				echo '<tr>
+				if ($value['position']>$tournament['capacity']){
+					echo '<tr style="color:red;">';
+				} else {
+					echo '<tr>';
+				}
+				echo	'<td>'.$value['position'].'</td>
 						<td>'.$value['first_name'].' '.$value['last_name'].'</td>
 						<td>'.$value['category'].'</td>';
-				if($value['accommodation']=='0')
-				{
-					echo '<td>No</td>';
-				}
-				else
-				{
-					echo '<td>Yes</td>';
-				}
-				if($value['nutrition']=='0')
-				{
-					echo '<td>No</td>';
-				}
-				else
-				{
-					echo '<td>Yes</td>';
+				if ($this->help_functions->is_admin()){
+					
+						echo '<td>'.$value['accom'].'</td>';
+						echo '<td>'.$value['food'].'</td>';
+						echo '<td>'.anchor('tournaments/admin_delete_registration/'.$value['user_id'].'/'.$tournament['tournament_id'], 'Log off', 'title="log off"').'</td>';
 				}
 				echo '</tr>';
 			}
@@ -75,6 +77,7 @@ if (!$this->help_functions->is_admin()){
 	}
 
 ?>
+<p style="margin-top:20px;">Note: Players marked with red color are on waiting list, because capacity of tournament was reached</p>
 </div>
 <?php 
 if (!$this->help_functions->is_admin()){

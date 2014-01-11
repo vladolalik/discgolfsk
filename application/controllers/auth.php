@@ -326,7 +326,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_inactive_players/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(NOT_ACTIVE_PROFILE);
-		$config['per_page'] = 3; 
+		$config['per_page'] = 10; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -369,7 +369,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/get_autocreated_profile/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(AUTO_CREATED_PROFILE);
-		$config['per_page'] = 3; 
+		$config['per_page'] = 10; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -413,7 +413,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_all_players/'	;
 		$config['total_rows'] = $this->users->get_nmbr_all();
-		$config['per_page'] = 3; 
+		$config['per_page'] = 10; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -455,7 +455,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_autocreated_profile/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(2);
-		$config['per_page'] = 3; 
+		$config['per_page'] = 10; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				

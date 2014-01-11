@@ -8,7 +8,7 @@
 
  	echo form_open('tournaments/admin_set_par_lap/'.$this->uri->segment(3)); ?>
  	<fieldset>
- 		<legend>Set par</legend>
+ 		<legend>Set par <?php echo $tournament['name'].' ('.$tournament['date'].')'; ?></legend>
  		<table>
  			<tr>
  				<td><?php echo form_label('Categories', 'category_id'); ?></td>
@@ -22,38 +22,47 @@
  				<td style="color: red;"><?php echo form_error('category_id'); ?></td>
  			</tr>
  		</table>
- 		<table id="par">
- 			
-		 	<?php
-		 	/* One par field name has this form "basket_[basket_order]_[category_id]*/
-		 		foreach($categories as $key=>$val)
-		 		{
-			 		for($i=1; $i<=20; $i++)
+	 	<table id="par">
+			 	<?php
+			 	/* One par field name has this form "basket_[basket_order]_[category_id]*/
+			 		
+			 		foreach($categories as $key=>$val)
 			 		{
-			 			if (isset($unique_par['basket_'.$i.$val['category_id']])){
-			 				$option_input = array (
-			 					'name'=>'basket_'.$i.'_'.$val['category_id'],
-			 					'id'=>'basket_'.$i.'_'.$val['category_id'],
-			 					'class'=>$val['category_id'],
-			 					'value'=>set_value('basket_'.$i, $unique_par['basket_'.$i.$val['category_id']] )
-			 				);	
-			 			} 
-			 			else 
-			 			{
-			 				$option_input = array (
-			 					'name'=>'basket_'.$i.'_'.$val['category_id'],
-			 					'id'=>'basket_'.$i.'_'.$val['category_id'],
-			 					'class'=>$val['category_id'],
-			 					'value'=>set_value('basket_'.$i )
-			 				);
+			 			echo '<tr class="'.$val['category_id'].'">';
+			 			for($i=1; $i<=20; $i++){
+			 				echo '<td align="center">'.form_label( $i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
 			 			}
-			 			echo '<tr class="'.$val['category_id'].'"><td>'.form_label('Basket '.$i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
-			 			echo '<td>'.form_input($option_input).'</td>';
-			 			echo '<td style="color: red;">'.form_error($option_input['name']).'</td></tr>';
-			 		}
-			 	}
-		 	?>
-		 </table>
+			 			echo '</tr>';
+			 			echo '<tr class="'.$val['category_id'].'">';
+				 		for($i=1; $i<=20; $i++)
+				 		{
+				 			if (isset($unique_par['basket_'.$i.$val['category_id']])){
+				 				$option_input = array (
+				 					'name'=>'basket_'.$i.'_'.$val['category_id'],
+				 					'id'=>'basket_'.$i.'_'.$val['category_id'],
+				 					'size'=>'1',
+				 					'class'=>$val['category_id'],
+				 					'value'=>set_value('basket_'.$i, $unique_par['basket_'.$i.$val['category_id']] )
+				 				);	
+				 			} 
+				 			else 
+				 			{
+				 				$option_input = array (
+				 					'name'=>'basket_'.$i.'_'.$val['category_id'],
+				 					'id'=>'basket_'.$i.'_'.$val['category_id'],
+				 					'size'=>'1',
+				 					'class'=>$val['category_id'],
+				 					'value'=>set_value('basket_'.$i )
+				 				);
+				 			}
+				 			//echo '<tr class="'.$val['category_id'].'"><td>'.form_label('Basket '.$i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
+				 			echo '<td>'.form_input($option_input).'</td>';
+				 			//echo '<td style="color: red;">'.form_error($option_input['name']).'</td></tr>';
+				 		}
+				 		echo '</tr>';
+				 	}
+			 	?>
+		</table>
 	<?php echo form_error(); ?>
  	</fieldset>
  <?php
