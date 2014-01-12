@@ -22,11 +22,11 @@
 			<th>Birth date</th>
 			<th>Connect</th>
 			<th>Category</th>
-			<th>Tournament</th>
+			<th>Delete existing data</th>
 		</tr>
 	
 		<?php
-		
+			debug($players);
 			$string = "";
 			foreach ($players as $key => $player) {
 				$string .= '<tr>';
@@ -45,8 +45,9 @@
 					$string .= '<td class="error-icon"><i class="fa fa-times"></i></td>';
 				}
 				if( $player['has_tournament'] == -1){ // napise ci chceme zapisat ak dany hrac uz ma turnaj
-					$string .= '<td><i class="fa fa-check"></i> </td>';
+					$string .= '<td><i class="fa fa-check"></i> </td>'; // napise fajku ak je všetko v poriadku a ešte nemáme údaje o danom hráčovi 
 				}else{
+					 // inak dá checkbox...ktorý dá na vyber, či nehcať pôvodné výsledky alebo zmazať pôvodné a pridať nové
 					$string .= '<td> <input type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
 				}
 				$string .= '</tr>';

@@ -624,6 +624,12 @@ class Tournaments extends CI_Controller {
 					if( !isset($final_laps_data[$key]) ){
 						$final_laps_data[$key] = null;						
 					}
+					//ak chceme vymať pôvodné dáta, $player['exist'] = player_id, $player['has_tournamet'] = tournament_id
+					if( isset( $_POST[$player['exist']] ) && $player['has_tournament'] != -1 ){
+						if( $this->tournament->delete_player_results_in_tournament($tournament_id, $player['exist'] ) ){
+						
+						}
+					}
 					$this->__save_player_data( $tournament_id, $player['exist'], $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 				}
 				if( ( ( $player['exist'] == -1 ) && ($player['category_exist'] != -1)  && (isset($_POST[$player['exist']]) ||  ($player['has_tournament'] == -1) ) ) ){
@@ -635,12 +641,15 @@ class Tournaments extends CI_Controller {
 					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
 				}
 
+				//treba ošetriť podmienku, že chcem zamazať existujúce výsledky hráča
+				//if( $this->tournament->delete_player_results_in_tournament($_POST['tournament_id'], $_POST['player_id'] ) ){}
+
 			}
 		}
 		$this->compute_year_rank_gender();
 		$this->session->set_flashdata('message', 'Data imported, set pars data');
 		// redirect('tournaments/admin_view_tournaments');
-		redirect('tournaments/admin_set_par_lap_gender/'.$tournament_id);
+		redirect('tournaments/admin_set_par_lap/'.$tournament_id);
 	}
 
 	function admin_delete_results(){

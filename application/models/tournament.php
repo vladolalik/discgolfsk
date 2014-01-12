@@ -811,7 +811,7 @@ function get_nmbr_accept_tourn()
 * @param int
 * @return bool
 */
-function delete_player_results_in_tournament($tournament_id, $player_id){
+function delete_player_results_in_tournament( $tournament_id, $player_id ){
     if (!$this->help_functions->is_admin())
     {
         redirect($tournament_id, $player_id);
