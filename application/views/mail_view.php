@@ -46,9 +46,9 @@
   
   <?php 
     if (isset($sent_to)) {                           
-      echo '<p>mail sent to:<br />', $sent_to,'<br />';
+      echo '<div id="mailing-success"><p>mail sent to:<br />', $sent_to,'<br />';
       if (isset($sent_cc)) {
-        echo 'copies sent to:<br />', implode(", ", $sent_cc), '</p>';  
+        echo 'copies sent to:<br />', implode(", ", $sent_cc), '</p></div>';  
       }
     }     
 
@@ -56,7 +56,7 @@
            
     echo form_open('mailingController/send');
       echo '<div id="form-top">'; 
-        $tmp_data = array('name' => "input_from",  'id' => "input_from",);
+        $tmp_data = array('name' => "input_from",  'id' => "input_from", 'readonly' => "readonly", 'value' => "discgolf.kontakt@gmail.com");
         echo form_label('From: ', 'input_from'), form_input($tmp_data);
         
         $tmp_data = array('name' => "input_to",  'id' => "input_to",);

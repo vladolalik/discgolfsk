@@ -30,8 +30,8 @@ class MailingController extends CI_Controller {
         'protocol' => "smtp",
         'smtp_host' => "ssl://smtp.googlemail.com",
         'smtp_port' => 465,
-        'smtp_user' => "email here",
-        'smtp_pass' => "password here",
+        'smtp_user' => "discgolf.kontakt@gmail.com",
+        'smtp_pass' => "flogcsid",
         'mailtype'  => "html", 
         'charset'   => "utf-8"
       );

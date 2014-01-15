@@ -413,6 +413,16 @@ nav #main-nav li ul{
 	font-weight: normal;
 	font-size: 14px;
 }
+#mailing-success p{
+	color: green;
+	border-left: 10px solid green;
+	font-weight: bold;
+	padding-left: 20px;
+	padding: 10px 20px;
+	margin-bottom: 5px;
+	font-weight: normal;
+	font-size: 14px;
+}
 /** CATEGORIES
 -------------------------------------------*/
 #add-category{
