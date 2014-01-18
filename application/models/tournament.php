@@ -716,7 +716,7 @@ function get_year_ranking($gender)
     $gender=strtolower($gender);
     $select = $this->db->query("SELECT u.year_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
                                 FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
-                                WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') 
+                                WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') AND u.year_score != '0'
                                 ORDER BY u.year_score DESC");
     if ($select->num_rows()>0){
         return $select->result_array();
