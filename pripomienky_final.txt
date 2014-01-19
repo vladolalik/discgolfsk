@@ -1,0 +1,125 @@
+IMPORT TURNAJOV
+
+1) pri importe turnajov posledne skore v riadku sa neprenasa
+2) pridat polozku Check All pri overovani duplicity hracov pri importe turnaja
+7) datumy narodenia mozu byt riesene tak ako bolo navrhnute
+8) pri importe turnajov - koniec suboru - volny riadok pri disq. hracovi neberie
+
+
+CREATE TOURNAMENT
+
+3) zadavat Par pre kazde kolo + finale (len 1 kolo)
+FIXED 4) ak nie je zadana ziadna Accommodation a Food option - nezobrazovat
+16) V Create tournament je preklep v polozke "Latitude"
+
+REGISTRATION
+FIXED 5) zmenit text v zozname registred players:
+The players marked with the red color are on the waiting list because the maximal capacity of the tournament was reached.
+FIXED 6) resetovat counter cervenych hracov od 1.
+FIXED 9) pri registracii hracov / update profile pri zadavani krajiny pridat za pole text
+(SK, CZ, AT, HU, PL, USA, DE, HR, IT, UK, ...)
+FIXED 17) Pre registracii dat este hracom polozku Note (automaticky, pri kazdom prihlasovani na turnaj), v ktorej hraci mozu pri
+
+prihlasovani uviest dlhsi text, napr. podrobnosti ubytovania. Tieto udaje sa nebudu zobrazovat v zozname prihlasenych, akurat
+
+adminovi a riaditelovi turnaja.
+
+
+AUTOCREATED PROFILES
+10) pri autcreated profiles sa neprebera z vysledkov (ani krajina) ani datum narodenia
+14) Niektore Autocreated Profiles (napr. Jano Druhy) nejde zmazat, hlasi chybu
+-----------
+A Database Error Occurred
+
+Error Number: 1451
+
+Cannot delete or update a parent row: a foreign key constraint fails (`vx600000db/statistics_lap`, CONSTRAINT
+
+`fk_laps_statistics_user_profiles1` FOREIGN KEY (`user_id`) REFERENCES `statistics_user_profiles` (`user_id`) ON DELETE NO
+
+ACTION ON UPDATE NO ACTION)
+
+DELETE FROM `statistics_user_profiles` WHERE `user_id` = '21'
+
+Filename: /domains1/vx600000/public/www_root/statistics/models/tank_auth/users.php
+
+Line Number: 708
+------------
+
+FIXED 15) Po uspesnom zmazani Autocreated profilu naskoci zoznam All profiles, mala by to byt ale naspat stranka Autocreated
+
+profiles, najlepsie ta jej strana, ktora bola naposledy pouzita. Tiez by bolo lepsie zobrazovat hracov po 20 nie po 10 v
+
+Autocreated Profiles.
+
+
+RESULTS
+11) pri zobrazovani vysledkov hraca na turnaji vypisovat striedavo v riadkoch PAR a vysledky hraca (tie boldom alebo inak
+
+odlisit graficky)
+12) tam isto ako 11 zobrazovat len odohrane jamky (nie automaticky vsetkych 20)
+malo by to vyzerat (vratane textov)
+Peter Hrac
+Hole     1   2   3   4   5   6  SUM  TOTAL
+Par      3   3   5   3   4   3   21
+Round 1  4   3   4   3   4   4   22
+Par      3   3   5   3   4   3   21
+Round 2  3   3   4   4   3   3   20    42
+Par      3   3   5   3   4   3   21
+Round 3  4   4   5   4   4   4   25    67
+Par      4   4   5   4        17
+Final    4   5   4   3        16    83
+
+TOURNAMENTS
+13) pri mazani turnajov hlasi chybu (test5)
+Error Number: 1451
+
+Cannot delete or update a parent row: a foreign key constraint fails (`vx600000db/statistics_number_of_baskets`, CONSTRAINT
+
+`fk_number_of_baskets_results1` FOREIGN KEY (`result_id`) REFERENCES `statistics_results` (`result_id`) ON DELETE NO ACTION ON
+
+UPDATE NO A)
+
+DELETE FROM `statistics_results` WHERE `tournament_id` = '21'
+
+Filename: /domains1/vx600000/public/www_root/statistics/models/tournament.php
+
+Line Number: 449
+
+
+15b) Ale dobra vec, ze zmaze vysledky. Idealne by bolo mat dve moznosti - zmazat turnaj alebo zmazat len vysledky
+
+
+RANKING a LEAGUE
+1) zaokruhlovat na 1 desatinne miesto
+2) ranking je za poslednych 365 dni ale staci ho v skutocnosti prepocitavat pri zadani novych vysledkov
+3) do nadpisu Ranking (datum poslednej aktualizacie)
+4) do rankingu aj do Chamiponships/League kategorie su OPEN a WOMEN nie Male/Female (OPEN, OPEN MASTER, OPEN JUNIOR -> OPEN,
+
+WOMEM, WOMEN JUNIOR, WOMEN MASTER -> WOMEN)
+5) pri delenych miestach sa delia body, ale ostatni dostavaju body podla normalneho poradia
+
+Priklad 2
+ak boli vysledke skore hracov 40, 42,42,42,43,43, t.j. spolu bolo 6 hracov a Max je 100 bodov, tak hraci ziskavaju po rade
+100, 66.7, 66.7, 66.7, 25, 25 bodov (kedze druhy, treti a stvrty hrac si body delia a taktiez piaty a siesty).
+
+FIXED 6) premenovat Slovak Championships na Slovak DG League
+7) Pri vytvarani turnaja je potrebne zadat 3 parametre (teraz je to jeden, ktory sa vola Parameter turnaja):
+Bodove hodnotenie turnaja OPEN (nazvyme ho MaxOPEN)
+Bodove hodnotenie turnaja WOMEN (nazvyme ho MaxWOMEN)
+navyse este treba zodpovedat jednu otazku: Majstrovstva Slovenska? (Ano/Nie). Odpoved na tuto otazku (ktora je kladna len pre
+
+jeden turnaj za rok) bude mat vplyv na hodnotenie turnaja v ramci DG ligy (vid nizsie, bodnifikacia 50% v ramci League).
+
+8)  do players pridat v administracii polozku Add Score -  zobrazi sa zoznam vsetkych hracov (po 20), s dvomi volnymi polami
+
+ciselnymi (xxx,x) -default 0,0 a tieto polozky sa pridaju do scitania najlepsich 6 skore v SK DG league.
+tabulka sa k 1.1. prepise na 0,0 pre vsetkych.
+
+9) vysledky championships do osobitnej tabulky (a ukladat vysledky z minulych rokov, pozor na mazanie poloziek za zahranicne
+
+turnaje k 1.1.)4
+
+Bonus:
+B1) pri zobrazovani vysledkov hraca na turnaji ak je skore lepsie ako PAR danej jamky - zelenym, ak je horsie cervenym
+B2) pri zobrazovani hraca v Rankingu - zobrazit jeho profilove udaje

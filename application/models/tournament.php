@@ -21,7 +21,7 @@ class Tournament extends CI_Model{
 
     function get_all_tournaments(){
         $this->db->from( 'tournaments' );
-        $this->db->order_by( "name", "asc" );
+        $this->db->order_by( "date", "desc" );
         $query = $this->db->get();
         return $query->result();
     }

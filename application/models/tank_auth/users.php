@@ -721,16 +721,10 @@ class Users extends CI_Model
 
 			$this->db->where('user_id', $user_id);
 			$this->db->delete($this->profile_table_name);
-			/*if ($this->db->affected_rows() > 0) {	
-				// delete user data
-				// register for toournament		
-				
-				// results
-				
-
-				*/
+			
+			if ($this->db->affected_rows() > 0) {	
 				return TRUE;
-			//}
+			}
 		}
 		return FALSE;
 	}
