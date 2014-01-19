@@ -568,11 +568,11 @@ function get_par_by_id_gender($tournament_id, $gender)
 
 function get_par_by_id($tournament_id)
 {
-    $select = $this->db->query("SELECT b.number, b.par, l.final, p.category_id, t.name  
+    $select = $this->db->query("SELECT DISTINCT p.category_id, b.number, l.number no_round, b.par, l.final, t.name  
                                 FROM statistics_basket b, statistics_lap l, statistics_players_has_tournaments p, statistics_tournaments t
                                 WHERE b.lap_id=l.lap_id AND l.tournament_id=p.tournament_id AND t.tournament_id=p.tournament_id
-                                AND l.tournament_id='$tournament_id'
-                                order by p.category_id, l.final, b.number");
+                                AND l.tournament_id='$tournament_id' AND l.user_id=p.user_id
+                                order by p.category_id, l.number, l.final, b.number");
     return $select->result_array();
 }
 
@@ -587,8 +587,14 @@ function set_lap_par($tournament_id, $category_id, $par, $number)
     die();*/
     $query = $this->db->query("UPDATE statistics_basket b, statistics_players_has_tournaments p, statistics_lap l
                               SET b.par='$par'
-                              WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.tournament_id=p.tournament_id AND p.category_id='$category_id'
-                                    AND b.number='$number' ");
+                              WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.tournament_id=p.tournament_id 
+                                    AND b.number='$number' AND 
+                                    l.user_id IN 
+                                                (SELECT t.user_id 
+                                                 FROM  statistics_players_has_tournaments t
+                                                 WHERE  t.category_id='$category_id' AND t.tournament_id='$tournament_id'
+                                                 ) "
+                              );
     if ($this->db->affected_rows()>0){
         return TRUE;
     }

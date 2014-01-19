@@ -10,7 +10,7 @@ CREATE TOURNAMENT
 
 3) zadavat Par pre kazde kolo + finale (len 1 kolo)
 FIXED 4) ak nie je zadana ziadna Accommodation a Food option - nezobrazovat
-16) V Create tournament je preklep v polozke "Latitude"
+FIXED 16) V Create tournament je preklep v polozke "Latitude"
 
 REGISTRATION
 FIXED 5) zmenit text v zozname registred players:

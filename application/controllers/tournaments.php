@@ -1437,10 +1437,14 @@ function admin_set_par_lap()
 	 else
 	{
 		$par = $this->tournament->get_par_by_id($tournament_id);
+		print_r($par);
+
 		foreach ($par as $key => $value){
 			//$row['basket_'.$value['number'].$value['category_id']] =array('par'=>$value['par'], 'category_id'=>$value['category_id']);
-			$row['basket_'.$value['number'].$value['category_id']] =$value['par'];
+			$row['basket_'.$value['number'].'_'.$value['category_id']] =$value['par'];
 		}
+		print_r($row);
+		//die();
 		$data['unique_par'] = NULL;
 		if (isset($row)){
 			$data['unique_par'] = $row;	

@@ -25,7 +25,7 @@
 	 	<table id="par">
 			 	<?php
 			 	/* One par field name has this form "basket_[basket_order]_[category_id]*/
-			 		
+			 		print_r($unique_par);
 			 		foreach($categories as $key=>$val)
 			 		{
 			 			echo '<tr class="'.$val['category_id'].'">';
@@ -36,13 +36,13 @@
 			 			echo '<tr class="'.$val['category_id'].'">';
 				 		for($i=1; $i<=20; $i++)
 				 		{
-				 			if (isset($unique_par['basket_'.$i.$val['category_id']])){
+				 			if (isset($unique_par['basket_'.$i.'_'.$val['category_id']])){
 				 				$option_input = array (
 				 					'name'=>'basket_'.$i.'_'.$val['category_id'],
 				 					'id'=>'basket_'.$i.'_'.$val['category_id'],
 				 					'size'=>'1',
 				 					'class'=>$val['category_id'],
-				 					'value'=>set_value('basket_'.$i, $unique_par['basket_'.$i.$val['category_id']] )
+				 					'value'=>set_value('basket_'.$i.'_'.$val['category_id'], $unique_par['basket_'.$i.'_'.$val['category_id']] )
 				 				);	
 				 			} 
 				 			else 
@@ -52,7 +52,7 @@
 				 					'id'=>'basket_'.$i.'_'.$val['category_id'],
 				 					'size'=>'1',
 				 					'class'=>$val['category_id'],
-				 					'value'=>set_value('basket_'.$i )
+				 					'value'=>set_value('basket_'.$i.'_'.$val['category_id'] )
 				 				);
 				 			}
 				 			//echo '<tr class="'.$val['category_id'].'"><td>'.form_label('Basket '.$i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
