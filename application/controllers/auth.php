@@ -298,14 +298,16 @@ class Auth extends CI_Controller
 		{
 			redirect();
 		}
+		var_dump($this->uri->rsegment_array());
 		$id = $this->uri->segment(3);
+		$target_url=$this->uri->segment(4);
 		if ($this->users->__delete_user($id))
 		{
 			$this->session->set_flashdata('message', '<p class="succes"> User was succesfully deleted!</p>');
 		} else {
 			$this->session->set_flashdata('message', '<p class="fail"> User was not deleted.</p>');
 		}
-		redirect('auth/admin_get_all_players');
+		redirect('auth/'.$target_url);
 			
 	}
 
@@ -326,7 +328,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_inactive_players/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(NOT_ACTIVE_PROFILE);
-		$config['per_page'] = 10; 
+		$config['per_page'] = 20; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -369,7 +371,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/get_autocreated_profile/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(AUTO_CREATED_PROFILE);
-		$config['per_page'] = 10; 
+		$config['per_page'] = 20; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -413,7 +415,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_all_players/'	;
 		$config['total_rows'] = $this->users->get_nmbr_all();
-		$config['per_page'] = 10; 
+		$config['per_page'] = 20; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
@@ -455,7 +457,7 @@ class Auth extends CI_Controller
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/auth/admin_get_autocreated_profile/'	;
 		$config['total_rows'] = $this->users->get_nmbr_activated(2);
-		$config['per_page'] = 10; 
+		$config['per_page'] = 20; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				

@@ -32,7 +32,7 @@ else
 				<td>'.$player['club'].'</td>';
 		echo   '<td>'; echo ($player['username'] == 'auto')? 'YES':'NO';  echo '</td>';
 		echo   '<td><form action="'.base_url().'index.php/auth/admin_activate_player/'.$player['user_id'].'"> <input type="submit" value="Activate" onclick="return confirm(\'Are you sure you want to activate profile with email: '.$player['email'].'?\')" /></form></td>
-				<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results with email: '.$player['email'].'?\')" /></form></td>
+				<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'/admin_get_inactive_players"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results with email: '.$player['email'].'?\')" /></form></td>
 				<td><form action="'.base_url().'index.php/auth/admin_reject_activation/'.$player['user_id'].'"> <input type="submit" value="Reject Activation" onclick="return confirm(\'Are you sure you want to reject request for activation from this user with email: '.$player['email'].'?\')" /></form></td></tr>';
 	}
 	echo '</table>';

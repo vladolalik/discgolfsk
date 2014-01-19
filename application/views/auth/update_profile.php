@@ -1,4 +1,4 @@
-<?php $this->load->view('header', array('title' => 'Change email', 'caption' => 'Update profile')) ?>
+<?php $this->load->view('header', array('title' => 'Update profile', 'caption' => 'Update profile')) ?>
 <?php
 
 $first_name = array(
@@ -44,7 +44,8 @@ $about = array (
 	'id' => 'about',
 	'name' => 'about',
 	'value' => set_value('about', $about),
-	'class' => 'tinymc'
+	'class' => 'tinymc',
+	'style' => 'max-width:400px'
 );
 
 ?>
@@ -63,8 +64,9 @@ $about = array (
 	</tr>
 	<tr>
 		<td><?php echo form_label('Country', $country['id']); ?></td>
-		<td><?php echo form_input($country); ?></td>
+		<td><?php echo form_input($country); ?>(SK, CZ, AT, HU, PL, USA, DE, HR, IT, UK, ...)</td>
 		<td style="color: red;"><?php echo form_error($country['name']); ?><?php echo isset($errors[$country['name']])?$errors[$country['name']]:''; ?></td>
+
 	</tr>
 	<tr>
 		<td><?php echo form_label('Day of birth', $birth['id']); ?></td>

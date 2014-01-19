@@ -56,24 +56,25 @@
 				if ($this->tank_auth->is_logged_in() && $will=='1' && $allow_registration=='1')
 				{	
 
-					
-					foreach($options as $value){
-						if ($value['type'] == 'food'){
-							$food_opt[$value['option_id']]=$value['what'];
-						} else {
-							$accom_opt[$value['option_id']]=$value['what'];
+					if ($options!=NULL)
+					{
+						foreach($options as $value){
+							if ($value['type'] == 'food'){
+								$food_opt[$value['option_id']]=$value['what'];
+							} else {
+								$accom_opt[$value['option_id']]=$value['what'];
+							}
 						}
 					}
 
-					/*$option_accom=array(
-						'name'=>'accom',
-						'id'=>'accom',
+					$note = array (
+						'id' => 'note',
+						'name' => 'note',
+						'value' => set_value('note'),
+						'style' => 'max-width:400px'
 					);
 
-					$option_food=array(
-						'name'=>'food',
-						'id'=>'food',
-					);*/ ?>
+					?>
 
 					<fieldset>
 					<legend>Registration form</legend>
@@ -92,15 +93,27 @@
 								?>
 								<td style="color: red;"><?php echo form_error('category'); ?></td>
 							</tr>
+							<?php if (isset($accom_opt))
+							{ ?>
+								<tr>
+									<td><?php echo form_label('Accommodation', 'accom'); ?></td>
+									<td><?php echo form_dropdown('accom', $accom_opt, '', 'id="accom"'); ?></td>
+							
+									<td style="color: red;"><?php echo form_error('accom'); ?></td>
+								</tr>
+							<?php } ?>
+							<?php if (isset($food_opt))
+							{ ?>
+								<tr>
+									<td><?php echo form_label('Food', 'food'); ?></td>
+									<td><?php echo form_dropdown('food',$food_opt,'','id="food"'); ?></td>
+									<td style="color: red;"><?php echo form_error('food'); ?></td>
+								</tr>
+							<?php } ?>
 							<tr>
-								<td><?php echo form_label('Accommodation', 'accom'); ?></td>
-								<td><?php echo form_dropdown('accom', $accom_opt, '', 'id="accom"'); ?></td>
-								<td style="color: red;"><?php echo form_error('accom'); ?></td>
-							</tr>
-							<tr>
-								<td><?php echo form_label('Food', 'food'); ?></td>
-								<td><?php echo form_dropdown('food',$food_opt,'','id="food"'); ?></td>
-								<td style="color: red;"><?php echo form_error('food'); ?></td>
+								<td><?php echo form_label('Note', $note['id']); ?></td>
+								<td><?php echo form_textarea($note); ?></td>
+								<td style="color: red;"><?php echo form_error($note['name']); ?></td>
 							</tr>
 						</table>
 					

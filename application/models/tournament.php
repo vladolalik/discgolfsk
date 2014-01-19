@@ -499,7 +499,7 @@ function register_player($registration_data)
 */
 function get_registerd_players($tournament_id)
 {
-    $select=$this->db->query("SELECT u.first_name, u.last_name, c.category, o_food.what food, r.position, o_accom.what accom, r.user_id
+    $select=$this->db->query("SELECT u.first_name, u.last_name, c.category, o_food.what food, r.position, o_accom.what accom, r.user_id, r.note
                               FROM  statistics_registered_players r
                               LEFT JOIN statistics_register_options AS o_food ON o_food.option_id=r.food_id
                               LEFT JOIN statistics_register_options AS o_accom ON o_accom.option_id=r.accom_id

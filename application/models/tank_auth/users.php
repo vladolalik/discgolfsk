@@ -704,21 +704,33 @@ class Users extends CI_Model
 		$data = $this->get_all_user_by_id($user_id);
 		if ($data->role != 'admin') 
 		{	
+
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('registered_players');
+
+			$this->db->query("DELETE FROM statistics_number_of_baskets WHERE result_id IN (SELECT result_id FROM statistics_results WHERE user_id='$user_id')");
+
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('results');
+
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('players_has_tournaments');
+
+			$this->db->query("DELETE FROM statistics_basket WHERE lap_id IN (SELECT lap_id FROM statistics_lap WHERE user_id='$user_id')");
+			$this->db->query("DELETE FROM statistics_lap WHERE user_id='$user_id'");
+
 			$this->db->where('user_id', $user_id);
 			$this->db->delete($this->profile_table_name);
-			if ($this->db->affected_rows() > 0) {	
+			/*if ($this->db->affected_rows() > 0) {	
 				// delete user data
 				// register for toournament		
-				$this->db->where('user_id', $user_id);
-				$this->db->delete('registered_players');
+				
 				// results
-				$this->db->where('user_id', $user_id);
-				$this->db->delete('results');
+				
 
-				$this->db->where('user_id', $user_id);
-				$this->db->delete('players_has_tournaments');
+				*/
 				return TRUE;
-			}
+			//}
 		}
 		return FALSE;
 	}

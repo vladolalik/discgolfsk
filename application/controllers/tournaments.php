@@ -43,7 +43,7 @@ class Tournaments extends CI_Controller {
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'index.php/tournaments/admin_view_tournaments/'	;
 		$config['total_rows'] = $this->tournament->get_nmbr_tournaments();
-		$config['per_page'] = 10; 
+		$config['per_page'] = 20; 
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 							
@@ -1104,7 +1104,7 @@ function view_tournaments()
 	$this->load->library('pagination');
 	$config['base_url'] = base_url().'index.php/tournaments/view_tournaments/'	;
 	$config['total_rows'] = $this->tournament->get_nmbr_tournaments();
-	$config['per_page'] = 5;  
+	$config['per_page'] = 10;  
 	$config['full_tag_open'] = '<div id="pagination">';
 	$config['full_tag_close'] = '</div>';
 						
@@ -1152,8 +1152,9 @@ function tournament_details()
 
 	$this->form_validation->set_rules('category_id','Category','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
-	$this->form_validation->set_rules('food','Food','required|trim|xss_clean|strip_tags');
-	$this->form_validation->set_rules('accom','Accommodation','required|trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('food','Food','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('accom','Accommodation','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('note','Note','trim|xss_clean|strip_tags');
 	if ($this->form_validation->run()){
 		
 		if (!$this->tank_auth->is_logged_in()) 
@@ -1167,6 +1168,7 @@ function tournament_details()
 			'category_id'=>$this->form_validation->set_value('category_id'),
 			'accom_id'=>$this->form_validation->set_value('accom'),
 			'food_id'=>$this->form_validation->set_value('food'),
+			'note'=>$this->form_validation->set_value('note')
 		);
 
 		if ($this->tournament->register_player($registration_data))

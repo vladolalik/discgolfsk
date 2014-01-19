@@ -88,7 +88,8 @@ $club = array(
 $about = array (
 	'id' => 'about',
 	'name' => 'about',
-	'value' => set_value('about')
+	'value' => set_value('about'),
+	'style' => 'max-width:400px'
 );
 
 
@@ -115,7 +116,7 @@ echo $this->input->post('first_name');
 	</tr>
 	<tr>
 		<td><?php echo form_label('Country', $country['id']); ?></td>
-		<td><?php echo form_input($country); ?></td>
+		<td><?php echo form_input($country); ?>(SK, CZ, AT, HU, PL, USA, DE, HR, IT, UK, ...)</td>
 		<td style="color: red;"><?php echo form_error($country['name']); ?><?php echo isset($errors[$country['name']])?$errors[$country['name']]:''; ?></td>
 	</tr>
 	<tr>

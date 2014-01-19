@@ -41,7 +41,7 @@ else
 			echo '<td colspan="2"><span>Created:</span><br/>'.$player['created'].'</td>
 			  <td><span>Birth date:</span><br/>'.$player['birth_date'].'</td>
 			  <td>'.$player['club'].'</td>'; 
-			echo '<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td>';
+			echo '<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'/admin_get_all_players"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td>';
 		echo '</tr>';
 
 	}

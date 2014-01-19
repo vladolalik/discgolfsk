@@ -133,7 +133,7 @@
 			'id'	=>'lat',
 			'value' => set_value('lat')
 		); 
-		echo '<td>'.form_label('Lattitude: ','lat').'</td>';
+		echo '<td>'.form_label('Latitude: ','lat').'</td>';
 		echo '<td>'.form_input($options).'</td>';
 		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
