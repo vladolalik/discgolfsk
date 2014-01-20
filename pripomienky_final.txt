@@ -8,7 +8,7 @@ IMPORT TURNAJOV
 
 CREATE TOURNAMENT
 
-3) zadavat Par pre kazde kolo + finale (len 1 kolo)
+FIXED 3) zadavat Par pre kazde kolo + finale (len 1 kolo)
 FIXED 4) ak nie je zadana ziadna Accommodation a Food option - nezobrazovat
 FIXED 16) V Create tournament je preklep v polozke "Latitude"
 
@@ -27,7 +27,7 @@ adminovi a riaditelovi turnaja.
 
 AUTOCREATED PROFILES
 10) pri autcreated profiles sa neprebera z vysledkov (ani krajina) ani datum narodenia
-14) Niektore Autocreated Profiles (napr. Jano Druhy) nejde zmazat, hlasi chybu
+FIXED 14) Niektore Autocreated Profiles (napr. Jano Druhy) nejde zmazat, hlasi chybu
 -----------
 A Database Error Occurred
 

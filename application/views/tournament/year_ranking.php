@@ -4,7 +4,7 @@
  	//print_r($female);
 ?>
 <div id="ranking">
-	<h2>Male</h2>
+	<h2>OPEN</h2>
  	<table id="results-table"  class="statistics table-row-diff">
  		<tr>
  			<th>Rank</th>
@@ -14,9 +14,10 @@
 
 <?php
 //print_r($male[0]);
-if ($male!=NULL)
+if ($open!=NULL)
 {
- 	foreach ($male as $key => $m_results) 
+	print_r($open);
+ 	foreach ($open as $key => $m_results) 
  	{
  		//print_r($m_results);
  		echo '<tr>
@@ -30,7 +31,7 @@ if ($male!=NULL)
 ?>
 </table>
 
-<h2>Female</h2>
+<h2>WOMEN</h2>
  	<table id="results-table" class="statistics table-row-diff">
  		<tr>
  			<th>Rank</th>
@@ -40,8 +41,8 @@ if ($male!=NULL)
 
 <?php
 //print_r($male[0]);
- if ($female!=NULL){
- 	foreach ($female as $key => $f_results) 
+ if ($women!=NULL){
+ 	foreach ($women as $key => $f_results) 
  	{
  		echo '<tr>
 	 			<td class="text-center">'.$f_results['rank'].'</td>

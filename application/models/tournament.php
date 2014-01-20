@@ -276,25 +276,25 @@ class Tournament extends CI_Model{
     }
 
     /**
-    * Function return all results by gender
+    * Function return all results by two main categroies OPEN and WOMEN
     * @author Vladimir Lalik
     */
 
-    function get_all_results_gender($tournament_id, $player_id, $gender)
+    function get_all_results_open_women($tournament_id, $player_id, $category)
     {
 
-        if ($gender==0){
-            $gen = "male";
+        if ($category==0){
+            $cat = "open";
         } else {
-            $gen = "female";
+            $cat = "women";
         }
         $player = ($player_id != 'ALL')? 'AND p.user_id ='.$player_id : '';
         $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name, n.*
                                     FROM statistics_tournaments t, statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
                                     statistics_number_of_baskets n
                                     WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id 
-                                          AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
-                                          $player AND LOWER(u.gender)='$gen' AND r.result_id = n.result_id
+                                          AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id AND c.category_id=p.category_id 
+                                          $player AND LOWER(c.category) LIKE '%$cat%' AND r.result_id = n.result_id
                                     ORDER BY 
                                             CASE WHEN (r.final_3 IS NULL) THEN 9999 END,
                                             CASE WHEN (r.final_2 IS NULL) THEN 99999 END,
@@ -732,16 +732,17 @@ function get_not_disq_players($tournament_id, $category_id)
 * @param int
 * @return array
 */
-function get_not_disq_players_gender($tournament_id, $gender)
+function get_not_disq_players_open_women($tournament_id, $category)
 {
-    if ($gender==0){
-        $gen = "male";
+    if ($category==0){
+        $cat = "open";
     } else {
-        $gen = "female";
+        $cat = "women";
     }
     $select=$this->db->query("SELECT u.user_id 
-                              FROM statistics_user_profiles u, statistics_players_has_tournaments p
-                              WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND LOWER(u.gender)='$gen' AND p.disqualified IS NULL");
+                              FROM statistics_user_profiles u, statistics_players_has_tournaments p, statistics_categories c
+                              WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND LOWER(c.category) LIKE '%$cat%'  
+                              AND p.disqualified IS NULL AND p.category_id=c.category_id");
     if ($select->num_rows()>0){
         return $select->result_array(); 
     }
@@ -802,13 +803,19 @@ function update_year_score($user_id, $score, $slovak_score)
 * @author Vladimir Lalik
 * @return array
 */
-function get_year_ranking($gender)
+function get_year_ranking($category)
 {
    // var_dump($gender);
-    $gender=strtolower($gender);
+    $category=strtolower($category);
     $select = $this->db->query("SELECT u.year_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
                                 FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
-                                WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') AND u.year_score != '0'
+                                WHERE u.user_id=us.id AND 
+                                        (us.activated='1' OR us.activated='2' OR us.username='auto') 
+                                        AND u.year_score != '0' AND u.user_id IN (SELECT  DISTINCT pl.user_id 
+                                                                                   FROM statistics_players_has_tournaments pl, statistics_categories c, statistics_tournaments t
+                                                                                   WHERE pl.category_id=c.category_id AND pl.tournament_id=t.tournament_id AND LOWER(c.category) LIKE '%$category%' AND YEAR(t.date) ='2014'
+                                                                                   ORDER BY pl.user_id
+                                                                                   ) 
                                 ORDER BY u.year_score DESC");
     if ($select->num_rows()>0){
         return $select->result_array();

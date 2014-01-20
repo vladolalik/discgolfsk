@@ -332,8 +332,8 @@ class Auth extends CI_Controller
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
-		$config['first_link'] = FALSE;
-		$config['last_link'] = FALSE;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
 				
 		$config['next_tag_open'] = '<span class="next">';
 		$config['next_tag_close'] = '</span>';
@@ -375,8 +375,8 @@ class Auth extends CI_Controller
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
-		$config['first_link'] = FALSE;
-		$config['last_link'] = FALSE;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
 				
 		$config['next_tag_open'] = '<span class="next">';
 		$config['next_tag_close'] = '</span>';
@@ -419,8 +419,8 @@ class Auth extends CI_Controller
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
-		$config['first_link'] = FALSE;
-		$config['last_link'] = FALSE;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
 				
 		$config['next_tag_open'] = '<span class="next">';
 		$config['next_tag_close'] = '</span>';
@@ -461,8 +461,8 @@ class Auth extends CI_Controller
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 				
-		$config['first_link'] = FALSE;
-		$config['last_link'] = FALSE;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
 				
 		$config['next_tag_open'] = '<span class="next">';
 		$config['next_tag_close'] = '</span>';

@@ -47,8 +47,8 @@ class Tournaments extends CI_Controller {
 		$config['full_tag_open'] = '<div id="pagination">';
 		$config['full_tag_close'] = '</div>';
 							
-		$config['first_link'] = FALSE;
-		$config['last_link'] = FALSE;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
 							
 		$config['next_tag_open'] = '<span class="next">';
 		$config['next_tag_close'] = '</span>';
@@ -1133,8 +1133,8 @@ function view_tournaments()
 	$config['full_tag_open'] = '<div id="pagination">';
 	$config['full_tag_close'] = '</div>';
 						
-	$config['first_link'] = FALSE;
-	$config['last_link'] = FALSE;
+	$config['first_link'] = 'First';
+	$config['last_link'] = 'Last';
 						
 	$config['next_tag_open'] = '<span class="next">';
 	$config['next_tag_close'] = '</span>';
@@ -1665,7 +1665,7 @@ function __compute_year_rank()
 * @author Vladimir Lalik
 */
 
-function compute_year_rank_gender()
+function compute_year_rank_open_women()
 {
 	$tournaments = $this->tournament->get_tournaments();
 	$categories = $this->tournament->get_categories();
@@ -1674,24 +1674,71 @@ function compute_year_rank_gender()
 		for ($i=0; $i<2; $i++) {
 			//var_dump($tournament['tournament_id']);
 			//var_dump($category['category_id']);
-			$players = $this->tournament->get_not_disq_players_gender($tournament['tournament_id'], $i);
-			//var_dump($players);
+			$players = $this->tournament->get_not_disq_players_open_women($tournament['tournament_id'], $i);
+			
+			//print_r($players);
+			//die();
 			if ($tournament['par'] != NULL)
 			{
 				$count = count($players); // pocet zucasntenych hracov
 				if ($players!=NULL)
 				{
-					foreach ($players as $player) {
-						$rank = $this->__compute_rank_gender($player['user_id'], $tournament['tournament_id'], $i);
-						$score = (($count-$rank+1)/$count)*$tournament['par'];
-						
+					$total_same_players=0;
+					$last_score=-9999;
+					$num_similar_score=0;
+					$same_players=null;
+
+					foreach ($players as $key=>$player) {
+
+						$rank = $this->__compute_rank_open_women($player['user_id'], $tournament['tournament_id'], $i);
+						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par'];
+
+						// zistovanie rovnakeh skore
+
+						if ($score==$last_score)
+						{
+							if ($num_similar_score==0)
+							{
+								$same_players['0_'.$total_same_players] = array(
+									'user_id'=>$players[$key-1]['user_id'],
+									'score'=>(($count-$rank+1)/$count)*$tournament['par'],
+									'tournament_id'=>$tournament['tournament_id']
+								);
+							}
+
+							$num_similar_score++;
+							$same_players[$num_similar_score.'_'.$total_same_players] = array (
+									'user_id'=>$player['user_id'],
+									'score'=>(($count-($rank+$num_similar_score)+1)/$count)*$tournament['par'],
+									'tournament_id'=>$tournament['tournament_id']
+							);
+
+						}
+						else if ($num_similar_score!=0)
+						{
+
+							$total_same_players = $total_same_players + $num_similar_score;
+							$num_similar_score=0;
+							//$same_players=null;
+
+						}
+
+						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par'];
+						$last_score = $score;
 						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
+						//var_dump($player);
+
+						//var_dump($score);
+						//var_dump($rank);
+						//die();
 					}
+					//die();
 				}
 			}
 		}
 	}
-
+	print_r($same_players);
+	die();
 	// vypocitam score za rok pre kazdeho hraca
 	$players = $this->tournament->get_all_players();
 	foreach ($players as $player) {
@@ -1705,13 +1752,15 @@ function compute_year_rank_gender()
 
 
 /**
-* Function that compute player rank in tournament by gender
+* Function that compute player rank in tournament by two main categories OPEN and WOMEN
 * @author Vladimir Lalik
 * @return int
 */
-function __compute_rank_gender($player_id, $tournament_id, $gender)
+function __compute_rank_open_women($player_id, $tournament_id, $category)
 {
-	$results = $this->tournament->get_all_results_gender($tournament_id,'ALL',$gender);
+	 $results = $this->tournament->get_all_results_open_women($tournament_id,'ALL',$category);
+	 //print_r($results);
+	 //die();
 	 $rank = 0;
 	 foreach ($results as $key => $row)
 	 {
@@ -1745,8 +1794,8 @@ function __compute_rank_gender($player_id, $tournament_id, $gender)
 */
 function year_ranking()
 {
- 	$data['male'] = $this->tournament->get_year_ranking('male');
- 	$data['female'] = $this->tournament->get_year_ranking('female');
+ 	$data['open'] = $this->tournament->get_year_ranking('open');
+ 	$data['women'] = $this->tournament->get_year_ranking('women');
  	//print_r($data);
  	$data['name']="Ranking";
  	$this->load->view('tournament/year_ranking', $data);
