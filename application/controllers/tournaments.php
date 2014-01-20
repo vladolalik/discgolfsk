@@ -1389,17 +1389,37 @@ function admin_set_par_lap()
 	}
 	$tournament_id = $this->uri->segment(3);
 	
-	
+	$number_of_round=$this->tournament->get_nmbr_of_round($tournament_id);
+	$number_of_final=$this->tournament->get_nmbr_of_final_round($tournament_id);
+
 	$this->form_validation->set_rules('category_id','Category','trim|required|xss_clean|strip_tags');
 	$data['categories']=$this->tournament->get_categories();
-	
+	$data['number_of_round'] = $number_of_round;
+	$data['number_of_final'] = $number_of_final;
 
 	// set validation rules for all fields
 	foreach($data['categories'] as $category)
 	{
-		for ($i=1; $i<=20; $i++)
+		for ($num=1; $num<=$number_of_round; $num++) // all rounds
 		{
-			$this->form_validation->set_rules('basket_'.$i.'_'.$category['category_id'], 'Basket '.$i, 'trim|xss_clean|is_numeric');
+			for ($i=1; $i<=20; $i++) // all baskets
+			{
+				/*
+				Structure of name is basket_[rank of basket]_[category_id]_[rank of round]
+				*/
+				$this->form_validation->set_rules('basket_'.$i.'_'.$category['category_id'].'_'.$num, 'Basket '.$i, 'trim|xss_clean|is_numeric');
+			}
+		}
+		// final rounds
+		for ($num=1; $num<=$number_of_final; $num++) // all final rounds
+		{
+			for ($i=1; $i<=20; $i++) // all baskets
+			{
+				/*
+				Structure of name is basket_[rank of basket]_[category_id]_[rank of round]
+				*/
+				$this->form_validation->set_rules('final_'.$i.'_'.$category['category_id'].'_'.$num, 'Basket '.$i, 'trim|xss_clean|is_numeric');
+			}
 		}
 	}
 	if ($this->form_validation->run())
@@ -1407,21 +1427,36 @@ function admin_set_par_lap()
 		//zapis
 		//skotrolujem vsetky kategorie
 		foreach ($data['categories'] as $key => $value) {
-			//if ($this->form_validation->set_value('basket_1_'.$value['category_id'])!=NULL)
-			//{	
-			//print_r($value['category']);
+				
+				//normal rounds
 				$result = FALSE;
-				for ($i=1; $i<=20; $i++)
+				for ($num=1; $num<=$number_of_round; $num++) // all rounds
 				{
-					if ($this->form_validation->set_value('basket_'.$i.'_'.$value['category_id'])!=NULL)
+					for ($i=1; $i<=20; $i++)
 					{
-						//print_r($this->form_validation->set_value('basket_'.$i.'_'.$value['category_id']);
-						$res = $this->tournament->set_lap_par($tournament_id, $value['category_id'], $this->form_validation->set_value('basket_'.$i.'_'.$value['category_id']),$i);
-						$result = $result || $res;
-						
+						if ($this->form_validation->set_value('basket_'.$i.'_'.$value['category_id'].'_'.$num)!=NULL)
+						{
+							//arguments for set_lap_par(tournament_id, value of par, number of basket, number of round, final round if it is final then 1 else 0)
+							$res = $this->tournament->set_lap_par($tournament_id, $value['category_id'], $this->form_validation->set_value('basket_'.$i.'_'.$value['category_id'].'_'.$num),$i, $num, 0);
+							$result = $result || $res;
+							
+						}
 					}
 				}
-			//}
+				// final rounds
+				for ($num=1; $num<=$number_of_final; $num++) // all final rounds
+				{
+					for ($i=1; $i<=20; $i++)
+					{
+						if ($this->form_validation->set_value('final_'.$i.'_'.$value['category_id'].'_'.$num)!=NULL)
+						{
+							//arguments for set_lap_par(tournament_id, value of par, number of basket, number of round, final round if it is final then 1 else 0)
+							$res = $this->tournament->set_lap_par($tournament_id, $value['category_id'], $this->form_validation->set_value('final_'.$i.'_'.$value['category_id'].'_'.$num),$i,$num, 1);
+							$result = $result || $res;
+							
+						}
+					}
+				}			
 		}
 		if ($result)
 		{
@@ -1437,13 +1472,20 @@ function admin_set_par_lap()
 	 else
 	{
 		$par = $this->tournament->get_par_by_id($tournament_id);
-		print_r($par);
+		//print_r($par);
 
 		foreach ($par as $key => $value){
 			//$row['basket_'.$value['number'].$value['category_id']] =array('par'=>$value['par'], 'category_id'=>$value['category_id']);
-			$row['basket_'.$value['number'].'_'.$value['category_id']] =$value['par'];
+			if ($value['final']==0 || $value['final']==NULL)
+			{
+				$row['basket_'.$value['number'].'_'.$value['category_id'].'_'.$value['no_round']] =$value['par'];
+			} 
+			else
+			{
+				$row['final_'.$value['number'].'_'.$value['category_id'].'_'.$value['no_round']] =$value['par'];
+			}
 		}
-		print_r($row);
+		//print_r($row);
 		//die();
 		$data['unique_par'] = NULL;
 		if (isset($row)){

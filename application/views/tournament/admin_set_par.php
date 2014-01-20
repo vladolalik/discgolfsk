@@ -25,41 +25,85 @@
 	 	<table id="par">
 			 	<?php
 			 	/* One par field name has this form "basket_[basket_order]_[category_id]*/
-			 		print_r($unique_par);
+			 		//print_r($unique_par);
 			 		foreach($categories as $key=>$val)
 			 		{
-			 			echo '<tr class="'.$val['category_id'].'">';
-			 			for($i=1; $i<=20; $i++){
-			 				echo '<td align="center">'.form_label( $i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
-			 			}
-			 			echo '</tr>';
-			 			echo '<tr class="'.$val['category_id'].'">';
-				 		for($i=1; $i<=20; $i++)
-				 		{
-				 			if (isset($unique_par['basket_'.$i.'_'.$val['category_id']])){
-				 				$option_input = array (
-				 					'name'=>'basket_'.$i.'_'.$val['category_id'],
-				 					'id'=>'basket_'.$i.'_'.$val['category_id'],
-				 					'size'=>'1',
-				 					'class'=>$val['category_id'],
-				 					'value'=>set_value('basket_'.$i.'_'.$val['category_id'], $unique_par['basket_'.$i.'_'.$val['category_id']] )
-				 				);	
-				 			} 
-				 			else 
-				 			{
-				 				$option_input = array (
-				 					'name'=>'basket_'.$i.'_'.$val['category_id'],
-				 					'id'=>'basket_'.$i.'_'.$val['category_id'],
-				 					'size'=>'1',
-				 					'class'=>$val['category_id'],
-				 					'value'=>set_value('basket_'.$i.'_'.$val['category_id'] )
-				 				);
+			 			
+			 			for ($num=1; $num<=$number_of_round; $num++) // all rounds
+			 			{
+				 			echo '<tr class="'.$val['category_id'].'">';
+				 			echo '<td></td>';
+				 			for($i=1; $i<=20; $i++){ // all baskets
+				 				echo '<td align="center">'.form_label( $i, 'basket_'.$i.'_'.$val['category_id'].'_'.$num).'</td>';
 				 			}
-				 			//echo '<tr class="'.$val['category_id'].'"><td>'.form_label('Basket '.$i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
-				 			echo '<td>'.form_input($option_input).'</td>';
-				 			//echo '<td style="color: red;">'.form_error($option_input['name']).'</td></tr>';
-				 		}
-				 		echo '</tr>';
+				 			echo '</tr>';
+				 			echo '<tr class="'.$val['category_id'].'">';
+				 			echo '<td align="center"><b>Round '.$num.'</b></td>';
+					 		for($i=1; $i<=20; $i++)
+					 		{
+					 			if (isset($unique_par['basket_'.$i.'_'.$val['category_id'].'_'.$num])){
+					 				$option_input = array (
+					 					'name'=>'basket_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'id'=>'basket_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'size'=>'1',
+					 					'class'=>$val['category_id'],
+					 					'value'=>set_value('basket_'.$i.'_'.$val['category_id'].'_'.$num, $unique_par['basket_'.$i.'_'.$val['category_id'].'_'.$num] )
+					 				);	
+					 			} 
+					 			else 
+					 			{
+					 				$option_input = array (
+					 					'name'=>'basket_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'id'=>'basket_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'size'=>'1',
+					 					'class'=>$val['category_id'],
+					 					'value'=>set_value('basket_'.$i.'_'.$val['category_id'].'_'.$num )
+					 				);
+					 			}
+					 			//echo '<tr class="'.$val['category_id'].'"><td>'.form_label('Basket '.$i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
+					 			echo '<td>'.form_input($option_input).'</td>';
+					 			//echo '<td style="color: red;">'.form_error($option_input['name']).'</td></tr>';
+					 		}
+					 		echo '</tr>';
+					 	}
+					 	//print_r($number_of_final);
+					 	for ($num=1; $num<=$number_of_final; $num++) // all final rounds
+			 			{
+				 			echo '<tr class="'.$val['category_id'].'">';
+				 			echo '<td></td>';
+				 			for($i=1; $i<=20; $i++){ // all baskets
+				 				echo '<td align="center">'.form_label( $i, 'final_'.$i.'_'.$val['category_id'].'_'.$num).'</td>';
+				 			}
+				 			echo '</tr>';
+				 			echo '<tr class="'.$val['category_id'].'">';
+				 			echo '<td align="center"><b>Final '.$num.'</b></td>';
+					 		for($i=1; $i<=20; $i++)
+					 		{
+					 			if (isset($unique_par['final_'.$i.'_'.$val['category_id'].'_'.$num])){
+					 				$option_input = array (
+					 					'name'=>'final_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'id'=>'final_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'size'=>'1',
+					 					'class'=>$val['category_id'],
+					 					'value'=>set_value('final_'.$i.'_'.$val['category_id'].'_'.$num, $unique_par['final_'.$i.'_'.$val['category_id'].'_'.$num] )
+					 				);	
+					 			} 
+					 			else 
+					 			{
+					 				$option_input = array (
+					 					'name'=>'final_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'id'=>'final_'.$i.'_'.$val['category_id'].'_'.$num,
+					 					'size'=>'1',
+					 					'class'=>$val['category_id'],
+					 					'value'=>set_value('final_'.$i.'_'.$val['category_id'].'_'.$num )
+					 				);
+					 			}
+					 			//echo '<tr class="'.$val['category_id'].'"><td>'.form_label('Basket '.$i, 'basket_'.$i.'_'.$val['category_id']).'</td>';
+					 			echo '<td>'.form_input($option_input).'</td>';
+					 			//echo '<td style="color: red;">'.form_error($option_input['name']).'</td></tr>';
+					 		}
+					 		echo '</tr>';
+					 	}
 				 	}
 			 	?>
 		</table>

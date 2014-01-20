@@ -577,8 +577,41 @@ function get_par_by_id($tournament_id)
 }
 
 
+/**
+* Function return number of normal round in tournament 
+* @author Vladimir Lalik
+* @param int
+* @return int
+*
+*/
+function get_nmbr_of_round($tournament_id)
+{
+    $select=$this->db->select('nmbr_of_round')
+                     ->where('tournament_id', $tournament_id)
+                     ->get('tournaments');
+    $number = $select->row('nmbr_of_round');
+    return $number;
+}
 
-function set_lap_par($tournament_id, $category_id, $par, $number)
+/**
+* Function return number of final round in tournament 
+* @author Vladimir Lalik
+* @param int
+* @return int
+*
+*/
+function get_nmbr_of_final_round($tournament_id)
+{
+    $select=$this->db->select('nmbr_of_fnl_laps')
+                     ->where('tournament_id', $tournament_id)
+                     ->get('tournaments');
+    $number = $select->row('nmbr_of_fnl_laps');
+    return $number;
+}
+
+
+
+function set_lap_par($tournament_id, $category_id, $par, $basket_number, $lap_number, $final)
 {
     /*var_dump($tournament_id);
     var_dump($category_id);
@@ -588,7 +621,7 @@ function set_lap_par($tournament_id, $category_id, $par, $number)
     $query = $this->db->query("UPDATE statistics_basket b, statistics_players_has_tournaments p, statistics_lap l
                               SET b.par='$par'
                               WHERE b.lap_id = l.lap_id AND p.tournament_id='$tournament_id' AND l.tournament_id=p.tournament_id 
-                                    AND b.number='$number' AND 
+                                    AND b.number='$basket_number' AND l.number='$lap_number' AND l.final='$final' AND 
                                     l.user_id IN 
                                                 (SELECT t.user_id 
                                                  FROM  statistics_players_has_tournaments t

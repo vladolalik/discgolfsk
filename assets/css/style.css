@@ -474,6 +474,25 @@ nav #main-nav li ul{
 	width: 100%;
 	text-align: center;
 }
+
+/** Individual stats 
+--------------------------------------*/
+.par {
+	background-color: #B0B0B0;
+}
+.fail_par {
+	color:#FF0000;
+}
+.succes_par {
+	color:#008B00;
+}
+.table-head {
+	background-color: #B0B0B0;
+	
+}
+.table-head th {
+	font-weight:bold;
+}
 /** FOOTER
 --------------------------------------*/
 footer{
