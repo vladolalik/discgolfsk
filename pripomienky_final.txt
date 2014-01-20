@@ -54,10 +54,10 @@ Autocreated Profiles.
 
 
 RESULTS
-11) pri zobrazovani vysledkov hraca na turnaji vypisovat striedavo v riadkoch PAR a vysledky hraca (tie boldom alebo inak
+FIXED 11) pri zobrazovani vysledkov hraca na turnaji vypisovat striedavo v riadkoch PAR a vysledky hraca (tie boldom alebo inak
 
 odlisit graficky)
-12) tam isto ako 11 zobrazovat len odohrane jamky (nie automaticky vsetkych 20)
+FIXED 12) tam isto ako 11 zobrazovat len odohrane jamky (nie automaticky vsetkych 20)
 malo by to vyzerat (vratane textov)
 Peter Hrac
 Hole     1   2   3   4   5   6  SUM  TOTAL
@@ -67,11 +67,11 @@ Par      3   3   5   3   4   3   21
 Round 2  3   3   4   4   3   3   20    42
 Par      3   3   5   3   4   3   21
 Round 3  4   4   5   4   4   4   25    67
-Par      4   4   5   4        17
-Final    4   5   4   3        16    83
+Par      4   4   5   4           17
+Final    4   5   4   3           16    83
 
 TOURNAMENTS
-13) pri mazani turnajov hlasi chybu (test5)
+FIXED 13) pri mazani turnajov hlasi chybu (test5)
 Error Number: 1451
 
 Cannot delete or update a parent row: a foreign key constraint fails (`vx600000db/statistics_number_of_baskets`, CONSTRAINT
@@ -87,7 +87,7 @@ Filename: /domains1/vx600000/public/www_root/statistics/models/tournament.php
 Line Number: 449
 
 
-15b) Ale dobra vec, ze zmaze vysledky. Idealne by bolo mat dve moznosti - zmazat turnaj alebo zmazat len vysledky
+FIXED 15b) Ale dobra vec, ze zmaze vysledky. Idealne by bolo mat dve moznosti - zmazat turnaj alebo zmazat len vysledky
 
 
 RANKING a LEAGUE

@@ -491,7 +491,36 @@ nav #main-nav li ul{
 	
 }
 .table-head th {
-	font-weight:bold;
+	font-weight:bold!important;
+}
+.individual-stats {
+	border:1px solid #000000!important;
+}
+.individual-stats{
+	width: 100%;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.individual-stats th{
+	/*color: #00AFAF;*/
+	font-size: 14px;
+	font-weight: normal;
+}
+.individual-stats td i{
+	color: #474747;
+}
+.individual-stats th span{
+	font-size: 12px;
+	color: #474747;
+}
+.individual-stats  ,.individual-stats  th, .individual-stats td{
+	border: 1px solid #000000;
+}
+.individual-stats{
+	border: 0px;
+}
+.individual-stats a:hover{
+	border: none;
 }
 /** FOOTER
 --------------------------------------*/

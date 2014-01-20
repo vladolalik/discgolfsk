@@ -863,6 +863,7 @@ function view_individual_results()
 
 	$data = $this->tournament->get_user_data($player_id);
 	$data['results'] = $this->tournament->get_player_stats($player_id);
+	if ($data['results']!=null)
 	foreach ($data['results'] as $key => $row)
 	{
 		if ($data['results'][$key]['disqualified'] == '1')
@@ -1078,7 +1079,11 @@ function view_individual_results()
 }
 
 
-
+/**
+* Function delete tournament and all results join with tournament and registered players
+* @author Vladimir Lalik
+*
+*/
 function admin_delete_tournament()
 {
 	if (!$this->help_functions->is_admin())
@@ -1097,6 +1102,26 @@ function admin_delete_tournament()
 		$this->session->set_flashdata('message', '<p class="fail">Tournament was not deleted!</p>');
 		redirect('tournaments/admin_view_tournaments');
 	}
+}
+
+function admin_delete_tournament_results()
+{
+	if (!$this->help_functions->is_admin())
+	{
+		redirect();
+	}
+	$tournament_id = $this->uri->segment(3);
+	
+	if ($this->tournament->delete_tournament_results($tournament_id))
+	{
+		$this->session->set_flashdata('message', '<p class="success">Tournaments results was deleted!</p>');
+		redirect('tournaments/admin_view_tournaments');
+	} 
+	else 
+	{
+		$this->session->set_flashdata('message', '<p class="fail">Tournament results was not deleted!</p>');
+		redirect('tournaments/admin_view_tournaments');
+	}	
 }
 
 function view_tournaments()

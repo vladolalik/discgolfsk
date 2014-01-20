@@ -20,6 +20,7 @@
 			<th>Update</th>
 			<th>Set par</th>
 			<th>Delete</th>
+			<th>Delete Results</th>
 		</tr>
 
 	<?php 
@@ -37,6 +38,7 @@
 					<td class="text-center">'.anchor('/tournaments/admin_update_tournament/'.$row['tournament_id'], 'Update', 'title="update tournament"').'</td>
 					<td class="text-center">'.anchor('/tournaments/admin_set_par_lap/'.$row['tournament_id'], 'Set par', 'title="Set par"').'</td>
 					<td class="text-center"><form action="'.base_url().'index.php/tournaments/admin_delete_tournament/'.$row['tournament_id'].'"><input type="submit" name="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete touranment: '.$row['name'].' ('.$row['date'].') ?\')" /></form></td>
+					<td class="text-center"><form action="'.base_url().'index.php/tournaments/admin_delete_tournament_results/'.$row['tournament_id'].'"><input type="submit" name="submit" value="Del Results" onclick="return confirm(\'Are you sure you want to delete touranments results: '.$row['name'].' ('.$row['date'].') ?\')" /></form></td>
 				  </tr>';
 		}
 		echo '</table>';

@@ -441,14 +441,67 @@ function delete_tournament($tournament_id)
     {
         redirect();
     }
+    //delete results
+    $this->db->query("DELETE FROM statistics_basket 
+                      WHERE lap_id IN (SELECT lap_id 
+                                       FROM statistics_lap 
+                                       WHERE tournament_id='$tournament_id'
+                                      )");
     $query = $this->db->where('tournament_id', $tournament_id)
-                      ->delete('players_has_tournaments');
-    $query = $this->db->where('tournament_id', $tournament_id)
-                      ->delete('registered_players');
+                      ->delete('lap');
+    $this->db->query("DELETE FROM statistics_number_of_baskets 
+                      WHERE result_id IN (SELECT result_id 
+                                       FROM statistics_results 
+                                       WHERE tournament_id='$tournament_id'
+                                      )");
+
     $query = $this->db->where('tournament_id', $tournament_id)
                       ->delete('results');
     $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('players_has_tournaments');
+
+    // delete registered players
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('register_options');
+    
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('registered_players');
+    
+    $query = $this->db->where('tournament_id', $tournament_id)
                       ->delete('tournaments');
+
+    if ($this->db->affected_rows()>0)
+    {
+        return TRUE;
+    }                
+    return FALSE;
+}
+
+/**
+* Function delete tournament results
+* @author Vladimir Lalik
+* @param int
+* @return bool
+*/
+function delete_tournament_results($tournament_id)
+{
+    $this->db->query("DELETE FROM statistics_basket 
+                      WHERE lap_id IN (SELECT lap_id 
+                                       FROM statistics_lap 
+                                       WHERE tournament_id='$tournament_id'
+                                      )");
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('lap');
+    $this->db->query("DELETE FROM statistics_number_of_baskets 
+                      WHERE result_id IN (SELECT result_id 
+                                       FROM statistics_results 
+                                       WHERE tournament_id='$tournament_id'
+                                      )");
+
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('results');
+    $query = $this->db->where('tournament_id', $tournament_id)
+                      ->delete('players_has_tournaments');
     if ($this->db->affected_rows()>0)
     {
         return TRUE;

@@ -52,7 +52,7 @@ if (!$this->help_functions->is_admin()){
 		?>
 				<th>Accommodation</th>
 				<th>Food</th>
-				<th>About</th>
+				<th>Note</th>
 				<th>De-register</th>
 		<?php } ?>
 			</tr>
