@@ -478,7 +478,7 @@ nav #main-nav li ul{
 /** Individual stats 
 --------------------------------------*/
 .par {
-	background-color: #B0B0B0;
+	background-color: #CFCFCF;
 }
 .fail_par {
 	color:#FF0000;
@@ -487,7 +487,7 @@ nav #main-nav li ul{
 	color:#008B00;
 }
 .table-head {
-	background-color: #B0B0B0;
+	background-color: #CFCFCF;
 	
 }
 .table-head th {
