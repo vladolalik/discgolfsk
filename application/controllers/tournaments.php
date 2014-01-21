@@ -1642,7 +1642,7 @@ function __compute_year_rank()
 			var_dump($players);
 			if ($tournament['par'] != NULL)
 			{
-				$count = count($players); // pocet zucasntenych hracov
+				$count = count($players); // pocet zucastnenych hracov
 				if ($players!=NULL)
 				{
 					foreach ($players as $player) {

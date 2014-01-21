@@ -1,4 +1,12 @@
-<?php $this->load->view('header', array('title' => $name.' '.date('Y'), 'caption' => $name.' '.date('Y'))); ?>
+<?php
+	$last_update=''; 
+	if ($open!=NULL){
+			$last_update=$open['0']['last_update'];
+		} else if ($women!=NULL){
+			$last_update=$women['0']['last_update'];
+		}
+
+$this->load->view('header', array('title' => $name.' '. 'Last update: '.date('F d, Y', strtotime($last_update)), 'caption' => $name.' '. 'Last update: '.date('F d, Y', strtotime($last_update)))); ?>
 <?php
  	//print_r($male);
  	//print_r($female);

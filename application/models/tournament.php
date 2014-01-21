@@ -814,14 +814,16 @@ function update_year_score($user_id, $score, $category)
     if ($select->num_rows()>0)
     {
         $this->db->where('user_id', $user_id)
-                 ->update('ranking', array($cat.'_score'=>$score));
+                 ->update('ranking', array($cat.'_score'=>$score, 'last_update'=>date('Y-m-d H:i:s')));
     } 
     else 
     {
         $data = array (
             $cat.'_score'=>$score,
-            'user_id'=>$user_id
+            'user_id'=>$user_id,
+            'last_update'=>date('Y-m-d H:i:s')
         );
+
         $this->db->insert('ranking', $data);
     }
 }
@@ -835,7 +837,7 @@ function get_year_ranking($category)
 {
    // var_dump($gender);
     $category=strtolower($category);
-    $select = $this->db->query("SELECT rank.".$category."_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+    $select = $this->db->query("SELECT rank.".$category."_score, rank.last_update, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
                                 FROM statistics_user_profiles u, statistics_users us, statistics_ranking rank, (SELECT @curRank := 0)  r
                                 WHERE u.user_id=us.id AND rank.user_id=u.user_id AND
                                         (us.activated='1' OR us.activated='2' OR us.username='auto') 
