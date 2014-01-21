@@ -649,7 +649,7 @@ class Tournaments extends CI_Controller {
 
 			}
 		}
-		$this->compute_year_rank_open_women()();
+		$this->compute_year_rank_open_women();
 		$this->session->set_flashdata('message', 'Data imported, set pars data');
 		// redirect('tournaments/admin_view_tournaments');
 		redirect('tournaments/admin_set_par_lap/'.$tournament_id);
