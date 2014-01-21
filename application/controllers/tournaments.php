@@ -1669,36 +1669,36 @@ function __compute_year_rank()
 function compute_year_rank_open_women()
 {
 	$tournaments = $this->tournament->get_tournaments();
-	$categories = $this->tournament->get_categories();
 	foreach ($tournaments as $key => $tournament) {
 		// ziskat vsetkych nediskvalifikovanych hracov
-		for ($i=0; $i<2; $i++) {
-			//var_dump($tournament['tournament_id']);
-			//var_dump($category['category_id']);
+		
+		for ($i=0; $i<2; $i++) { // vypocet skore pre dve hlvane kategorie open a women 0 znamena OPEN a 1 znamena WOMEN
+			
 			$players = $this->tournament->get_not_disq_players_open_women($tournament['tournament_id'], $i);
 			
-			//print_r($players);
-			//die();
+			
+			$total_same_players=0;  //celkovy pocet hracov s rovnakym skore
+			$last_score=-9999; 
+			$num_similar_score=0; // pocet-1 za sebou iducich hracov
+			$same_players=null; //pole hracov s rovnakym skore
+
 			if ($tournament['par'] != NULL)
 			{
 				$count = count($players); // pocet zucasntenych hracov
 				if ($players!=NULL)
 				{
-					$total_same_players=0;
-					$last_score=-9999;
-					$num_similar_score=0;
-					$same_players=null;
+					
+					foreach ($players as $key=>$player) 
+					{
 
-					foreach ($players as $key=>$player) {
+						$rank = $this->__compute_rank_open_women($player['user_id'], $tournament['tournament_id'], $i); // vypocet poradia daneho hraca
+						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par']; // skore daneho hraca (pripocitava sa pocet rovnakych doteraz najdenych co zabezpeci spravnost vypoctu)
 
-						$rank = $this->__compute_rank_open_women($player['user_id'], $tournament['tournament_id'], $i);
-						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par'];
-
-						// zistovanie rovnakeh skore
-
-						if ($score==$last_score)
+						// zistovanie rovnakeh skore ak sa rovna skore aktualneho hraca so skore toho predoslehho hraca
+						
+						if (round($score,2)==round($last_score,2))
 						{
-							if ($num_similar_score==0)
+							if ($num_similar_score==0) // ak je to druhy sa opakujuci musim zaratat aj ten pred nim 
 							{
 								$same_players['0_'.$total_same_players] = array(
 									'user_id'=>$players[$key-1]['user_id'],
@@ -1707,47 +1707,63 @@ function compute_year_rank_open_women()
 								);
 							}
 
-							$num_similar_score++;
+							$num_similar_score=$num_similar_score+1;
 							$same_players[$num_similar_score.'_'.$total_same_players] = array (
 									'user_id'=>$player['user_id'],
 									'score'=>(($count-($rank+$num_similar_score)+1)/$count)*$tournament['par'],
 									'tournament_id'=>$tournament['tournament_id']
 							);
+							
 
 						}
-						else if ($num_similar_score!=0)
+						else if ($num_similar_score!=0) // ak sa nezhoduje dalsi v poradi a uz mam aspon 2 zhodne 
 						{
+							$total_same_players = $total_same_players + $num_similar_score; // zvysi sa celkovy pocet rovnakych
+							
+							$num_similar_score=0; // vynulujem pocet aktualnych
+							
 
-							$total_same_players = $total_same_players + $num_similar_score;
-							$num_similar_score=0;
-							//$same_players=null;
-
+							// skore hracov ktory mali rovnaky vysledok v turnaji
+							// updatnem skore hracov ktory mali rovnake skore spravim z ich skore priemer a ten im ulozim 
+							$sum=0; 
+							foreach($same_players as $same_player)
+							{
+								$sum=$sum+$same_player['score'];
+								
+							}
+							// priemer tych co mali rovnake skore
+							$average=$sum/count($same_player);
+							foreach($same_players as $same_player)
+							{
+								$this->tournament->update_score($tournament['tournament_id'], $same_player['user_id'], $average);			
+							}
+							$same_players=null;
 						}
 
 						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par'];
 						$last_score = $score;
 						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
-						//var_dump($player);
-
-						//var_dump($score);
-						//var_dump($rank);
-						//die();
 					}
-					//die();
+					
 				}
 			}
 		}
 	}
-	print_r($same_players);
-	die();
+	
+	//die();
 	// vypocitam score za rok pre kazdeho hraca
 	$players = $this->tournament->get_all_players();
 	foreach ($players as $player) {
-		$sum = $this->tournament->get_score_actual_year($player['user_id']);
-		$slovak_champ_sum=$this->tournament->get_score_actual_slovak($player['user_id']);
-		//print_r($sum['sum']);
-		$this->tournament->update_year_score($player['user_id'], $sum['sum'], $slovak_champ_sum['sum']);
+		for ($i=0; $i<2; $i++) 
+		{
+			$sum = $this->tournament->get_score_actual_year($player['user_id'], $i);
+			//$slovak_champ_sum=$this->tournament->get_score_actual_slovak($player['user_id']);
+			var_dump($sum['sum']);
+			//die();
+			$this->tournament->update_year_score($player['user_id'], $sum['sum'], $i);
+		}
 	}
+	//die();
 	redirect('tournaments/admin_view_tournaments');
 }
 
@@ -1822,7 +1838,7 @@ function slovak_champ_rank()
 function tournaments_score()
 {
 	$user_id=$this->uri->segment(3);
-	$data['score']=$this->tournament->get_score_tournaments($user_id);
+	$data['women']=$this->tournament->get_score_tournaments($user_id, 'women');
 	$this->load->view('tournament/tournaments_score', $data);
 }
 
