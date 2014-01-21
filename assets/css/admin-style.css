@@ -423,6 +423,13 @@ nav #main-nav li ul{
 	font-weight: normal;
 	font-size: 14px;
 }
+
+/** IMPORT 
+-------------------------------------------*/
+#import-confirmation-toggle-all{
+	text-align: right;
+}
+
 /** CATEGORIES
 -------------------------------------------*/
 #add-category{

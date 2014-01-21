@@ -26,14 +26,19 @@
 		</tr>
 	
 		<?php
-			debug($players);
+			// debug($players);
+			// debug($laps_data);
+			// debug($final_laps_data);
 			$string = "";
 			foreach ($players as $key => $player) {
+				$birth_date = ( $player['birth_date'] != "0000-00-00" ) ? $player['birth_date']  : "";
+
+
 				$string .= '<tr>';
 				$string .= '<td>'.$player['name'].'</td>';
 				$string .= '<td>'.$player['surname'].'</td>';
 				$string .= '<td>'.$player['gender'].'</td>';
-				$string .= '<td>'.$player['birth_date'].'</td>';
+				$string .= '<td>'.$birth_date.'</td>';
 				if( $player['exist'] != -1){ //moznost parovania ak este nie je vytvoreny
 					$string .= '<td class="ok-icon"><i class="fa fa-check"></i></td>';
 				}else{
@@ -48,7 +53,7 @@
 					$string .= '<td><i class="fa fa-check"></i> </td>'; // napise fajku ak je všetko v poriadku a ešte nemáme údaje o danom hráčovi 
 				}else{
 					 // inak dá checkbox...ktorý dá na vyber, či nehcať pôvodné výsledky alebo zmazať pôvodné a pridať nové
-					$string .= '<td> <input type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
+					$string .= '<td> <input class="confirmation-checkbox" type="checkbox" checked name="'.$player['exist'].'"/>'.'</td>';
 				}
 				$string .= '</tr>';
 			}
@@ -61,4 +66,17 @@
 			echo form_submit('submit', 'Save');
 			echo form_close();
 		?>
+		<div id="import-confirmation-toggle-all" >
+			<label for="toggle-all">Toggle all</label>
+			<input id="toggle-all" type="checkbox" checked />
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				$('#toggle-all').click(function(){
+					var checked = $( this ).prop('checked');
+					console.log( checked );
+					$('.confirmation-checkbox').prop("checked",checked);
+				});
+			});
+		</script>
 	</fieldset>

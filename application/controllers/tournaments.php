@@ -282,7 +282,7 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('surname', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('gender', '', 'trim|required|xss_clean|htmlspecialchars|callback_validate_gender');
 		$this->form_validation->set_rules('category', '', 'trim|required|xss_clean|htmlspecialchars');
-		$this->form_validation->set_rules('birth_date', '', 'trim|required|xss_clean|htmlspecialchars');
+		$this->form_validation->set_rules('birth_date', '', 'trim|xss_clean|htmlspecialchars');
 
 		$this->form_validation->set_message('validate_gender','Gender is not valid! Please use only Male or Female.');
 
@@ -334,7 +334,7 @@ class Tournaments extends CI_Controller {
 		$data['validation_errors'] = "";
 		$line_number = 0;
 		$loaded_player_data = FALSE; 			// informacia o tom ci su pre noveho hraca ulozene uz nejake data
-
+		$dataString = str_replace("\r\n", "\n", $dataString);
 		$lines = explode("\n",$dataString); 	// rozdelime subor na pole riadkov
 		$lines = array_slice($lines, 0, ( sizeof($lines) -1 ) );  
 		foreach ($lines as $row) {				// prechadzame po riadku
@@ -350,14 +350,15 @@ class Tournaments extends CI_Controller {
 					$surname				= $values[1];
 					$gender 				= $values[2];   
 					$category				= $values[3];
-					$birth_date				= $values[4];
+					//defaultne teda nevyplnene je 0000-00-00 iba ked chceme mat s rovankym menom tak  zoberieme inu hodnotu
+					$birth_date				= ( $values[4] != null ) ? $values[4] : "0000-00-00";
 
 					// volanie validacie
 					$player_errors = $this->__validete_player($name ,$surname ,$gender ,$category, $birth_date, $line_number, $player_number );
 					if( $player_errors == ""){ // ak nie su errory ulozim ho a zapamatam si jeho id
 						$valid_players[$player_number]['name'] 			= $name;
 						$valid_players[$player_number]['surname'] 		= $surname;
-						$valid_players[$player_number]['gender'] 	= $gender;
+						$valid_players[$player_number]['gender'] 		= $gender;
 						$valid_players[$player_number]['category'] 		= $category;
 						$valid_players[$player_number]['birth_date'] 	= $birth_date;
 					}else{

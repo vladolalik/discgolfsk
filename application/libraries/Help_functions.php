@@ -82,7 +82,7 @@ class Help_functions{
 		// 	redirect();
 		// }
 		
-		return $this->ci->users->__exists_profile($first_name, $last_name,$birth_date);
+		return $this->ci->users->__exists_profile($first_name, $last_name, $birth_date);
 		
 	}
 

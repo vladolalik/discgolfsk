@@ -178,8 +178,8 @@ class Users extends CI_Model
 	{
 		$query = $this->db->query("SELECT u.id as user_id 
 								   FROM statistics_users u, statistics_user_profiles p
-								   WHERE u.id = p.user_id AND LOWER(p.first_name) = '".strtolower($first_name)."' AND LOWER(p.last_name) = '".strtolower($last_name)."' AND LOWER(p.birth_date) = '".strtolower($birth_date)."'");
-		if ($query->num_rows == 1)
+								   WHERE u.id = p.user_id AND LOWER(p.first_name) = '".strtolower($first_name)."' AND LOWER(p.last_name) = '".strtolower($last_name)."' AND (p.birth_date) = '".$birth_date."'");
+		if ($query->num_rows >= 1)
 		{
 			$data = $query->row_array();
 			return $data['user_id'];
