@@ -103,11 +103,23 @@
 	<tr>
 	<?php
 		$options=array(
-			'name'	=>'par',
-			'id'	=>'par',
-			'value' => set_value('par')
+			'name'	=>'max_open',
+			'id'	=>'max_open',
+			'value' => set_value('max_open')
 		); 
-		echo '<td>'.form_label('Parameter of tournament: ','par').'</td>';
+		echo '<td>'.form_label('Max OPEN: ','max_open').'</td>';
+		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
+			'name'	=>'max_women',
+			'id'	=>'max_women',
+			'value' => set_value('max_women')
+		); 
+		echo '<td>'.form_label('Max WOMEN: ','max_women').'</td>';
 		echo '<td>'.form_input($options).'</td>';
 		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>

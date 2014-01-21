@@ -101,7 +101,8 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('capacity','Capacity of tournament','trim|required|xss_clean|is_natural|strip_tags');
 		$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
 		$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
-		$this->form_validation->set_rules('par','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
+		$this->form_validation->set_rules('max_open','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
+		$this->form_validation->set_rules('max_women','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');
@@ -124,7 +125,8 @@ class Tournaments extends CI_Controller {
 					'allow_registration' => $allow_registration,
 					'lat'=>$this->form_validation->set_value('lat'),
 					'lng'=>$this->form_validation->set_value('lng'),
-					'par'=>$this->form_validation->set_value('par'),
+					'max_open'=>$this->form_validation->set_value('max_open'),
+					'max_women'=>$this->form_validation->set_value('max_women'),
 					'capacity'=>$this->form_validation->set_value('capacity'),
 					'dir_name'=>$this->form_validation->set_value('dir_name'),
 					'dir_phone'=>$this->form_validation->set_value('dir_phone'),
@@ -1031,7 +1033,8 @@ function view_individual_results()
 	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
-	$this->form_validation->set_rules('par','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
+	$this->form_validation->set_rules('max_open','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
+	$this->form_validation->set_rules('max_women','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
 	$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');	
 	$this->form_validation->set_rules('dir_email','Director\'s email','trim|valid_email|xss_clean|strip_tags');
@@ -1054,7 +1057,8 @@ function view_individual_results()
 					'allow_registration' => $allow_registration,
 					'lat'=>$this->form_validation->set_value('lat'),
 					'lng'=>$this->form_validation->set_value('lng'),
-					'par'=>$this->form_validation->set_value('par'),
+					'max_open'=>$this->form_validation->set_value('max_open'),
+					'max_women'=>$this->form_validation->set_value('max_women'),
 					'capacity'=>$this->form_validation->set_value('capacity'),
 					'dir_name'=>$this->form_validation->set_value('dir_name'),
 					'dir_phone'=>$this->form_validation->set_value('dir_phone'),
@@ -1671,7 +1675,10 @@ function compute_year_rank_open_women()
 	$tournaments = $this->tournament->get_tournaments();
 	foreach ($tournaments as $key => $tournament) {
 		// ziskat vsetkych nediskvalifikovanych hracov
-		
+		$categories = array(
+			'0'=>'max_open',
+			'1'=>'max_women'
+		);
 		for ($i=0; $i<2; $i++) { // vypocet skore pre dve hlvane kategorie open a women 0 znamena OPEN a 1 znamena WOMEN
 			
 			$players = $this->tournament->get_not_disq_players_open_women($tournament['tournament_id'], $i);
@@ -1682,7 +1689,7 @@ function compute_year_rank_open_women()
 			$num_similar_score=0; // pocet-1 za sebou iducich hracov
 			$same_players=null; //pole hracov s rovnakym skore
 
-			if ($tournament['par'] != NULL)
+			if ($tournament[$categories[$i]] != NULL)
 			{
 				$count = count($players); // pocet zucasntenych hracov
 				if ($players!=NULL)
@@ -1692,7 +1699,7 @@ function compute_year_rank_open_women()
 					{
 
 						$rank = $this->__compute_rank_open_women($player['user_id'], $tournament['tournament_id'], $i); // vypocet poradia daneho hraca
-						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par']; // skore daneho hraca (pripocitava sa pocet rovnakych doteraz najdenych co zabezpeci spravnost vypoctu)
+						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament[$categories[$i]]; // skore daneho hraca (pripocitava sa pocet rovnakych doteraz najdenych co zabezpeci spravnost vypoctu)
 
 						// zistovanie rovnakeh skore ak sa rovna skore aktualneho hraca so skore toho predoslehho hraca
 						
@@ -1702,7 +1709,7 @@ function compute_year_rank_open_women()
 							{
 								$same_players['0_'.$total_same_players] = array(
 									'user_id'=>$players[$key-1]['user_id'],
-									'score'=>(($count-$rank+1)/$count)*$tournament['par'],
+									'score'=>(($count-$rank+1)/$count)*$tournament[$categories[$i]],
 									'tournament_id'=>$tournament['tournament_id']
 								);
 							}
@@ -1710,7 +1717,7 @@ function compute_year_rank_open_women()
 							$num_similar_score=$num_similar_score+1;
 							$same_players[$num_similar_score.'_'.$total_same_players] = array (
 									'user_id'=>$player['user_id'],
-									'score'=>(($count-($rank+$num_similar_score)+1)/$count)*$tournament['par'],
+									'score'=>(($count-($rank+$num_similar_score)+1)/$count)*$tournament[$categories[$i]],
 									'tournament_id'=>$tournament['tournament_id']
 							);
 							
@@ -1740,7 +1747,7 @@ function compute_year_rank_open_women()
 							$same_players=null;
 						}
 
-						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament['par'];
+						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament[$categories[$i]];
 						$last_score = $score;
 						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
 					}
@@ -1838,7 +1845,9 @@ function slovak_champ_rank()
 function tournaments_score()
 {
 	$user_id=$this->uri->segment(3);
+	$data = $this->tournament->get_user_data($user_id);
 	$data['women']=$this->tournament->get_score_tournaments($user_id, 'women');
+	$data['open']=$this->tournament->get_score_tournaments($user_id, 'open');
 	$this->load->view('tournament/tournaments_score', $data);
 }
 

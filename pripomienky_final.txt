@@ -91,7 +91,7 @@ FIXED 15b) Ale dobra vec, ze zmaze vysledky. Idealne by bolo mat dve moznosti - 
 
 
 RANKING a LEAGUE
-1) zaokruhlovat na 1 desatinne miesto
+FIXED 1) zaokruhlovat na 1 desatinne miesto
 2) ranking je za poslednych 365 dni ale staci ho v skutocnosti prepocitavat pri zadani novych vysledkov
 3) do nadpisu Ranking (datum poslednej aktualizacie)
 4) do rankingu aj do Chamiponships/League kategorie su OPEN a WOMEN nie Male/Female (OPEN, OPEN MASTER, OPEN JUNIOR -> OPEN,

@@ -868,7 +868,7 @@ function get_score_tournaments($user_id, $category)
     $gender=strtolower($where->row('gender'));
     */
 
-    $select=$this->db->query("SELECT u.first_name, u.last_name, t.name, t.date, p.score, u.year_score, u.slovak_champ_score, ranking.rank, c.category
+    $select=$this->db->query("SELECT u.first_name, u.last_name, t.name, t.date, p.score,  u.slovak_champ_score, ranking.rank, c.category
                               FROM statistics_user_profiles u, statistics_tournaments t, statistics_players_has_tournaments p, statistics_categories c, 
                                   (SELECT rank.".$category."_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
                                     FROM statistics_user_profiles u, statistics_users us, statistics_ranking rank, (SELECT @curRank := 0)  r
