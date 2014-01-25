@@ -61,12 +61,23 @@
 			'id'	=>'allow_registration',
 			'value' => '1',
 			'checked' => ($allow_registration=='1')?'TRUE':'FALSE'
-
 		); 
-		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';
-		?> <td><input type="checkbox" value="1" name="allow_registration" id="allow_registration" <?php if ($allow_registration=='1') echo 'checked="checked"'; ?>></td>' 
+		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';?>
+		<td><input type="checkbox" value="1" name="allow_registration" id="allow_registration" <?php if($allow_registration=='1') echo 'checked="checked"';?> ></td> 
 	</tr>
 	<tr><td> <h3>Results</h3></td></tr>
+	<tr>
+	<?php
+		$options=array(
+			'name'	=>'slovak_champ',
+			'id'	=>'slovak_champ',
+			'value' => '1',
+			'checked' => ($slovak_champ=='1')?'TRUE':'FALSE'
+
+		); 
+		echo '<td>'.form_label('Slovak championship ','slovak_champ').'</td>';?>
+		<td><input type="checkbox" value="1" name="slovak_champ" id="slovak_champ" <?php if ($slovak_champ=='1') echo 'checked="checked"';?>>
+	</tr>
 	<tr>
 	<?php 
 		$options=array(

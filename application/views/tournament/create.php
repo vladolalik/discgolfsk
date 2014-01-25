@@ -77,6 +77,19 @@
 	</tr>
 	<tr><td> <h3>Results</h3></td></tr>
 	<tr>
+	<?php
+		$options=array(
+			'name'	=>'slovak_champ',
+			'id'	=>'slovak_champ',
+			'value' => '1',
+
+		); 
+		echo '<td>'.form_label('Slovak championship ','slovak_champ').'</td>';
+		echo '<td>'.form_checkbox($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
+	<tr>
 	<?php 
 		$options=array(
 			'name'	=>'rounds',

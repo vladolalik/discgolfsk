@@ -905,11 +905,13 @@ function get_slovak_ranking($gender)
     
    
     $gender=strtolower($gender);
-    $select = $this->db->query("SELECT u.slovak_champ_score year_score, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+    $select = $this->db->query("SELECT u.slovak_champ_score year_score, u.user_id year_score, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
                                 FROM statistics_user_profiles u, statistics_users us, (SELECT @curRank := 0)  r
                                 WHERE LOWER(u.gender)='$gender' AND u.user_id=us.id AND (us.activated='1' OR us.activated='2' OR us.username='auto') 
                                 ORDER BY u.slovak_champ_score DESC");
     if ($select->num_rows()>0){
+        print_r($select->result_array());
+        die();
         return $select->result_array();
     }
     return NULL;

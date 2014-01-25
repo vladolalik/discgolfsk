@@ -103,6 +103,7 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
 		$this->form_validation->set_rules('max_open','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
 		$this->form_validation->set_rules('max_women','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
+		$this->form_validation->set_rules('slovak_champ','Slovak championship','trim|xss_clean|strip_tags|numeric');
 		$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 		$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');
@@ -112,6 +113,11 @@ class Tournaments extends CI_Controller {
 			if ($allow_registration == NULL)
 			{
 				$allow_registration = 0;	
+			}
+			$slovak_champ=$this->form_validation->set_value('slovak_champ');
+			if ($slovak_champ == NULL)
+			{
+				$slovak_champ = 0;	
 			}
 			
 			$tournament_data = array(
@@ -123,6 +129,7 @@ class Tournaments extends CI_Controller {
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
 					'about' => $this->form_validation->set_value('about'),
 					'allow_registration' => $allow_registration,
+					'slovak_champ' => $slovak_champ,
 					'lat'=>$this->form_validation->set_value('lat'),
 					'lng'=>$this->form_validation->set_value('lng'),
 					'max_open'=>$this->form_validation->set_value('max_open'),
@@ -1031,6 +1038,7 @@ function view_individual_results()
 	$this->form_validation->set_rules('capacity','Capacity','trim|required|xss_clean|is_natural|strip_tags');
 	$this->form_validation->set_rules('rounds','Rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
 	$this->form_validation->set_rules('rounds_final','Final rounds','trim|required|xss_clean|is_natural_no_zero|strip_tags');
+	$this->form_validation->set_rules('slovak_champ','Slovak championship','trim|xss_clean|strip_tags|numeric');
 	$this->form_validation->set_rules('lat','Lattitude','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('lng','Longtitude','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('max_open','Parameter of tournament','trim|xss_clean|strip_tags|numeric');
@@ -1045,6 +1053,11 @@ function view_individual_results()
 		{
 			$allow_registration = 0;	
 		}
+		$slovak_champ=$this->form_validation->set_value('slovak_champ');
+		if ($slovak_champ == NULL)
+		{
+			$slovak_champ = 0;	
+		}
 		
 		$tournament_data = array(
 					'name'			=>	$this->form_validation->set_value('name'),
@@ -1055,6 +1068,7 @@ function view_individual_results()
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
 					'about' => $this->form_validation->set_value('about'),
 					'allow_registration' => $allow_registration,
+					'slovak_champ' => $slovak_champ,
 					'lat'=>$this->form_validation->set_value('lat'),
 					'lng'=>$this->form_validation->set_value('lng'),
 					'max_open'=>$this->form_validation->set_value('max_open'),
@@ -1770,7 +1784,7 @@ function compute_year_rank_open_women()
 			$this->tournament->update_year_score($player['user_id'], $sum['sum'], $i);
 		}
 	}
-	//die();
+	
 	redirect('tournaments/admin_view_tournaments');
 }
 
