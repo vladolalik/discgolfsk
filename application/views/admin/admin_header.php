@@ -61,6 +61,7 @@ tinymce.init({
 						<li><?php echo anchor('tournaments/admin_add_tournament', '<i class="fa fa-angle-right"></i>Add new tournament', 'title="Add new tournament"'); ?></li>
 						<li><?php echo anchor('tournaments/import', '<i class="fa fa-angle-right"></i>Import tournament', 'title="Add new tournament"'); ?></li>
 						<li><?php echo anchor('tournaments/registered_players', '<i class="fa fa-angle-right"></i>Registered players', 'title="Registered players"'); ?></li>
+						<li><?php echo anchor('tournaments/set_foreign_score', '<i class="fa fa-angle-right"></i>Foreign score', 'title="Score from foreign tournaments"'); ?></li>
 					</ul>
 				</li>
 				<li><?php echo anchor('tournaments/admin_delete_results', '<i class="fa fa-trash-o"></i>Delete results', 'title="Delete player results"'); ?> 

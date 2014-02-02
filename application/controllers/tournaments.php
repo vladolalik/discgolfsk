@@ -1643,7 +1643,7 @@ function __admin_set_par_lap_gender()
 *
 */
 
-function __compute_year_rank()
+/*function __compute_year_rank()
 {
 	$tournaments = $this->tournament->get_tournaments();
 	$categories = $this->tournament->get_categories();
@@ -1678,7 +1678,7 @@ function __compute_year_rank()
 		$this->tournament->update_year_score($player['user_id'], $sum['sum']);
 	}
 	redirect('tournaments/admin_view_tournaments');
-}
+}*/
 /**
 * rank list compute score for category male and female
 * @author Vladimir Lalik
@@ -1695,9 +1695,7 @@ function compute_year_rank_open_women()
 		);
 		for ($i=0; $i<2; $i++) { // vypocet skore pre dve hlvane kategorie open a women 0 znamena OPEN a 1 znamena WOMEN
 			
-			$players = $this->tournament->get_not_disq_players_open_women($tournament['tournament_id'], $i);
-			
-			
+			$players = $this->tournament->get_not_disq_players_open_women($tournament['tournament_id'], $i);	
 			$total_same_players=0;  //celkovy pocet hracov s rovnakym skore
 			$last_score=-9999; 
 			$num_similar_score=0; // pocet-1 za sebou iducich hracov
@@ -1788,6 +1786,77 @@ function compute_year_rank_open_women()
 	redirect('tournaments/admin_view_tournaments');
 }
 
+
+/**
+* Function that compute score in slovak DG league
+* @author Vladimir Lalik
+* 
+*/
+function get_slovak_DG_score()
+{
+
+}
+
+/**
+* Function set score from foreign tournaments
+*
+*
+*/
+function set_foreign_score()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+
+	$data['players']=$this->tournament->get_foreign_score();
+	foreach ($data['players'] as $key => $player) {
+		for($i=1; $i<5; $i++)
+		{
+			$this->form_validation->set_rules('foreign_'.$i.'_'.$player['user_id'], 'Tornament '.$i.' '.$player['last_name'].' '.$player['first_name'], 'trim|numeric|xss_clean');
+
+		}	
+	}
+
+	if ($this->form_validation->run())
+	{
+		foreach ($data['players'] as $key => $player) {
+			for($i=1; $i<5; $i++)
+			{
+				$score=$this->form_validation->set_value('foreign_'.$i.'_'.$player['user_id']);
+				if ($score!=null)
+				{
+					$this->tournament->set_foreign_score($player['user_id'], $i, $score);
+				}
+			}	
+		}
+		$this->session->set_flashdata('message', '<p class="success">Score from foreign tournaments was updated.</p>');
+		redirect('tournaments/set_foreign_score');
+	}
+
+	$this->load->view('tournament/set_foreign_score', $data);
+}
+
+/**
+* Function delete all foreing results
+* @author Vladimir Lalik
+*/
+function admin_delete_foreign_score()
+{	
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$this->tournament->delete_foreign_result();
+	redirect('tournaments/set_foreign_score');
+}
+
+function admin_delete_individual_foreign_score()
+{
+	$user_id=$this->uri->segment(3);
+	$this->tournament->delete_individual_foreign_score($user_id);
+	redirect('tournaments/set_foreign_score');
+}
 
 /**
 * Function that compute player rank in tournament by two main categories OPEN and WOMEN

@@ -251,6 +251,75 @@ class Tournament extends CI_Model{
     
     }
 
+
+    function get_foreign_score()
+    {
+        $query = $this->db->query( "SELECT u.id as user_id, p.first_name, u.username, p.last_name, 
+                                            f1.score as foreign_1, f2.score as foreign_2, f3.score as foreign_3, f4.score as foreign_4
+                                    FROM statistics_users u, statistics_user_profiles p 
+                                    LEFT JOIN statistics_foreign_tournaments f1 ON (f1.user_id=p.user_id AND f1.number='1')
+                                    LEFT JOIN statistics_foreign_tournaments f2 ON (f2.user_id=p.user_id AND f2.number='2')
+                                    LEFT JOIN statistics_foreign_tournaments f3 ON (f3.user_id=p.user_id AND f3.number='3')
+                                    LEFT JOIN statistics_foreign_tournaments f4 ON (f4.user_id=p.user_id AND f4.number='4')
+                                    WHERE (u.activated = '1' OR u.activated = '2' OR LOWER(u.username) = 'auto' ) AND u.id = p.user_id
+                                    ORDER BY LOWER(p.last_name)
+                                 ");
+        if ($query->num_rows > 0) return $query->result_array();
+    }
+
+    /**
+    * Function set score from foreign tournaments
+    * @param int
+    * @param int
+    * @param double
+    */
+    function set_foreign_score($user_id, $number, $score)
+    {
+        $select=$this->db->where('user_id', $user_id)
+                         ->where('number', $number)
+                         ->get('foreign_tournaments');
+
+        
+        if ($select->num_rows=='1')
+        {
+            $data=array(
+                'score'=>$score
+            );
+            $this->db->where('user_id', $user_id)
+                     ->where('number', $number)
+                     ->update('foreign_tournaments', $data);
+        } 
+        else 
+        {
+            $data=array(
+                'score'=>$score,
+                'user_id'=>$user_id,
+                'number'=>$number
+            );
+           $this->db->insert('foreign_tournaments', $data);
+        }
+    }
+
+    /**
+    * Function delete all foreign results
+    * @author Vladimir Lalik
+    */
+    function delete_foreign_result()
+    {
+        $this->db->empty_table('foreign_tournaments');
+    }
+
+    /**
+    * Function delete foreign results of one player specify by id
+    * @author Vladimir Lalik
+    * @param int
+    */
+    function delete_individual_foreign_score($user_id)
+    {
+        $this->db->where('user_id', $user_id)
+                 ->delete('foreign_tournaments');
+    }
+
     function get_all_results($tournament_id, $player_id, $category_id)
     {
 
