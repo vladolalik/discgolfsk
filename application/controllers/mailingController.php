@@ -11,7 +11,11 @@ class MailingController extends CI_Controller {
     //$this->load->library('email');
   }     
   
-  function index() {    
+  function index() {   
+    if (!($this->help_functions->is_admin()))
+    {
+      redirect();
+    } 
     $data['user'] = $this->mail_model->selectAll(); 
     $data['tournaments'] = $this->mail_model->selectTournaments();  
     $data['cathegories'] = $this->mail_model->selectCathegories(); 
@@ -19,9 +23,13 @@ class MailingController extends CI_Controller {
   }
   
   function send(){
+    if (!($this->help_functions->is_admin()))
+    {
+      redirect();
+    }
     $this->load->library('form_validation');    
     $this->form_validation->set_rules('input_from', 'sender adress', 'required|xss_clean|htmlspecialchars|valid_email');
-    $this->form_validation->set_rules('input_to', 'destination adress', 'required|xss_clean|htmlspecialchars|valid_emails');
+    $this->form_validation->set_rules('input_to', 'destination adress', 'xss_clean|htmlspecialchars|valid_emails');
     $this->form_validation->set_rules('input_subject', 'subject', 'required|xss_clean|htmlspecialchars');
     $this->form_validation->set_rules('message', 'message text', 'required|xss_clean|htmlspecialchars');     
     
@@ -40,7 +48,6 @@ class MailingController extends CI_Controller {
       
       $params = array(
         'from' =>$_POST['input_from'],
-        'to' =>$_POST['input_to'],
         'subject' =>$_POST['input_subject'],
         'message' =>$_POST['message'],
       );  
@@ -79,7 +86,7 @@ class MailingController extends CI_Controller {
           
       $this->mail_model->send($params);
       
-      $data['sent_to'] = $_POST['input_to'];      
+      //$data['sent_to'] = $_POST['input_to'];      
       $data['user'] = $this->mail_model->selectAll();    
       $data['tournaments'] = $this->mail_model->selectTournaments();  
       $data['cathegories'] = $this->mail_model->selectCathegories();  

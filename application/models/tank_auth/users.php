@@ -704,6 +704,11 @@ class Users extends CI_Model
 		$data = $this->get_all_user_by_id($user_id);
 		if ($data->role != 'admin') 
 		{	
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('ranking');
+
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('foreign_tournaments');			
 
 			$this->db->where('user_id', $user_id);
 			$this->db->delete('registered_players');

@@ -5,7 +5,7 @@
  $this->load->view('admin/admin_header', array('title'=>'Tournaments', 'caption'=>'Tournaments')); ?>
 
 <fieldset>
-		<legend>Number of tournaments which count to Slovak championship ranklist</legend>
+		<legend>Number of tournaments which count to Slovak DG league ranklist</legend>
 		<?php 
 		//	echo validation_errors();
 			echo form_open($this->uri->uri_string()); ?>
@@ -23,9 +23,10 @@
 		echo '<td>'.form_label('Number: ','nmbr_accept_tourn').'</td>';
 		echo '<td>'.form_input($options).'</td>';
 		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+		echo '<td>'.form_submit('mysubmit', 'Submit').'</td>';
 	?>
 	</tr>
 </table>
-<?php echo form_submit('mysubmit', 'Submit');?>
+<?php ?>
 <?php echo form_close();?>
-<?php $this->load->view('footer'); ?>
+<?php $this->load->view('admin/admin_footer'); ?>

@@ -610,6 +610,7 @@ class Auth extends CI_Controller
 
 						//$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
 						$this->session->set_flashdata('message', '<p class="success">Your registration was successfull. Now wait for activation of your profile</p>');
+						redirect('');
 					}
 				} else {
 					$errors = $this->tank_auth->get_error_message();

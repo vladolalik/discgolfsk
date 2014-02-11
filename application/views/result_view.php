@@ -72,7 +72,7 @@
 					 		$total = 0;
 					 		for ($i=1; $i<=$row_array['nmbr_of_round'];$i++)
 					 		{
-					 			if ($row_array['lap_'.$i] == NULL)
+					 			if ($row_array['lap_'.$i] == NULL || $row_array['lap_'.$i] == '0')
 					 			{
 					 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
 					 			} 
@@ -86,7 +86,7 @@
 
 					 		for ($i=1; $i<=$row_array['nmbr_of_fnl_laps'];$i++)
 					 		{	
-					 			if ($row_array['final_'.$i] == NULL)
+					 			if ($row_array['final_'.$i] == NULL || $row_array['final_'.$i] == '0')
 					 			{
 					 				echo '<td class="text-center" ><i class="fa fa-times-circle-o"></i></td>';
 					 			} 

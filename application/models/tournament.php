@@ -808,7 +808,7 @@ function get_not_disq_players_open_women($tournament_id, $category)
     } else {
         $cat = "women";
     }
-    $select=$this->db->query("SELECT u.user_id 
+   /* $select=$this->db->query("SELECT u.user_id 
                               FROM statistics_user_profiles u, statistics_players_has_tournaments p, statistics_categories c
                               WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND LOWER(c.category) LIKE '%$cat%'  
                               AND p.disqualified IS NULL AND p.category_id=c.category_id");
@@ -816,6 +816,25 @@ function get_not_disq_players_open_women($tournament_id, $category)
         return $select->result_array(); 
     }
     return NULL;
+*/
+
+    $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name, n.*
+                                FROM statistics_tournaments t, statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
+                                statistics_number_of_baskets n
+                                WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id AND
+                                     p.category_id = c.category_id AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
+                                     AND r.result_id = n.result_id AND LOWER(c.category) LIKE '%$cat%' AND p.disqualified IS NULL
+                                ORDER BY 
+                                    CASE WHEN (r.final_3 IS NULL) THEN 9999 END,
+                                    CASE WHEN (r.final_2 IS NULL) THEN 99999 END,
+                                    CASE WHEN (r.final_1 IS NULL) THEN 999999 END,
+                                    (case when p.disqualified is null then 1 else 0 end) DESC, r.points
+                                ");
+        if ($query->num_rows()>0)
+        {
+            return $query->result_array();
+        }
+        return NULL;
 }
 
 /**
@@ -852,20 +871,33 @@ function get_score_actual_year($player_id, $category)
     return $select->row_array();
 }
 
+function get_foreign_results($user_id)
+{
+    $select=$this->db->where('user_id', $user_id)
+                     ->get('foreign_tournaments');
+    if ($select->num_rows()>0)
+    {
+        return $select->result_array();
+    }
+    else 
+    {
+        return null;
+    }
+}
 
-function get_score_actual_slovak($player_id)
+
+function get_score_actual_slovak($player_id, $category)
 {
    $select=$this->db->select('nmbr_accept_tourn')
                     ->get('slovak_champ');
    $nmbr_accept_tourn=$select->row_array('nmbr_accept_tourn'); 
    $nmbr_accept_tourn=$nmbr_accept_tourn['nmbr_accept_tourn'];
   
-   $select=$this->db->query("SELECT SUM(score) sum 
-                              FROM (SELECT p.score FROM statistics_players_has_tournaments p, statistics_tournaments t
-                              WHERE p.user_id='$player_id' AND p.tournament_id=t.tournament_id AND YEAR(t.date) = YEAR(CURDATE())
-                              ORDER BY p.score DESC
-                              LIMIT 0, $nmbr_accept_tourn) as subt" );
-    return $select->row_array();
+   $select=$this->db->query("SELECT p.score, t.slovak_champ, t.name, p.user_id FROM statistics_players_has_tournaments p, statistics_tournaments t, statistics_categories c
+                              WHERE p.user_id='$player_id' AND p.tournament_id=t.tournament_id AND YEAR(t.date) = YEAR(CURDATE()) AND LOWER(c.category) LIKE '%$category%' AND p.category_id=c.category_id
+                               ORDER BY p.score DESC
+                              LIMIT 0, $nmbr_accept_tourn" );
+    return $select->result_array();
 }
 
 function update_year_score($user_id, $score, $category)
@@ -897,6 +929,30 @@ function update_year_score($user_id, $score, $category)
     }
 }
 
+
+function update_slovak_DG_score($user_id, $category, $score)
+{
+
+    // update or insert into table ranking
+    $select=$this->db->where('user_id', $user_id)
+                     ->get('ranking');
+    if ($select->num_rows()>0)
+    {
+        $this->db->where('user_id', $user_id)
+                 ->update('ranking', array($category.'_slovak_DG'=>$score, 'last_update'=>date('Y-m-d H:i:s')));
+    } 
+    else 
+    {
+        $data = array (
+            $category.'_slovak_DG'=>$score,
+            'user_id'=>$user_id,
+            'last_update'=>date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('ranking', $data);
+    }
+}
+
 /**
 * Function return year ranking with score from all tournaments in current year
 * @author Vladimir Lalik
@@ -917,6 +973,34 @@ function get_year_ranking($category)
                                                                                    ORDER BY pl.user_id
                                                                                    ) 
                                 ORDER BY rank.".$category."_score DESC");
+    if ($select->num_rows()>0){
+        return $select->result_array();
+    }
+    return NULL;
+
+}
+
+
+/**
+* Function return Slovak DG league ranking with score from all tournaments in current year
+* @author Vladimir Lalik
+* @return array
+*/
+function get_slovak_DG_ranking($category)
+{
+   // var_dump($gender);
+    $category=strtolower($category);
+    $select = $this->db->query("SELECT rank.".$category."_slovak_DG, rank.last_update, u.user_id, u.first_name, u.last_name, @curRank := @curRank + 1 AS rank
+                                FROM statistics_user_profiles u, statistics_users us, statistics_ranking rank, (SELECT @curRank := 0)  r
+                                WHERE u.user_id=us.id AND rank.user_id=u.user_id AND
+                                        (us.activated='1' OR us.activated='2' OR us.username='auto') 
+                                        AND rank.".$category."_slovak_DG != '0' AND rank.".$category."_score IS NOT NULL AND u.user_id IN (SELECT  DISTINCT pl.user_id
+                                                                                   FROM statistics_players_has_tournaments pl, statistics_categories c, statistics_tournaments t
+                                                                                   WHERE pl.category_id=c.category_id AND pl.tournament_id=t.tournament_id AND LOWER(c.category) LIKE '%$category%' AND 
+                                                                                   DATEDIFF(CURDATE(),DATE(t.date)) <= 365
+                                                                                   ORDER BY pl.user_id
+                                                                                   ) 
+                                ORDER BY rank.".$category."_slovak_DG DESC");
     if ($select->num_rows()>0){
         return $select->result_array();
     }
@@ -1025,7 +1109,8 @@ function delete_player_results_in_tournament( $tournament_id, $player_id ){
     {
         redirect($tournament_id, $player_id);
     }
-     $this->db->where('tournament_id', $tournament_id)
+
+    $this->db->where('tournament_id', $tournament_id)
                         ->where('user_id', $player_id)
                         ->delete('players_has_tournaments');
 

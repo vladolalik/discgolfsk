@@ -546,12 +546,16 @@ class Tournaments extends CI_Controller {
 		$in_final = FALSE;
 		$baskets_data 	  = array();
 		$lap_count = 0;
+		$disq = false;
 		foreach ($player_laps_data as $lap_key => $lap) {
 			$points += array_sum( $lap );
 			$data['lap_'.($lap_key+1)] = array_sum( $lap );
 			$baskets_data['no_bskts_'.($lap_key+1)] = count( $lap );
 			$lap_count++;
 
+			if ($data['lap_'.($lap_key+1)]=='0'){
+				$disq=true;
+			}
 
 			//NEW BASKETS
 			$lap_id = $this->tournament->save_lap( $tournament_id, $user_id, $lap_key+1, FALSE );
@@ -584,7 +588,7 @@ class Tournaments extends CI_Controller {
 		if( ( $number_of_laps + $number_of_final_laps )  == count( $data ) ){
 			$player_has_tournament['final'] = 1;
 		}
-		if( ( $number_of_laps )  > $lap_count ){
+		if( (( $number_of_laps )  > $lap_count ) || $disq ){
 			$player_has_tournament['disqualified'] = 1;
 		}
 
@@ -1270,6 +1274,40 @@ function registered_players()
 	}
 }
 
+
+/**
+* Function that view registerd players in tournament with more info for administrator
+*
+* @author Vladimir Lalik
+* @return void
+*
+*/
+function admin_registered_players()
+{
+	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
+	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
+	$data['tournaments']=$this->tournament->get_tournaments();
+	
+	if ($this->form_validation->run())
+	{
+		$tournament=array(
+			'tournament_id'=>$this->form_validation->set_value('tournament_id')
+		);
+		$data['registered_players']=$this->tournament->get_registerd_players($this->form_validation->set_value('tournament_id'));
+		$data['tournament']=$this->tournament->get_tournament_by_id($tournament['tournament_id']);
+
+		$this->load->view('tournament/admin_registered_players_view', $data);
+	} 
+	else 
+	{
+		$this->load->view('tournament/admin_registered_players_view', $data);
+	}
+}
+
+
 /**
 * Function that view all categories
 * @author Vladimir Lalik
@@ -1721,15 +1759,16 @@ function compute_year_rank_open_women()
 							{
 								$same_players['0_'.$total_same_players] = array(
 									'user_id'=>$players[$key-1]['user_id'],
-									'score'=>(($count-$rank+1)/$count)*$tournament[$categories[$i]],
+									'score'=>(($count-($rank+$total_same_players)+1)/$count)*$tournament[$categories[$i]],
 									'tournament_id'=>$tournament['tournament_id']
 								);
+								//$num_similar_score=$num_similar_score+1;
 							}
 
 							$num_similar_score=$num_similar_score+1;
 							$same_players[$num_similar_score.'_'.$total_same_players] = array (
 									'user_id'=>$player['user_id'],
-									'score'=>(($count-($rank+$num_similar_score)+1)/$count)*$tournament[$categories[$i]],
+									'score'=>(($count-(($rank+$total_same_players)+$num_similar_score)+1)/$count)*$tournament[$categories[$i]],
 									'tournament_id'=>$tournament['tournament_id']
 							);
 							
@@ -1747,11 +1786,16 @@ function compute_year_rank_open_women()
 							$sum=0; 
 							foreach($same_players as $same_player)
 							{
+								//var_dump($same_player['score']);
 								$sum=$sum+$same_player['score'];
 								
 							}
+							unset($same_player);
+							//var_dump($same_players);
 							// priemer tych co mali rovnake skore
-							$average=$sum/count($same_player);
+							$average=$sum/count($same_players);
+							//var_dump($average);
+
 							foreach($same_players as $same_player)
 							{
 								$this->tournament->update_score($tournament['tournament_id'], $same_player['user_id'], $average);			
@@ -1761,7 +1805,40 @@ function compute_year_rank_open_women()
 
 						$score = (($count-($rank+$total_same_players)+1)/$count)*$tournament[$categories[$i]];
 						$last_score = $score;
+						//var_dump($player['user_id']);
+						//var_dump($total_same_players);
+						//var_dump($rank);
+						//var_dump($score);
 						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
+					}
+
+					if ($num_similar_score!=0) // ak sa nezhoduje dalsi v poradi a uz mam aspon 2 zhodne 
+					{
+							$total_same_players = $total_same_players + $num_similar_score; // zvysi sa celkovy pocet rovnakych
+							
+							$num_similar_score=0; // vynulujem pocet aktualnych
+							
+
+							// skore hracov ktory mali rovnaky vysledok v turnaji
+							// updatnem skore hracov ktory mali rovnake skore spravim z ich skore priemer a ten im ulozim 
+							$sum=0; 
+							foreach($same_players as $same_player)
+							{
+								//var_dump($same_player['score']);
+								$sum=$sum+$same_player['score'];
+								
+							}
+							unset($same_player);
+							//var_dump($same_players);
+							// priemer tych co mali rovnake skore
+							$average=$sum/count($same_players);
+							//var_dump($average);
+
+							foreach($same_players as $same_player)
+							{
+								$this->tournament->update_score($tournament['tournament_id'], $same_player['user_id'], $average);			
+							}
+							$same_players=null;
 					}
 					
 				}
@@ -1777,12 +1854,13 @@ function compute_year_rank_open_women()
 		{
 			$sum = $this->tournament->get_score_actual_year($player['user_id'], $i);
 			//$slovak_champ_sum=$this->tournament->get_score_actual_slovak($player['user_id']);
-			var_dump($sum['sum']);
+			//var_dump($sum['sum']);
 			//die();
+			$this->__compute_slovak_DG_score($player['user_id'], $i);			
 			$this->tournament->update_year_score($player['user_id'], $sum['sum'], $i);
 		}
-	}
-	
+	}	
+	//die();
 	redirect('tournaments/admin_view_tournaments');
 }
 
@@ -1792,10 +1870,57 @@ function compute_year_rank_open_women()
 * @author Vladimir Lalik
 * 
 */
-function get_slovak_DG_score()
+function __compute_slovak_DG_score($user_id, $category)
 {
+	$categories = array(
+		'0'=>'open',
+		'1'=>'women'
+	);
+	$players = $this->tournament->get_all_players();
+	
+	$results = $this->tournament->get_score_actual_slovak($user_id, $categories[$category]);
+	$foreign_results = $this->tournament->get_foreign_results($user_id);
+	//print_r($results);
+	//print_r($foreign_results);
+
+	$results_order_array = array();  // new array as a column to sort collector
+
+	if ($results!=null)
+	{
+		foreach ($results as $content) {
+			if ($content['slovak_champ']=='1'){
+				$results_order_array[] = 1.5 * $content['score'];
+			} else {
+				$results_order_array[] = $content['score'];
+			}
+		}
+	}
+	if ($foreign_results!=null)
+	{
+		foreach ($foreign_results as $content) {
+			$results_order_array[] = $content['score'];
+		}
+	}
+
+	sort($results_order_array, SORT_NUMERIC);
+	//print_r($results_order_array);
+	
+	$count=$this->tournament->get_nmbr_accept_tourn(); // pocet turnajov ktore sa akceptuju do hodnotenia
+	$count=intval($count['nmbr_accept_tourn']);
+	$index=count($results_order_array)-1; // najvyssi index v usporiadanom poli vysledkov
+	$sum=0;
+	while($index>=0 && $count>0)
+	{
+		$sum=$sum+$results_order_array[$index];
+		$index--;
+		$count--;
+		//var_dump($count);
+	}
+	//print_r($sum);
+	$this->tournament->update_slovak_DG_score($user_id, $categories[$category], $sum);
 
 }
+
 
 /**
 * Function set score from foreign tournaments
@@ -1910,12 +2035,13 @@ function year_ranking()
 }
 
 
-function slovak_champ_rank()
+function slovak_DG_league()
 {
-	$data['male'] = $this->tournament->get_slovak_ranking('male');
- 	$data['female'] = $this->tournament->get_slovak_ranking('female');
- 	$data['name']="Slovak championship";
- 	$this->load->view('tournament/year_ranking', $data);
+	$data['open'] = $this->tournament->get_slovak_DG_ranking('open');
+ 	$data['women'] = $this->tournament->get_slovak_DG_ranking('women');
+ 	//print_r($data);
+ 	$data['name']="Slovak DG league";
+ 	$this->load->view('tournament/slovak_DG_league', $data);
 }
 
 
@@ -1946,7 +2072,7 @@ function set_nmbr_acc_tourn()
 	{
 		redirect();
 	}
-	$this->form_validation->set_rules('nmbr_accept_tourn', 'Number of tournaments which count to Slovak championship ranklist ', 'trim|required|is_int|xss_clean');
+	$this->form_validation->set_rules('nmbr_accept_tourn', 'Number of tournaments which count to Slovak DG league ranklist ', 'trim|required|is_natural|is_int|xss_clean');
 	if ($this->form_validation->run())
 	{
 		if ($this->tournament->set_nmbr_acc_tourn($this->form_validation->set_value('nmbr_accept_tourn')))
@@ -2020,7 +2146,7 @@ function admin_delete_registration()
 	$user_id=$this->uri->segment(3);
 	$tournament_id=$this->uri->segment(4);
 	$this->tournament->delete_registration($user_id, $tournament_id);
-	redirect('tournaments/registered_players/');
+	redirect('tournaments/admin_registered_players/');
 }
 
 }

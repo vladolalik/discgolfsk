@@ -1,14 +1,12 @@
 <?php  
-
-	$this->load->view('header', array('title' => 'Results', 'caption' => 'Results'));
-
+ 	$this->load->view('admin/admin_header', array('title'=>'Registered players', 'caption'=>'Registered players')); 	
 ?>
 <fieldset>
 	<legend>Select tournament</legend>
 <table>
 	<tr>
 <?php
-	echo form_open('/tournaments/registered_players');
+	echo form_open('/tournaments/admin_registered_players');
 	echo '<td>'.form_label('Tournaments', 'tournament_id').'</td>';
 	echo '<td><select name="tournament_id" id="tournament_id">';
 	foreach ($tournaments as $key => $value) {
@@ -29,14 +27,18 @@
 		?>
 		<h3>Tournament capacity is: <?php echo $tournament['capacity'];  ?></h3>
 		<div id="table">
-		<?php	
-			echo '<table class="profile-table" style="margin-top:10px;">';
+		<?php
+			echo '<table id="admin-autocreated-profiles-table" class="table-row-diff">';
 		 ?>
 		
 			<tr>
 				<th>Position</th>
 				<th>Player</th>
 				<th>Category</th>
+				<th>Accommodation</th>
+				<th>Food</th>
+				<th>Note</th>
+				<th>De-register</th>
 			</tr>
 		<?php 
 
@@ -60,7 +62,12 @@
 					echo	'<td>'.$value['position'].'</td>';
 				}
 				echo	'<td>'.$value['first_name'].' '.$value['last_name'].'</td>
-						<td>'.$value['category'].'</td>';
+						<td>'.$value['category'].'</td>';	
+						echo '<td>'.$value['accom'].'</td>';
+						echo '<td>'.$value['food'].'</td>';
+						echo '<td>'.$value['note'].'</td>';
+						echo '<td>'.anchor('tournaments/admin_delete_registration/'.$value['user_id'].'/'.$tournament['tournament_id'], 'Log off', 'title="log off"').'</td>';
+				
 				echo '</tr>';
 			}
 		echo '</table>';
@@ -70,5 +77,5 @@
 <p style="margin-top:20px;">The players marked with the red color are on the waiting list because the maximal capacity of the tournament was reached.</p>
 </div>
 <?php 
-	$this->load->view('footer');
+	$this->load->view('admin/admin_footer');
 ?>

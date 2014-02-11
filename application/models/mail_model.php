@@ -47,7 +47,7 @@ class Mail_model extends CI_Model {
   
   function send($params) {    
     $this->email->from($params['from']);
-    $this->email->to($params['to']);
+    //$this->email->to($params['to']);
     if (array_key_exists('cc', $params)) {
       $this->email->cc($params['cc']);
     }    

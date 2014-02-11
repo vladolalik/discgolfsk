@@ -1,4 +1,4 @@
-<?php $this->load->view('admin/admin_header', array('title'=>'Create tournament', 'caption'=>'Create tournament')); ?>
+<?php $this->load->view('admin/admin_header', array('title'=>'Send e-mail to players', 'caption'=>'Send e-mail to players')); ?>
   <script type="text/javascript">
   $(document).ready(function() {
       $('[name="all_tournaments"]').click(function() {         
@@ -45,12 +45,12 @@
 <div id="mailing-list">
   
   <?php 
-    if (isset($sent_to)) {                           
-      echo '<div id="mailing-success"><p>mail sent to:<br />', $sent_to,'<br />';
+   //if (isset($sent_to)) {                           
+     // echo '<div id="mailing-success"><p>mail sent to:<br />', $sent_to,'<br />';
       if (isset($sent_cc)) {
-        echo 'copies sent to:<br />', implode(", ", $sent_cc), '</p></div>';  
+        echo '<div id="mailing-success"><p>copies sent to:<br />', implode(", ", $sent_cc), '</p></div>';  
       }
-    }     
+   // }     
 
     echo '<div id="mailing-errors">'.validation_errors().'</div>'; 
            
@@ -59,14 +59,14 @@
         $tmp_data = array('name' => "input_from",  'id' => "input_from", 'readonly' => "readonly", 'value' => "discgolf.kontakt@gmail.com");
         echo form_label('From: ', 'input_from'), form_input($tmp_data);
         
-        $tmp_data = array('name' => "input_to",  'id' => "input_to",);
+        /*$tmp_data = array('name' => "input_to",  'id' => "input_to",);
         echo form_label('To: ', 'input_to'), form_input($tmp_data), '<br />';
-        echo '<br />';
+        echo '<br />';*/
         
-        $tmp_data = array('name' => "input_subject",  'id' => "input_subject");
+        $tmp_data = array('name' => "input_subject",  'id' => "input_subject", 'value'=>set_value('input_subject'));
         echo form_label('Subject: ', 'input_subject'), form_input($tmp_data), '<br />';
         echo form_label('Message: ', 'message');
-        echo form_textarea(array('name'=>'message', 'id'=>'message'));
+        echo form_textarea(array('name'=>'message', 'id'=>'message', 'value'=>set_value('message')));
       echo '</div>';
       
 
@@ -74,7 +74,7 @@
     echo '<table>';
       echo '<tr>';
         $tmp_data = array('name' => "all_tournaments", 'value' => 'all_tournaments', 'id' => 'all_tournaments');
-        echo '<td>'.form_label("<br /><i class='fa fa-arrow-circle-o-down'></i> Send to all tournaments:", 'all_tournaments').'</td>'; 
+        echo '<td>'.form_label("<br /><i class='fa fa-arrow-circle-o-down'></i> Send to users from all tournaments:", 'all_tournaments').'</td>'; 
         echo '<td>'.form_checkbox($tmp_data).'</td>';
       echo '</tr>';
     $counter = 0;
@@ -95,7 +95,7 @@
     echo '<table>';
     echo '<tr>';
     $tmp_data = array('name' => "all_cathegories", 'value' => 'all_cathegories', 'id' => 'all_cathegories'); 
-    echo '<td>'.form_label("<br /><i class='fa fa-arrow-circle-o-down'></i> Send to all categories:", 'all_cathegories').'</td>';
+    echo '<td>'.form_label("<br /><i class='fa fa-arrow-circle-o-down'></i> Send to users from all categories:", 'all_cathegories').'</td>';
     echo '<td>'.form_checkbox($tmp_data).'</td>';  
     //echo '<br />send to selected categories: <br />';
     $counter = 0;

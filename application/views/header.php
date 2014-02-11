@@ -45,7 +45,7 @@
 				echo '<li>'.anchor('/tournaments/view_results', 'NAVIGATION', 'title="NAVIGATION", id="navigation-header"').'</li>';
 				echo '<li>'.anchor('/tournaments/view_results', '<i class="fa fa-bar-chart-o"></i> Results', 'title="Results"').'</li>'.
 					 '<li>'.anchor('/tournaments/year_ranking', '<i class="fa fa-signal"></i> Ranking', 'title="Ranking"').'</li>'.
-					 '<li>'.anchor('/tournaments/slovak_champ_rank', '<i class="fa fa-trophy"></i> Slovak DG League', 'title="Slovak championship"').'</li>'.
+					 '<li>'.anchor('/tournaments/slovak_DG_league', '<i class="fa fa-trophy"></i> Slovak DG League', 'title="Slovak championship"').'</li>'.
 					 '<li>'.anchor('/tournaments/view_tournaments', '<i class="fa fa-sitemap"></i> Tournaments', 'title="Tournaments"').'</li>'.
 					 '<li>'.anchor('tournaments/registered_players', '<i class="fa fa-book"></i>Registered players', 'title="Registered players"').'</li>';
 				if ($this->tank_auth->is_logged_in(TRUE))
