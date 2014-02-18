@@ -40,7 +40,7 @@ class Users extends CI_Model
 		if ($query->num_rows == 1)
 		{
 			$data = $query->row_array();
-			print_r($data['id']);
+			//print_r($data['id']);
 			//die(); 
 			return $data['id'];
 		}
@@ -91,7 +91,7 @@ class Users extends CI_Model
 		if ($query->num_rows == 1) 
 		{
 			$old_data = $query->row_array(); 
-			if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png') 
+			if ($old_data['thumb'] != 'default-thumb.png' && $old_data['photo'] != 'default.png' && file_exists($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['thumb'])) 
 			{
 				unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['thumb']);
 				unlink($_SERVER['DOCUMENT_ROOT'].'/statistics/uploads/images/'.$old_data['photo']);
@@ -702,7 +702,7 @@ class Users extends CI_Model
 	{
 
 		$data = $this->get_all_user_by_id($user_id);
-		if ($data->role != 'admin') 
+		if ($data!=NULL && $data->role != 'admin') 
 		{	
 			$this->db->where('user_id', $user_id);
 			$this->db->delete('ranking');

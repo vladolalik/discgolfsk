@@ -749,6 +749,7 @@ class Tournaments extends CI_Controller {
 				  	 else 
 				  	 {*/
 					  	 $rank = 0;
+					  	 $same = 0;
 						 foreach ($data['results'][$category_id] as $key => $row)
 						 {
 						 	if ($row['disqualified'] != NULL)
@@ -758,10 +759,12 @@ class Tournaments extends CI_Controller {
 						 	elseif ($key!=0 && $data['results'][$category_id][$key-1]['points'] == $data['results'][$category_id][$key]['points'])
 						 	{
 						 		$data['results'][$category_id][$key]['rank'] = $rank;	
+						 		$same = $same + 1;
 						 	} 
 						 	else 
 						 	{
-						 		$rank = $rank + 1;
+						 		$rank = $rank + 1 + $same;
+						 		$same = 0;
 						 		$data['results'][$category_id][$key]['rank'] = $rank;	
 						 	}
 						 }
@@ -2057,6 +2060,7 @@ function tournaments_score()
 	$data = $this->tournament->get_user_data($user_id);
 	$data['women']=$this->tournament->get_score_tournaments($user_id, 'women');
 	$data['open']=$this->tournament->get_score_tournaments($user_id, 'open');
+	//print_r($data);
 	$this->load->view('tournament/tournaments_score', $data);
 }
 

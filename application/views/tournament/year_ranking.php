@@ -18,6 +18,7 @@ $this->load->view('header', array('title' => $name.' '. 'Last update: '.date('F 
  			<th>Rank</th>
  			<th>Points</th>
  			<th>Name</th>
+ 			<th>Country</th>
  			<th>Details</th>
 
 <?php
@@ -32,6 +33,7 @@ if ($open!=NULL)
 	 			<td class="text-center">'.$m_results['rank'].'</td>
 	 			<td class="text-center">'.round($m_results['open_score'],1).'</td>
 	 			<td class="text-center">'.$m_results['first_name'].' '.$m_results['last_name'].'</td>
+	 			<td class="text-center">'.$m_results['country'].'</td>
 	 			<td class="text-center">'.anchor('tournaments/tournaments_score/'.$m_results['user_id'], 'Show', 'title="Score details"').'</td>
 	 		  </tr>';
  	}
@@ -45,6 +47,7 @@ if ($open!=NULL)
  			<th>Rank</th>
  			<th>Points</th>
  			<th>Name</th>
+ 			<th>Country</th>
  			<th>Details</th>
 
 <?php
@@ -56,6 +59,7 @@ if ($open!=NULL)
 	 			<td class="text-center">'.$f_results['rank'].'</td>
 	 			<td class="text-center">'.round($f_results['women_score'],1).'</td>
 	 			<td class="text-center">'.$f_results['first_name'].' '.$f_results['last_name'].'</td>
+	 			<td class="text-center">'.$f_results['country'].'</td>
 	 			<td class="text-center">'.anchor('tournaments/tournaments_score/'.$f_results['user_id'], 'Show', 'title="Score details"').'</td>
 	 		  </tr>';
  	}

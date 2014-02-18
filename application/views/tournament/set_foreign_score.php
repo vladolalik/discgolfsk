@@ -4,7 +4,7 @@
 */
  	$this->load->view('admin/admin_header', array('title'=>'Set score from foreign tournaments', 'caption'=>'Set score from foreign tournaments')); 
  ?>
-
+ <p style="color:red; margin:15px 15px 15px 15px;"><b>Note:</b> If you want applies changes in ranklist please update ranklist in admin menu.</p>
 <?php
 	echo '<form action="'.base_url().'index.php/tournaments/admin_delete_foreign_score">'; ?>
 	<input type="submit" name="submit" value="Delete all foreign results" onclick="return confirm('Are you sure that you want to delete all foreign results')" /></form>

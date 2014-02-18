@@ -263,6 +263,7 @@ class Auth extends CI_Controller
 		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|xss_clean|strip_tags');
+		$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|strip_tags');
 
 		if ($this->form_validation->run()){
 			$data = array(
@@ -270,7 +271,8 @@ class Auth extends CI_Controller
 					'last_name' => $this->form_validation->set_value('last_name'),
 					'club' => $this->form_validation->set_value('club'),
 					'gender' => $this->form_validation->set_value('gender'),
-					'birth_date' => $this->form_validation->set_value('birth_date')
+					'birth_date' => $this->form_validation->set_value('birth_date'),
+					'country' => $this->form_validation->set_value('country')
 				);
 			$this->users->update_profile($id, $data);
 			$this->session->set_flashdata('message', '<p class="success">Update was succesfull</p>');
@@ -281,8 +283,6 @@ class Auth extends CI_Controller
 			$data = $this->users->get_user_profile($id);
 			$this->load->view('auth/update_auto_profile', $data);
 		}
-
-
 	}
 
 
@@ -298,7 +298,7 @@ class Auth extends CI_Controller
 		{
 			redirect();
 		}
-		var_dump($this->uri->rsegment_array());
+		//var_dump($this->uri->rsegment_array());
 		$id = $this->uri->segment(3);
 		$target_url=$this->uri->segment(4);
 		if ($this->users->__delete_user($id))

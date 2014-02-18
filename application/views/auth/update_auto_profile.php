@@ -37,6 +37,12 @@ $club = array(
 	'value' => set_value('club', $club)
 );
 
+$country = array(
+	'id' => 'country',
+	'name' => 'country',
+	'value' => set_value('country', $country)
+);
+
 ?>
 <?php echo form_open('auth/admin_update_auto_profile/'.$user_id); ?>
 <table>
@@ -70,6 +76,11 @@ $club = array(
 		<td><?php echo form_label('Club', $club['id']); ?></td>
 		<td><?php echo form_input($club); ?></td>
 		<td style="color: red;"><?php echo form_error($club['name']); ?><?php echo isset($errors[$club['name']])?$errors[$club['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('Country', $country['id']); ?></td>
+		<td><?php echo form_input($country); ?></td>
+		<td style="color: red;"><?php echo form_error($country['name']); ?><?php echo isset($errors[$country['name']])?$errors[$country['name']]:''; ?></td>
 	</tr>
 </table>
 <?php echo form_submit('update', 'Update'); ?>

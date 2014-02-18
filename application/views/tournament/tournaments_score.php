@@ -21,10 +21,10 @@
 	</table>
 <div class="clear"></div>
 <?php
- 	print_r($women);
+ 	
 	if ($women!=NULL)
 	{
-		echo '<h3>Score in Slovak championship: '.round($women['0']['slovak_champ_score'],2).'</h3>';
+		echo '<h3>Score in Slovak DG league (WOMEN): '.round($women['0']['women_slovak_DG'],2).'</h3>';
 		
 		echo '<table id="results-table"  class="statistics table-row-diff">
 					<tr>
@@ -34,9 +34,11 @@
 						<th>Score</th>
 						<th>Category</th>
 					</tr>';
-	} else if ($open!=NULL)
-	{
-		echo '<h3>Score in Slovak championship: '.round($open['0']['slovak_champ_score'],2).'</h3>';
+	} 
+	else if ($open!=NULL)
+	{	
+		//print_r($open);
+		echo '<h3>Score in Slovak DG league (OPEN): '.round($open['0']['open_slovak_DG'],2).'</h3>';
 		
 		echo '<table id="results-table"  class="statistics table-row-diff">
 					<tr>

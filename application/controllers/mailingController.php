@@ -48,6 +48,7 @@ class MailingController extends CI_Controller {
       
       $params = array(
         'from' =>$_POST['input_from'],
+       // 'to' =>$_POST['input_to'],
         'subject' =>$_POST['input_subject'],
         'message' =>$_POST['message'],
       );  

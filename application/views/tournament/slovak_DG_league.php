@@ -6,11 +6,9 @@
 			$last_update=$women['0']['last_update'];
 		}
 
-$this->load->view('header', array('title' => $name.' ', 'caption' => $name)); ?>
-<?php
- 	//print_r($male);
- 	//print_r($female);
+	$this->load->view('header', array('title' => $name.' ', 'caption' => $name));
 ?>
+
 <div id="ranking">
 	<h2>OPEN</h2>
  	<table id="results-table"  class="statistics table-row-diff">
@@ -18,6 +16,7 @@ $this->load->view('header', array('title' => $name.' ', 'caption' => $name)); ?>
  			<th>Rank</th>
  			<th>Points</th>
  			<th>Name</th>
+ 			<th>Country</th>
  		</tr>
  			
 
@@ -33,6 +32,7 @@ if ($open!=NULL)
 	 			<td class="text-center">'.$m_results['rank'].'</td>
 	 			<td class="text-center">'.round($m_results['open_slovak_DG'],1).'</td>
 	 			<td class="text-center">'.$m_results['first_name'].' '.$m_results['last_name'].'</td>
+	 			<td class="text-center">'.$m_results['country'].'</td>
 	 		  </tr>';
  	}
 }
