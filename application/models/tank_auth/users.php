@@ -210,7 +210,7 @@ class Users extends CI_Model
 
 	}
 
-	function __create_auto_profile($first_name, $last_name, $gender, $club, $birth_date)
+	function __create_auto_profile($first_name, $last_name, $gender, $club, $birth_date, $country)
 	{
 		$data = array ('activated' => 2,
 						'created' => Date("Y-m-d H:i:s"),
@@ -219,12 +219,13 @@ class Users extends CI_Model
 
 		$query = $this->db->insert($this->table_name, $data);
 		
-		$data_profile = array ('first_name'=> $first_name,
-							   'last_name' => $last_name,
-							   'gender' => $gender,
-							   'club' => $club,
+		$data_profile = array ('first_name'	=> $first_name,
+							   'last_name' 	=> $last_name,
+							   'gender' 	=> $gender,
+							   'club' 		=> $club,
 							   'birth_date' => $birth_date,
-							   'user_id' => $this->db->insert_id()
+							   'user_id' 	=> $this->db->insert_id(),
+							   'country' 	=> $country
 		 					  );
 		$query = $this->db->insert($this->profile_table_name, $data_profile);
 		$select = $this->db->select('user_id')

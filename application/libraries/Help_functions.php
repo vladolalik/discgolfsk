@@ -51,7 +51,7 @@ class Help_functions{
 	* @return int
 	*/
 
-	function __create_auto_profile($first_name="duro", $last_name="berky", $gender=NULL, $club=NULL, $birth_date=NULL)
+	function __create_auto_profile($first_name="duro", $last_name="berky", $gender=NULL, $club=NULL, $birth_date=NULL, $country = NULL)
 	{
 		$this->ci = & get_instance();
 		$this->ci->load->model('tank_auth/users');
@@ -59,7 +59,7 @@ class Help_functions{
 		// {
 		// 	redirect();
 		// }
-		return $this->ci->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date);
+		return $this->ci->users->__create_auto_profile($first_name, $last_name, $gender, $club, $birth_date, $country);
 
 	}
 

@@ -277,7 +277,7 @@ class Tournaments extends CI_Controller {
 	* @return string
 	* @author Branislav Ballon
 	*/
-	function __validete_player($name = "", $surname = "", $gender = "", $category = "",$birth_date = "", $line_number = 0, $player_number = 0 ){
+	function __validete_player($name = "", $surname = "", $gender = "", $category = "",$birth_date = "", $line_number = 0, $player_number = 0, $country = "" ){
 		$v_errors = "";
 
 		$_POST['name'] 			= $name;					//ulozime
@@ -285,6 +285,7 @@ class Tournaments extends CI_Controller {
 		$_POST['gender'] 		= $gender;
 		$_POST['category']		= $category;
 		$_POST['birth_date']	= $birth_date;
+		$_POST['country']		= $country;
 
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('name', '', 'trim|required|xss_clean|htmlspecialchars');
@@ -292,6 +293,7 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('gender', '', 'trim|required|xss_clean|htmlspecialchars|callback_validate_gender');
 		$this->form_validation->set_rules('category', '', 'trim|required|xss_clean|htmlspecialchars');
 		$this->form_validation->set_rules('birth_date', '', 'trim|xss_clean|htmlspecialchars');
+		$this->form_validation->set_rules('country', '', 'trim|xss_clean|htmlspecialchars|required');
 
 		$this->form_validation->set_message('validate_gender','Gender is not valid! Please use only Male or Female.');
 
@@ -361,15 +363,17 @@ class Tournaments extends CI_Controller {
 					$category				= $values[3];
 					//defaultne teda nevyplnene je 0000-00-00 iba ked chceme mat s rovankym menom tak  zoberieme inu hodnotu
 					$birth_date				= ( $values[4] != null ) ? $values[4] : "0000-00-00";
+					$country				= $values[5];
 
 					// volanie validacie
-					$player_errors = $this->__validete_player($name ,$surname ,$gender ,$category, $birth_date, $line_number, $player_number );
+					$player_errors = $this->__validete_player($name ,$surname ,$gender ,$category, $birth_date, $line_number, $player_number, $country );
 					if( $player_errors == ""){ // ak nie su errory ulozim ho a zapamatam si jeho id
 						$valid_players[$player_number]['name'] 			= $name;
 						$valid_players[$player_number]['surname'] 		= $surname;
 						$valid_players[$player_number]['gender'] 		= $gender;
 						$valid_players[$player_number]['category'] 		= $category;
 						$valid_players[$player_number]['birth_date'] 	= $birth_date;
+						$valid_players[$player_number]['country'] 		= $country;
 					}else{
 						$v_errors .= $player_errors;
 						$data['validation_errors']  .= $player_errors;
@@ -650,7 +654,7 @@ class Tournaments extends CI_Controller {
 					if( !isset($final_laps_data[$key]) ){
 						$final_laps_data[$key] = null;						
 					}
-					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname'],  $player['gender'], null, $player['birth_date']);
+					$new_player_id =  $this->help_functions->__create_auto_profile( $player['name'], $player['surname'],  $player['gender'], null, $player['birth_date'], $player['country']);
 					$this->__save_player_data($tournament_id, $new_player_id, $laps_data[$key],  $final_laps_data[$key], $number_of_laps, $number_of_final_laps, $player['category_exist'] );
 					//$this->__save_player_data( $player['exist'],$laps_data[$key], $final_laps_data[$key] );
 				}
