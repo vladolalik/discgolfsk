@@ -6,6 +6,7 @@
  
 <link rel="stylesheet" href="<?= base_url() ?>assets/css/admin-style.css" />
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<?php include_once("analytics_script.php"); ?>
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
@@ -20,6 +21,11 @@
 	      changeMonth: true,
 	      changeYear: true
 	    });
+	    // getter
+		var yearRange = $("#birth_date").datepicker( "option", "yearRange" );
+ 
+		// setter
+		$( "#birth_date" ).datepicker( "option", "yearRange", "c-50:+1" );
 	});
 </script>
 <script>

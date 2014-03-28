@@ -65,6 +65,37 @@
 		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';?>
 		<td><input type="checkbox" value="1" name="allow_registration" id="allow_registration" <?php if($allow_registration=='1') echo 'checked="checked"';?> ></td> 
 	</tr>
+	<tr><td> <h3>Permitted categories for registration</h3></td></tr>
+	<?php 
+		$checked_categories=explode(';', $allowed_reg_categories);
+		//var_dump($checked_categories);
+		foreach ($categories as $key => $category) {
+			foreach ($checked_categories as $key => $checked_cat) {
+				if ($checked_cat==$category['category'])
+				{
+					$options=array (
+						'name'=> $category['category_id'],
+						'id'=> $category['category_id'],
+						'value'=>$category['category'],
+						'checked'=>'TRUE'
+					);	
+					break;
+				} else {
+					$options=array (
+						'name'=> $category['category_id'],
+						'id'=> $category['category_id'],
+						'value'=>$category['category'],
+					
+					);
+				}
+				
+			}
+
+			echo '<tr><td>'.form_label($category['category'], $options['id']);
+			echo '<td>'.form_checkbox($options).'</td>';
+			echo '<td style="color: red;">'.form_error($options['name']).'</td></tr>';
+		}
+	?>
 	<tr><td> <h3>Results</h3></td></tr>
 	<tr>
 	<?php

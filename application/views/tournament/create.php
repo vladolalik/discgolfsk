@@ -75,6 +75,21 @@
 		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
+	<tr><td> <h3>Permitted categories for registration</h3></td></tr>
+	<?php 
+		foreach ($categories as $key => $category) {
+			$options=array (
+				'name'=> $category['category_id'],
+				'id'=> $category['category_id'],
+				'value'=>$category['category'],
+				'checked'=>'TRUE'
+			);
+
+			echo '<tr><td>'.form_label($category['category'], $options['id']);
+			echo '<td>'.form_checkbox($options).'</td>';
+			echo '<td style="color: red;">'.form_error($options['name']).'</td></tr>';
+		}
+	?>
 	<tr><td> <h3>Results</h3></td></tr>
 	<tr>
 	<?php

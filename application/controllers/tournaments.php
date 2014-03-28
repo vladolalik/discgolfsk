@@ -90,6 +90,9 @@ class Tournaments extends CI_Controller {
 			redirect();
 		}
 
+		//get categories
+		$data['categories']=$this->tournament->get_categories();
+
 		$this->form_validation->set_rules('name','Name','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('about','About','trim');
 		$this->form_validation->set_rules('allow_registration','Allow registration','trim|xss_clean|strip_tags');
@@ -108,6 +111,11 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');
 		$this->form_validation->set_rules('dir_email','Director\'s email','trim|required|valid_email|xss_clean|strip_tags');
+		foreach ($data['categories'] as $key => $category) 
+		{
+			$this->form_validation->set_rules($category['category_id'], $category['category'], 'trim|xss_clean|strip_tags');
+		}
+
 		if($this->form_validation->run()){
 			$allow_registration=$this->form_validation->set_value('allow_registration');
 			if ($allow_registration == NULL)
@@ -119,7 +127,15 @@ class Tournaments extends CI_Controller {
 			{
 				$slovak_champ = 0;	
 			}
-			
+			$allowed_reg_categories='';
+			foreach ($data['categories'] as $key => $category) {
+				//print_r($this->form_validation->set_value($category['category_id']));
+				if ($this->form_validation->set_value($category['category_id'])!=NULL){
+					$allowed_reg_categories=$allowed_reg_categories.';'.$this->form_validation->set_value($category['category_id']);
+				}
+			}
+			//print_r($allowed_reg_categories);
+			//die();
 			$tournament_data = array(
 					'name'			=>	$this->form_validation->set_value('name'),
 					'date'			=>	$this->form_validation->set_value('date'),
@@ -137,7 +153,8 @@ class Tournaments extends CI_Controller {
 					'capacity'=>$this->form_validation->set_value('capacity'),
 					'dir_name'=>$this->form_validation->set_value('dir_name'),
 					'dir_phone'=>$this->form_validation->set_value('dir_phone'),
-					'dir_email'=>$this->form_validation->set_value('dir_email')
+					'dir_email'=>$this->form_validation->set_value('dir_email'),
+					'allowed_reg_categories'=>$allowed_reg_categories
 				);
 			
 				
@@ -149,7 +166,7 @@ class Tournaments extends CI_Controller {
 			}
 				// inserte?	
 		}else{
-			$this->load->view('tournament/create');	
+			$this->load->view('tournament/create', $data);	
 		}		
 	}
 
@@ -695,7 +712,8 @@ class Tournaments extends CI_Controller {
 				$this->session->set_flashdata('message', 'Data deleted');
 			}
 			$this->session->set_flashdata('message', 'Data deleted');
-			$this->load->view('tournament/admin_view_tournaments');
+			//$this->load->view('tournament/admin_view_tournaments');
+			redirect('tournaments/admin_delete_results');
 		}
 		$this->load->view('tournament/admin_delete_results', $data);	
 	}
@@ -1035,8 +1053,11 @@ function view_individual_results()
 	{
 		redirect();
 	}
+	
 	$tournament_id = $this->uri->segment(3);
 	$data = $this->tournament->get_tournament_by_id($tournament_id);
+	//get categories
+	$data['categories']=$this->tournament->get_categories();
 	if ($data == NULL) {
 		redirect('/tournaments/admin_view_tournaments');
 	}
@@ -1057,6 +1078,12 @@ function view_individual_results()
 	$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');	
 	$this->form_validation->set_rules('dir_email','Director\'s email','trim|valid_email|xss_clean|strip_tags');
+	foreach ($data['categories'] as $key => $category) 
+	{
+		$this->form_validation->set_rules($category['category_id'], $category['category'], 'trim|xss_clean|strip_tags');
+	}
+
+
 	$this->form_validation->set_message('datecheck', 'Tournament with selected name and date already exits!');
 	if($this->form_validation->run()){
 		$allow_registration = $this->form_validation->set_value('allow_registration');
@@ -1068,6 +1095,12 @@ function view_individual_results()
 		if ($slovak_champ == NULL)
 		{
 			$slovak_champ = 0;	
+		}
+		$allowed_reg_categories='';
+		foreach ($data['categories'] as $key => $category) {
+			if ($this->form_validation->set_value($category['category_id'])!=NULL){
+				$allowed_reg_categories=$allowed_reg_categories.';'.$this->form_validation->set_value($category['category_id']);
+			}
 		}
 		
 		$tournament_data = array(
@@ -1087,7 +1120,8 @@ function view_individual_results()
 					'capacity'=>$this->form_validation->set_value('capacity'),
 					'dir_name'=>$this->form_validation->set_value('dir_name'),
 					'dir_phone'=>$this->form_validation->set_value('dir_phone'),
-					'dir_email'=>$this->form_validation->set_value('dir_email')
+					'dir_email'=>$this->form_validation->set_value('dir_email'),
+					'allowed_reg_categories'=>$allowed_reg_categories
 				);
 			
 				
@@ -1208,6 +1242,9 @@ function tournament_details()
 	$this->form_validation->set_rules('category_id','Category','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('food','Food','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('phone','Phone number','trim|xss_clean|strip_tags|numeric');
+	$this->form_validation->set_rules('pdga_membership','Active PDGA Membership','trim|xss_clean|strip_tags|numeric');
+	$this->form_validation->set_rules('active_saf','Acitve SAF Membership','trim|xss_clean|strip_tags|required');
 	$this->form_validation->set_rules('accom','Accommodation','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('note','Note','trim|xss_clean|strip_tags');
 	if ($this->form_validation->run()){
@@ -1223,7 +1260,10 @@ function tournament_details()
 			'category_id'=>$this->form_validation->set_value('category_id'),
 			'accom_id'=>$this->form_validation->set_value('accom'),
 			'food_id'=>$this->form_validation->set_value('food'),
-			'note'=>$this->form_validation->set_value('note')
+			'note'=>$this->form_validation->set_value('note'),
+			'phone'=>$this->form_validation->set_value('phone'),
+			'pdga_membership'=>$this->form_validation->set_value('pdga_membership'),
+			'active_saf'=>$this->form_validation->set_value('active_saf'),
 		);
 
 		if ($this->tournament->register_player($registration_data))
@@ -1251,7 +1291,90 @@ function tournament_details()
 	}
 }
 
+/**
+* Function that view details of tournament and allow 
+*
+* @author Vladimir Lalik
+* @return void
+*
+*/
+function tournament_details_unregistered()
+{
+	
+	$tournament_id=$this->uri->segment(3);
+	$data=$this->tournament->get_tournament_by_id($tournament_id);
+	if ($data==NULL)
+	{
+		
+		redirect('tournaments/view_tournaments');
+	}
 
+	$data['options']=$this->tournament->get_options_tournament($tournament_id);
+
+	$this->form_validation->set_rules('first_name','First name','trim|xss_clean|strip_tags|required');
+	$this->form_validation->set_rules('last_name','Last name','trim|xss_clean|strip_tags|required');
+	$this->form_validation->set_rules('birth_date', 'Date of birth', 'trim|xss_clean|htmlspecialchars');
+	$this->form_validation->set_rules('email','Email','trim|xss_clean|strip_tags|required|valid_email');
+	$this->form_validation->set_rules('club','Club','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('country','Country','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('category_id','Category','trim|required|xss_clean|strip_tags');
+	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
+	$this->form_validation->set_rules('food','Food','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('phone','Phone number','trim|xss_clean|strip_tags|numeric');
+	$this->form_validation->set_rules('pdga_membership','Active PDGA Membership','trim|xss_clean|strip_tags|numeric');
+	$this->form_validation->set_rules('active_saf','Acitve SAF Membership','trim|xss_clean|strip_tags|required');
+	$this->form_validation->set_rules('accom','Accommodation','trim|xss_clean|strip_tags');
+	$this->form_validation->set_rules('note','Note','trim|xss_clean|strip_tags');
+	if ($this->form_validation->run()){
+		
+		//if (!$this->tank_auth->is_logged_in()) 
+		//{
+		//	redirect(); // redirect if user is not logged in
+		//}
+		$user_data= array (
+			'first_name'=>$this->form_validation->set_value('first_name'),
+			'last_name'=>$this->form_validation->set_value('last_name'),
+			'birth_date'=>$this->form_validation->set_value('birth_date'),
+			'email'=>$this->form_validation->set_value('email'),
+			'club'=>$this->form_validation->set_value('club'),
+			'country'=>$this->form_validation->set_value('country'),
+		);
+
+		$registration_data = array(
+			'tournament_id'=>$this->form_validation->set_value('tournament_id'),
+			'category_id'=>$this->form_validation->set_value('category_id'),
+			'accom_id'=>$this->form_validation->set_value('accom'),
+			'food_id'=>$this->form_validation->set_value('food'),
+			'note'=>$this->form_validation->set_value('note'),
+			'phone'=>$this->form_validation->set_value('phone'),
+			'pdga_membership'=>$this->form_validation->set_value('pdga_membership'),
+			'active_saf'=>$this->form_validation->set_value('active_saf'),
+		);
+
+		if ($this->tournament->register_unregistered_player($user_data, $registration_data))
+		{
+			$this->session->set_flashdata('message', '<p class="success">You are register in tournament '.$data['name'].' ('.$data['date'].')</p>');
+			redirect('tournaments/tournament_details/'.$data['tournament_id']);
+		} 
+		else 
+		{
+			$this->session->set_flashdata('message', '<p class="fail"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
+			redirect('tournaments/tournament_details/'.$data['tournament_id']);
+		}
+		//print_r($registration_data);
+		//die();
+	}
+	else 
+	{
+		$date_tourn = new DateTime($data['date']);
+		$date_now = new DateTime('now');
+		$interval = $date_tourn->diff($date_now);
+		$data['will'] = $interval->invert;
+		$data['categories']=$this->tournament->get_categories();
+		//print_r($interval);
+		$this->load->view('tournament/tournament_details', $data);
+	}
+}
 /**
 * Function that view registerd players in tournament
 *
@@ -1264,7 +1387,8 @@ function registered_players()
 	
 	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
 	$data['tournaments']=$this->tournament->get_tournaments();
-	
+	$tournament_id = $this->uri->segment(3);
+
 	if ($this->form_validation->run())
 	{
 		$tournament=array(
@@ -1275,6 +1399,12 @@ function registered_players()
 
 		$this->load->view('tournament/registered_players_view', $data);
 	} 
+	else if ($tournament_id!=NULL)
+	{
+		$data['registered_players']=$this->tournament->get_registerd_players($tournament_id);
+		$data['tournament']=$this->tournament->get_tournament_by_id($tournament_id);
+		$this->load->view('tournament/registered_players_view', $data);
+	}
 	else 
 	{
 		$this->load->view('tournament/registered_players_view', $data);
@@ -2151,9 +2281,8 @@ function admin_delete_registration()
 	{
 		redirect();
 	}
-	$user_id=$this->uri->segment(3);
-	$tournament_id=$this->uri->segment(4);
-	$this->tournament->delete_registration($user_id, $tournament_id);
+	$register_player_id=$this->uri->segment(3);
+	$this->tournament->delete_registration($register_player_id);
 	redirect('tournaments/admin_registered_players/');
 }
 

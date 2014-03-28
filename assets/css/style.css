@@ -290,7 +290,8 @@ nav #main-nav li ul{
 	width: 100%;
 }
 #results-table th{
-	/*color: #00AFAF;*/
+	background-color: #00AFAF;/*#77e2e2*/
+	color: #FFFFFF;
 	font-size: 14px;
 	font-weight: normal;
 }
@@ -299,7 +300,7 @@ nav #main-nav li ul{
 }
 #results-table th span{
 	font-size: 12px;
-	color: #474747;
+	/*color: #474747;*/
 }
 #results-table  ,#results-table  th, #results-table td{
 	border: 1px solid #CCCCCC;;
@@ -320,7 +321,8 @@ nav #main-nav li ul{
 	text-align: center;
 }
 .profile-table th{
-	/*color: #00AFAF;*/
+	background-color: #00AFAF;/*#77e2e2*/
+	color: #FFFFFF;
 	font-size: 14px;
 	font-weight: normal;
 }

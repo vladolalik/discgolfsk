@@ -8,7 +8,7 @@
 
  	echo form_open('tournaments/admin_set_par_lap/'.$this->uri->segment(3)); ?>
  	<fieldset>
- 		<legend>Set par <?php echo $tournament['name'].' ('.$tournament['date'].')'; ?></legend>
+ 		<legend>Set par <?php echo $tournament['name'].' ('.date('F d, Y', strtotime($tournament['date'])).')'; ?></legend>
  		<table>
  			<tr>
  				<td><?php echo form_label('Categories', 'category_id'); ?></td>

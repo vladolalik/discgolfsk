@@ -1,9 +1,11 @@
 <?php  
  	$this->load->view('admin/admin_header', array('title'=>'Registered players', 'caption'=>'Registered players')); 	
 ?>
+
+
 <fieldset>
 	<legend>Select tournament</legend>
-<table>
+<table class="center-table">
 	<tr>
 <?php
 	echo form_open('/tournaments/admin_registered_players');
@@ -26,19 +28,24 @@
 		//print_r($registered_players);
 		?>
 		<h3>Tournament capacity is: <?php echo $tournament['capacity'];  ?></h3>
-		<div id="table">
+		<div >
 		<?php
-			echo '<table id="admin-autocreated-profiles-table" class="table-row-diff">';
+			echo '<table id="admin-autocreated-profiles-table" class="table-row-diff"  border="2px">';
 		 ?>
 		
 			<tr>
-				<th>Position</th>
-				<th>Player</th>
-				<th>Category</th>
-				<th>Accommodation</th>
-				<th>Food</th>
-				<th>Note</th>
-				<th>De-register</th>
+				<th><b>Position</b></th>
+				<th><b>Player</b></th>
+				<th><b>Day of birth</b></th>
+				<th><b>Category</b></th>
+				<th><b>Accomm.</b></th>
+				<th><b>Food</b></th>
+				<th><b>Email</b></th>
+				<th><b>Phone</b></th>
+				<th><b>PDGA Mem.</b></th>
+				<th><b>SAF Mem.</b></th>
+				<th><b>Note</b></th>
+				<th><b>De-register</b></th>
 			</tr>
 		<?php 
 
@@ -61,12 +68,24 @@
 				{
 					echo	'<td>'.$value['position'].'</td>';
 				}
-				echo	'<td>'.$value['first_name'].' '.$value['last_name'].'</td>
-						<td>'.$value['category'].'</td>';	
+				if ($value['first_name']==NULL)
+					{
+						echo '<td>'.$value['n_first_name'].' '.$value['n_last_name'].'</td>';
+						echo '<td>'.date('F d, Y', strtotime($value['n_birth_date'])).'</td>';
+						echo '<td>'.$value['n_email'].'</td>';
+					} else {
+						echo '<td>'.$value['first_name'].' '.$value['last_name'].'</td>';
+						echo '<td>'.date('F d, Y', strtotime($value['birth_date'])).'</td>';
+						echo '<td>'.$value['email'].'</td>';
+					}
+						echo '<td>'.$value['category'].'</td>';	
 						echo '<td>'.$value['accom'].'</td>';
 						echo '<td>'.$value['food'].'</td>';
+						echo '<td>'.$value['phone'].'</td>';
+						echo '<td>'.$value['pdga_membership'].'</td>';
+						echo '<td>'.$value['active_saf'].'</td>';
 						echo '<td>'.$value['note'].'</td>';
-						echo '<td>'.anchor('tournaments/admin_delete_registration/'.$value['user_id'].'/'.$tournament['tournament_id'], 'Log off', 'title="log off"').'</td>';
+						echo '<td>'.anchor('tournaments/admin_delete_registration/'.$value['register_player_id'], 'Log off', 'title="log off"').'</td>';
 				
 				echo '</tr>';
 			}
@@ -74,7 +93,7 @@
 	}
 
 ?>
-<p style="margin-top:20px;">The players marked with the red color are on the waiting list because the maximal capacity of the tournament was reached.</p>
+<p class="extra-note">The players marked with the red color are on the waiting list because the maximal capacity of the tournament was reached.</p>
 </div>
 <?php 
 	$this->load->view('admin/admin_footer');

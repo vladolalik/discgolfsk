@@ -11,14 +11,15 @@
 			echo form_open($this->uri->uri_string()); ?>
 		<br />
 
- <table>
+ <table class="center-table">
 			<tr>
 	<?php
 		$options=array(
-			'name'	=>'nmbr_accept_tourn',
-			'id'	=>'nmbr_accept_tourn',
-			'type'	=>'text',
-			'value' =>set_value('nmbr_accept_tourn', $nmbr_accept_tourn)
+			'name'	=> 'nmbr_accept_tourn',
+			'id'	=> 'nmbr_accept_tourn',
+			'type'	=> 'text',
+			'value' => set_value('nmbr_accept_tourn', $nmbr_accept_tourn),
+			'size'  => '2'
 		); 
 		echo '<td>'.form_label('Number: ','nmbr_accept_tourn').'</td>';
 		echo '<td>'.form_input($options).'</td>';

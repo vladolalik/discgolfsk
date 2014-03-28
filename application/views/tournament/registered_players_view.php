@@ -1,6 +1,6 @@
 <?php  
 
-	$this->load->view('header', array('title' => 'Results', 'caption' => 'Results'));
+	$this->load->view('header', array('title' => 'Registered players', 'caption' => 'Registered players'));
 
 ?>
 <fieldset>
@@ -11,8 +11,14 @@
 	echo form_open('/tournaments/registered_players');
 	echo '<td>'.form_label('Tournaments', 'tournament_id').'</td>';
 	echo '<td><select name="tournament_id" id="tournament_id">';
+	$tournament_id = $this->uri->segment(3);
 	foreach ($tournaments as $key => $value) {
-	 	echo '<option value="'.$value['tournament_id'].'" '.set_select('tournament_id', $value['tournament_id']).'>'.$value['name'].' ('.date('F d, Y', strtotime($value['date'])).')</option>';
+		if ($tournament_id!=NULL && $tournament_id==$value['tournament_id']){
+			echo '<option value="'.$value['tournament_id'].'" selected="selected">'.$value['name'].' ('.date('F d, Y', strtotime($value['date'])).')</option>';
+		} else {
+			echo '<option value="'.$value['tournament_id'].'" '.set_select('tournament_id', $value['tournament_id']).'>'.$value['name'].' ('.date('F d, Y', strtotime($value['date'])).')</option>';	
+		}
+	 	
 	 } 
 	 echo '</select></td>';
 	 echo '<td>'.form_submit('view', 'View').'</td>';
@@ -36,7 +42,11 @@
 			<tr>
 				<th>Position</th>
 				<th>Player</th>
+				<th>Country</th>
+				<th>Club</th>
+				<th>PDGA</th>				
 				<th>Category</th>
+
 			</tr>
 		<?php 
 
@@ -59,8 +69,18 @@
 				{
 					echo	'<td>'.$value['position'].'</td>';
 				}
-				echo	'<td>'.$value['first_name'].' '.$value['last_name'].'</td>
-						<td>'.$value['category'].'</td>';
+				if ($value['first_name']==NULL)
+					{
+						echo '<td>'.$value['n_first_name'].' '.$value['n_last_name'].'</td>';
+						echo '<td>'.$value['n_country'].'</td>';
+						echo '<td>'.$value['n_club'].'</td>';
+					} else {
+						echo '<td>'.$value['first_name'].' '.$value['last_name'].'</td>';
+						echo '<td>'.$value['country'].'</td>';
+						echo '<td>'.$value['club'].'</td>';
+					}
+					echo '<td>'.$value['pdga_membership'].'</td>';
+					echo '<td>'.$value['category'].'</td>';
 				echo '</tr>';
 			}
 		echo '</table>';

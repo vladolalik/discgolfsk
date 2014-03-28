@@ -1,6 +1,6 @@
 <div class="tournament-review">
 		<h3><?php echo $name; ?></h3>
-		<div class="tournament-picture"><?php echo '<img src="'.PATH_TO_TOURNAMENT_THUMB.$thumb.'" title="tournament_avatar_'.$name.'" />'; ?> </div>
+		<div class="tournament-picture"><a href="<?php echo base_url()?>index.php/tournaments/tournament_details/<?php echo $tournament_id; ?>"><?php echo '<img src="'.PATH_TO_TOURNAMENT_THUMB.$thumb.'" title="tournament_avatar_'.$name.'" />'; ?> </a></div>
 		<div class="tournament-info">
 			<p><span class="att">From: </span><?php echo date('F d, Y', strtotime($date)); ?></p>
 			<p><span class="att">To: </span><?php echo date('F d, Y', strtotime($date_to)); ?></p>
