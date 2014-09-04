@@ -1256,6 +1256,7 @@ function tournament_details()
 		
 		$registration_data = array(
 			'user_id'=>$this->session->userdata('id'),
+			'date'=>Date("Y-m-d H:i:s"),
 			'tournament_id'=>$this->form_validation->set_value('tournament_id'),
 			'category_id'=>$this->form_validation->set_value('category_id'),
 			'accom_id'=>$this->form_validation->set_value('accom'),
@@ -1313,7 +1314,7 @@ function tournament_details_unregistered()
 
 	$this->form_validation->set_rules('first_name','First name','trim|xss_clean|strip_tags|required');
 	$this->form_validation->set_rules('last_name','Last name','trim|xss_clean|strip_tags|required');
-	$this->form_validation->set_rules('birth_date', 'Date of birth', 'trim|xss_clean|htmlspecialchars');
+	$this->form_validation->set_rules('birth_date', 'Date of birth', 'trim|xss_clean|htmlspecialchars|required');
 	$this->form_validation->set_rules('email','Email','trim|xss_clean|strip_tags|required|valid_email');
 	$this->form_validation->set_rules('club','Club','trim|xss_clean|strip_tags');
 	$this->form_validation->set_rules('country','Country','trim|xss_clean|strip_tags');
@@ -1342,6 +1343,7 @@ function tournament_details_unregistered()
 
 		$registration_data = array(
 			'tournament_id'=>$this->form_validation->set_value('tournament_id'),
+			'date'=>Date("Y-m-d H:i:s"),
 			'category_id'=>$this->form_validation->set_value('category_id'),
 			'accom_id'=>$this->form_validation->set_value('accom'),
 			'food_id'=>$this->form_validation->set_value('food'),

@@ -93,6 +93,9 @@ echo $this->session->flashdata('message');
 			<?php if ($this->config->item('allow_registration', 'tank_auth')) echo anchor('/auth/register/', 'Register'); ?>
 		</td>
 	</tr>
+	<tr>
+		<td colspan="3"><?php echo anchor('/auth/forgot_password', 'Did you forgot your password?', 'title="Forgotten password"'); ?></td>
+	</tr>
 </table>
 
 <?php echo form_close(); ?>

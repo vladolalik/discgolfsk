@@ -1,4 +1,4 @@
-
+<?php $this->load->view('header', array('title' => 'Forgotten password', 'caption' => 'Forgotten password')) ?>
 <?php
 $login = array(
 	'name'	=> 'login',
@@ -14,12 +14,14 @@ if ($this->config->item('use_username', 'tank_auth')) {
 }
 ?>
 <?php echo form_open($this->uri->uri_string()); ?>
-<table>
+<table class="center-table">
 	<tr>
 		<td><?php echo form_label($login_label, $login['id']); ?></td>
 		<td><?php echo form_input($login); ?></td>
+		<td><?php echo form_submit('reset', 'Get a new password'); ?></td>
 		<td style="color: red;"><?php echo form_error($login['name']); ?><?php echo isset($errors[$login['name']])?$errors[$login['name']]:''; ?></td>
 	</tr>
 </table>
-<?php echo form_submit('reset', 'Get a new password'); ?>
+
 <?php echo form_close(); ?>
+<?php $this->load->view('footer') ?>

@@ -24,7 +24,7 @@ else
 				<td>'.date('F d, Y', strtotime($player['birth_date'])).'</td>
 				<td>'.$player['gender'].'</td>
 				<td>'.$player['club'].'</td>
-				<td><a href="admin_update_auto_profile/'.$player['user_id'].'"> Update</a></td>
+				<td>'.anchor('auth/admin_update_auto_profile/'.$player['user_id'], 'Update', 'title="Update auto-created profile"').'</td>
 				<td><form action="'.base_url().'index.php/auth/admin_delete_player/'.$player['user_id'].'/admin_get_autocreated_profile"> <input type="submit" value="Delete" onclick="return confirm(\'Are you sure you want to delete profile and all results : '.$player['first_name'].' '.$player['last_name'].'?\')" /></form></td>
 			 </tr>';
 	}

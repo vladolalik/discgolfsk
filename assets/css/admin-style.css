@@ -531,6 +531,14 @@ nav #main-nav li ul{
 }
 
 .center-table {
-	 margin-left:auto; 
+	margin-left:auto; 
     margin-right:auto;
+}
+.scroll {
+	max-width: 100%;
+    overflow: auto;
+}
+
+.registered-players {
+	width:1500px!important;
 }

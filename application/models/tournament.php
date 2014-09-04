@@ -613,12 +613,6 @@ function delete_tournament_results($tournament_id)
 */
 function register_player($registration_data)
 {
-    $position = $this->db->where('tournament_id', $registration_data['tournament_id'])
-                       ->count_all_results('registered_players');
-                       
-    $position = $position+1;
-
-    $registration_data['position']=$position; // position in list of players registered to tournament
     $select = $this->db->where('user_id', $registration_data['user_id'])
                        ->where('tournament_id', $registration_data['tournament_id'])
                        ->get('registered_players');
@@ -647,17 +641,12 @@ function register_player($registration_data)
 */
 function register_unregistered_player($user_data, $registration_data)
 {
-    $position = $this->db->where('tournament_id', $registration_data['tournament_id'])
-                       ->count_all_results('registered_players');
-                       
-    $position = $position+1;
-
-    $registration_data['position']=$position; // position in list of players registered to tournament
-    $select = $this->db->query("SELECT r.not_registered_players_id FROM statistics_registered_players r, statistics_not_registered_players n
-                                WHERE (n.not_registered_player_id = r.not_registered_players_id AND LOWER(n.first_name)='".strtolower($user_data['first_name'])."' 
-                                    AND LOWER(n.last_name)='".strtolower($user_data['last_name'])."' AND r.tournament_id='".$registration_data['tournament_id']."') OR LOWER(n.email)='".strtolower($user_data['email'])."'");
+    // podmienka na kotrolu duplicitnych registracii -- docasne zakomentovana
+    /*$select = $this->db->query("SELECT r.not_registered_players_id FROM statistics_registered_players r, statistics_not_registered_players n
+                                WHERE (n.not_registered_player_id = r.not_registered_players_id AND ((LOWER(n.first_name)='".strtolower($user_data['first_name'])."' 
+                                    AND LOWER(n.last_name)='".strtolower($user_data['last_name'])."') OR LOWER(n.email)='".strtolower($user_data['email'])."') AND r.tournament_id='".$registration_data['tournament_id']."') ");
     if ($select->num_rows()==0)
-    {
+    { */
         $query = $this->db->insert('not_registered_players', $user_data);
         $registration_data['not_registered_players_id'] = $this->db->insert_id();
         $query = $this->db->insert('registered_players', $registration_data);
@@ -665,11 +654,7 @@ function register_unregistered_player($user_data, $registration_data)
         {
             return TRUE;
         } 
-        else
-        {
-            return FALSE;
-        }
-    }
+   /* }*/
     return FALSE;
 }
 
@@ -682,9 +667,9 @@ function register_unregistered_player($user_data, $registration_data)
 */
 function get_registerd_players($tournament_id)
 {
-    $select=$this->db->query("SELECT u.first_name, r.register_player_id, u.last_name, not_reg.first_name as n_first_name, not_reg.last_name as n_last_name, not_reg.birth_date as n_birth_date, u.birth_date,
+    $select=$this->db->query("SELECT u.first_name, r.register_player_id, r.date, u.last_name, not_reg.first_name as n_first_name, not_reg.last_name as n_last_name, not_reg.birth_date as n_birth_date, u.birth_date,
                                     users.email, not_reg.email as n_email, u.country, u.club, 
-                                    not_reg.country as n_country, not_reg.club as n_club, r.pdga_membership, r.active_saf, r.phone, c.category, o_food.what food, r.position, o_accom.what accom, r.user_id, r.note
+                                    not_reg.country as n_country, not_reg.club as n_club, r.pdga_membership, r.active_saf, r.phone, c.category, o_food.what food, o_accom.what accom, r.user_id, r.note
                               FROM  statistics_registered_players r
                               LEFT OUTER JOIN statistics_users AS users ON users.id=r.user_id
                               LEFT OUTER JOIN statistics_not_registered_players AS not_reg ON not_reg.not_registered_player_id = r.not_registered_players_id
@@ -692,7 +677,8 @@ function get_registerd_players($tournament_id)
                               LEFT OUTER JOIN statistics_register_options AS o_accom ON o_accom.option_id=r.accom_id
                               LEFT OUTER JOIN statistics_user_profiles AS u ON u.user_id=r.user_id
                               LEFT OUTER JOIN statistics_categories AS c ON c.category_id=r.category_id
-                              WHERE r.tournament_id='$tournament_id'"
+                              WHERE r.tournament_id='$tournament_id'
+                              ORDER BY r.date"
                             );
 
     if ($select->num_rows()>0)
@@ -1292,31 +1278,16 @@ function delete_option($number, $type, $tournament_id)
 */
 function delete_registration($register_player_id)
 {
-    $select=$this->db->select('position, not_registered_players_id')
-                       ->where('register_player_id', $register_player_id)
-                       ->get('registered_players');
-    $position=$select->row('position');
-    $user_id=$select->row('not_registered_players_id');   
-   // print_r($user_id);
-    //die();
-
-    $this->db->delete('registered_players', array('register_player_id'=>$register_player_id));
-    if (is_numeric($user_id)){
-        $this->db->delete('not_registered_players', array('not_registered_player_id'=>$user_id));
-    }
-    // update positions after deleted record
-
-    $select=$this->db->where('position >', $position)
+    $select=$this->db->where('register_player_id', $register_player_id)
                      ->get('registered_players');
     
-    $data=$select->result_array();
-    
-    if ($data!=NULL){
-        foreach ($data as $record){
-            $pos=$record['position']-1;
-            $this->db->where('register_player_id', $record['register_player_id']);
-            $this->db->update('registered_players',array('position'=>$pos) );
-        }
+
+    $not_registered_player_id=$select->row('not_registered_players_id'); 
+    //var_dump($not_registered_player_id);
+   // die();
+    $this->db->delete('registered_players', array('register_player_id'=>$register_player_id));
+    if (is_numeric($not_registered_player_id)){
+        $this->db->delete('not_registered_players', array('not_registered_player_id'=>$not_registered_player_id));
     }
 }
 

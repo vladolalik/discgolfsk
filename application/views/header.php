@@ -75,7 +75,7 @@
 					else 
 					{
 						echo '<li>'.anchor('/auth/login', '<i class="fa fa-key"></i> Login', 'title="login"').'</li>
-							  <li>'.anchor('/auth/register', '<i class="fa fa-sign-in"></i> Register', 'title="register"').'</li>
+							  <li>'.anchor('/auth/register', '<i class="fa fa-sign-in"></i> CREATE ACCOUNT', 'title="register"').'</li>
 							  <li>'.anchor('/auth/get_autocreated_profile', '<i class="fa fa-eye"></i> Find yourself', 'title="Find your name in autocreated profiles and get your profile"').'</li>';
 							  
 					}

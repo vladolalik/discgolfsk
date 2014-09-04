@@ -45,6 +45,7 @@ if ($open!=NULL)
  			<th>Rank</th>
  			<th>Points</th>
  			<th>Name</th>
+ 			<th>Country</th>
  		</tr>
 
 <?php
@@ -56,6 +57,7 @@ if ($open!=NULL)
 	 			<td class="text-center">'.$f_results['rank'].'</td>
 	 			<td class="text-center">'.round($f_results['women_slovak_DG'],1).'</td>
 	 			<td class="text-center">'.$f_results['first_name'].' '.$f_results['last_name'].'</td>
+	 			<td class="text-center">'.$f_results['country'].'</td>
 	 		  </tr>';
  	}
 }

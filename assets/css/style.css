@@ -101,6 +101,8 @@ option:checked { background-color: #00AFAF; }
 	color: #00AFAF;
 	font-weight: bold;
 	padding-left: 20px;
+	margin-bottom: 20px;
+	margin-top: 20px;
 }
 a{
 	border-radius: none;
@@ -541,4 +543,18 @@ footer #des{
 	padding-top: 5px;
 	font-size: 12px;
 	color: #353535;
+}
+
+.center-table {
+	 margin-left:auto; 
+    margin-right:auto;
+}
+.registration-fails{
+	margin-top: 20px;
+	margin-bottom:20px;
+	color:red;
+}
+.link-reg-pl{
+	margin-top: 20px;
+	padding: auto;
 }

@@ -1,4 +1,4 @@
-<?php $this->load->view('header', array('title' => 'Register', 'caption' => 'Register')) ?>
+<?php $this->load->view('header', array('title' => 'Create Account', 'caption' => 'Create Account')) ?>
 <script type="text/javascript">
 $(function() {		
 	//DATEPICKER jQuery UI

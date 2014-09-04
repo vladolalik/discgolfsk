@@ -50,7 +50,52 @@
 		</div>
 
 		<br class="clear" />
-		<p><b><?php echo anchor('tournaments/registered_players/'.$tournament_id, 'View all registered players for this tournament.', 'title="Registered players"');?></b></p>	
+		<p class="link-reg-pl"><b><?php echo anchor('tournaments/registered_players/'.$tournament_id, 'View all registered players for this tournament.', 'title="Registered players"');?></b></p>
+		
+		<table class="registration-fails">
+			<?php if (validation_errors()!='')
+			echo '<tr><th>Please check your registration form and fill it correctly.</th></tr>'
+			?>
+			<tr>
+				<td><?php echo form_error('first_name'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('last_name'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('birth_date'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('email'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('club'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('country'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('category_id'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('phone'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('accom'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('food'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('pdga_membership'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('active_saf'); ?></td>
+			</tr>
+			<tr>
+				<td><?php echo form_error('note'); ?></td>
+			</tr>
+		</table>	
 		<div id="about">
 			<div>About:</div>
 			<?php echo $about; ?>
@@ -96,12 +141,12 @@
 					?>
 
 					<fieldset>
-					<legend>Registration form</legend>
+					<legend>Registration form (Fields with '*' are required.)</legend>
 					<?php echo form_open('/tournaments/tournament_details/'.$tournament_id); ?>
 						<input type="hidden" value="<?php echo $tournament_id; ?>" name="tournament_id" id="tournament_id"/>
 						<table>
 							<tr>
-								<td><?php echo form_label('Category', 'category_id'); ?></td>
+								<td><?php echo form_label('Category *', 'category_id'); ?></td>
 								<?php
 									echo '<td><select name="category_id" id="category_id" >';
 									foreach ($categories as $row)
@@ -117,15 +162,13 @@
 									}
 									echo '</select></td>'; 
 								?>
-								<td style="color: red;"><?php echo form_error('category'); ?></td>
+								
 							</tr>
 							<?php if (isset($accom_opt))
 							{ ?>
 								<tr>
 									<td><?php echo form_label('Accommodation', 'accom'); ?></td>
 									<td><?php echo form_dropdown('accom', $accom_opt, '', 'id="accom"'); ?></td>
-							
-									<td style="color: red;"><?php echo form_error('accom'); ?></td>
 								</tr>
 							<?php } ?>
 							<?php if (isset($food_opt))
@@ -133,19 +176,19 @@
 								<tr>
 									<td><?php echo form_label('Food', 'food'); ?></td>
 									<td><?php echo form_dropdown('food',$food_opt,'','id="food"'); ?></td>
-									<td style="color: red;"><?php echo form_error('food'); ?></td>
+									
 								</tr>
 							<?php } ?>
 							
 							<tr>
 								<td><?php echo form_label('Phone number', $phone['id']); ?></td>
-								<td><?php echo form_input($phone); ?></td>
-								<td style="color: red;"><?php echo form_error($phone['name']); ?></td>
+								<td ><?php echo form_input($phone); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Active PDGA Memberhip', $pdga_membership['id']); ?></td>
 								<td><?php echo form_input($pdga_membership); ?></td>
-								<td style="color: red;"><?php echo form_error($pdga_membership['name']); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Active SAF Membership', 'active_saf'); ?></td>
@@ -154,12 +197,11 @@
 										<option value="no" <?php echo set_select('active_saf', 'no'); ?>>No</option>
 									</select>
 								</td>
-								<td style="color: red;"><?php echo form_error('active_saf'); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Note', $note['id']); ?></td>
 								<td><?php echo form_textarea($note); ?></td>
-								<td style="color: red;"><?php echo form_error($note['name']); ?></td>
 							</tr>
 						</table>
 					
@@ -248,44 +290,45 @@
 					<legend>Registration form (Fields with '*' are required.)</legend>
 					<?php echo form_open('/tournaments/tournament_details_unregistered/'.$tournament_id); ?>
 						<input type="hidden" value="<?php echo $tournament_id; ?>" name="tournament_id" id="tournament_id"/>
+
 						<table>
 							<tr>
 								<td><?php echo form_label('First name *', $first_name['id']); ?></td>
 								<td><?php echo form_input($first_name); ?></td>
-								<td style="color: red;"><?php echo form_error($first_name['name']); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Last name *', $last_name['id']); ?></td>
 								<td><?php echo form_input($last_name); ?></td>
-								<td style="color: red;"><?php echo form_error($last_name['name']); ?></td>
+							
 							</tr>
 							<tr>
-								<td><?php echo form_label('Date of birth: ','date'); ?></td>
+								<td><?php echo form_label('Date of birth *: ','date'); ?></td>
 								<td><?php echo form_input($options); ?></td>
-								<td style="color: red;"><?php echo form_error($options['name']) ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Email *', $email['id']); ?></td>
 								<td><?php echo form_input($email); ?></td>
-								<td style="color: red;"><?php echo form_error($email['name']); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Club', $club['id']); ?></td>
 								<td><?php echo form_input($club); ?></td>
-								<td style="color: red;"><?php echo form_error($club['name']); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Country', $country['id']); ?></td>
 								<td><?php echo form_input($country); ?></td>
-								<td style="color: red;"><?php echo form_error($country['name']); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Phone number', $phone['id']); ?></td>
 								<td><?php echo form_input($phone); ?></td>
-								<td style="color: red;"><?php echo form_error($phone['name']); ?></td>
+								
 							</tr>
 							<tr>
-								<td><?php echo form_label('Category', 'category_id'); ?></td>
+								<td><?php echo form_label('Category *', 'category_id'); ?></td>
 								<?php
 									echo '<td><select name="category_id" id="category_id" >';
 									foreach ($categories as $row)
@@ -309,7 +352,7 @@
 									<td><?php echo form_label('Accommodation', 'accom'); ?></td>
 									<td><?php echo form_dropdown('accom', $accom_opt, '', 'id="accom"'); ?></td>
 							
-									<td style="color: red;"><?php echo form_error('accom'); ?></td>
+									
 								</tr>
 							<?php } ?>
 							<?php if (isset($food_opt))
@@ -317,13 +360,13 @@
 								<tr>
 									<td><?php echo form_label('Food', 'food'); ?></td>
 									<td><?php echo form_dropdown('food',$food_opt,'','id="food"'); ?></td>
-									<td style="color: red;"><?php echo form_error('food'); ?></td>
+									
 								</tr>
 							<?php } ?>
 							<tr>
 								<td><?php echo form_label('Active PDGA Memberhip', $pdga_membership['id']); ?></td>
 								<td><?php echo form_input($pdga_membership); ?></td>
-								<td style="color: red;"><?php echo form_error($pdga_membership['name']); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Active SAF Membership *', 'active_saf'); ?></td>
@@ -332,12 +375,12 @@
 										<option value="no" <?php echo set_select('active_saf', 'no'); ?>>No</option>
 									</select>
 								</td>
-								<td style="color: red;"><?php echo form_error('active_saf'); ?></td>
+								
 							</tr>
 							<tr>
 								<td><?php echo form_label('Note', $note['id']); ?></td>
 								<td><?php echo form_textarea($note); ?></td>
-								<td style="color: red;"><?php echo form_error($note['name']); ?></td>
+					
 							</tr>
 						</table>
 					

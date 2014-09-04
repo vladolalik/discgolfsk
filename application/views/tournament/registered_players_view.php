@@ -5,7 +5,7 @@
 ?>
 <fieldset>
 	<legend>Select tournament</legend>
-<table>
+<table class="center-table">
 	<tr>
 <?php
 	echo form_open('/tournaments/registered_players');
@@ -50,25 +50,16 @@
 			</tr>
 		<?php 
 
-			$over_capacity=false;
-			$count=1;
+			$position=1;
 			foreach ($registered_players as $key => $value) {
-				if ($value['position']>$tournament['capacity']){
-					$over_capacity=true;
+				if ($position>$tournament['capacity']){
 					echo '<tr style="color:red;">';
+					echo '<td>'.($position-$tournament['capacity']).'</td>';
 				} else {
 					echo '<tr>';
+					echo '<td>'.$position.'</td>';
 				}
 
-				if ($over_capacity)
-				{
-					echo '<td>'.$count.'</td>';
-					$count++;
-				} 
-				else 
-				{
-					echo	'<td>'.$value['position'].'</td>';
-				}
 				if ($value['first_name']==NULL)
 					{
 						echo '<td>'.$value['n_first_name'].' '.$value['n_last_name'].'</td>';
@@ -82,6 +73,7 @@
 					echo '<td>'.$value['pdga_membership'].'</td>';
 					echo '<td>'.$value['category'].'</td>';
 				echo '</tr>';
+				$position=$position+1;
 			}
 		echo '</table>';
 	}

@@ -19,7 +19,7 @@ else
 		echo '<tr>
 		<td class="text-center">'.$player['first_name'].'</td>
 		<td class="text-center">'.$player['last_name'].'</td>
-		<td class="text-center">'.$player['birth_date'].'</td>
+		<td class="text-center">'.date('Y', strtotime($player['birth_date'])).'</td>
 		<td class="text-center">'.$player['gender'].'</td>
 		<td class="text-center">'.$player['club'].'</td>
 		<td class="text-center">'.anchor('/auth/register_existing_profile/'.$player['user_id'], 'It\'s me', 'title="register existing profile"').'</td></tr>';
