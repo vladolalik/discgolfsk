@@ -1,0 +1,27 @@
+FIXED 1)  Registracia na turnaj - v zozname registrovanych su verejne udaje: 
+Meno, Country, Club, PDGA Membership (staci nazvat PDGA), Category
+t.j. email nie je verejny, tak isto ani ostatne udaje
+
+FIXED 2) pri registracii bez prihlasenia treba zadat aj datum narodenia, tiez neverejny udaj (minule som na to, zial, zabudol, ospravedlnujem sa)
+
+FIXED 3) momentalne ponuka pri registracii formular vsetky mozne aj nemozne Category (vsetky, ktore su v systeme), bolo by mozne to obmedzit, napr. pri Update alebo Add New Tournament by sa zadali pripustne kategorie a potom by boli v ponuke uz len tie
+
+Male zmeny:
+-----------
+FIXED 4) Zoznam registrovanych - ked sa ukaze zoznam registrovanych, titulka stranky stale hovori, ze "Results", trebalo by opravit na "Registered Players" 
+
+FIXED 5) pri zozbrazeni details k turnaju na stranke by mohol byt registracny formular az uplne na spodku stranky, t.j. najprv by bolo info o turnaji, az potom registracny formular. Tiez by bolo dobre, ak by sa odtial dalo priamo niekde kliknut na zoznam registrovanych priamo na danom turnaji (ale ak je to komplikovane, pokojne to pocka na inokedy)
+
+FIXED 6) formulaciu "If you are already registered please login or register if you want your own profile." 
+mozno nahradit 
+'If you are already registered please login or register if you want your to use your own profile."
+
+7) moj profil -> admin - ano vdaka. to by urcite pomohlo. Uz som si aktivoval ucet. 
+Mozno pridat admin prava aj ku uz vytvorenym kontam Katka Bodova, Lukas Grozaj a Stefan Dobrev. 
+
+----------------------------------
+Napokon len male detaily, ktore by bolo dobre urobit, ale nie je to uplne nevyhnutne. 
+
+FIXED 7) pri snahe otvorit si vlastne konto ponuka uzivatelom formular datumy narodenia len -10+10 rokov vzhladom na sucasny datum, da sa to robit postupne, ale ak by sa dalo nastavit to rozpatie len na roky dozadu a na obdobie 30-40 rokov bolo by to lepsie, toto je len uplny detail
+
+FIXED 8) vraj pri prehliadani zoznamu turnajov by bolo prirodzene klikat aj na obrazok turnaja, nielen na Details, mohli by byt teda obrazky klikatelne

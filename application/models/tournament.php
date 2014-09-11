@@ -859,17 +859,11 @@ function get_not_disq_players_open_women($tournament_id, $category)
     } else {
         $cat = "women";
     }
-   /* $select=$this->db->query("SELECT u.user_id 
-                              FROM statistics_user_profiles u, statistics_players_has_tournaments p, statistics_categories c
-                              WHERE p.tournament_id='$tournament_id' AND u.user_id=p.user_id AND LOWER(c.category) LIKE '%$cat%'  
-                              AND p.disqualified IS NULL AND p.category_id=c.category_id");
-    if ($select->num_rows()>0){
-        return $select->result_array(); 
-    }
-    return NULL;
-*/
 
-    $query = $this->db->query(" SELECT u.user_id, c.category, r.*, p.final, p.disqualified, t.*, u.first_name, u.last_name, n.*
+
+    /*$query = $this->db->query(" SELECT 
+                                CASE LOWER(c.category) WHEN LOWER('$cat') THEN p.final ELSE 0 END AS finale,
+                                u.user_id, c.category, r.*, p.final, p.disqualified, t.tournament_id, u.first_name, u.last_name, n.*
                                 FROM statistics_tournaments t, statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
                                 statistics_number_of_baskets n
                                 WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id AND
@@ -880,9 +874,29 @@ function get_not_disq_players_open_women($tournament_id, $category)
                                     CASE WHEN (r.final_2 IS NULL) THEN 99999 END,
                                     CASE WHEN (r.final_1 IS NULL) THEN 999999 END,
                                     (case when p.disqualified is null then 1 else 0 end) DESC, r.points
+                                ");*/
+
+    $query = $this->db->query(" SELECT 
+                                CASE WHEN LOWER(c.category)=LOWER('$cat') THEN p.final ELSE 0 END AS final,
+                                CASE WHEN LOWER(c.category)=LOWER('$cat') THEN r.final_1 ELSE NULL END AS finale_1,
+                                CASE WHEN LOWER(c.category)=LOWER('$cat') THEN r.final_2 ELSE NULL END AS finale_2,
+                                CASE WHEN LOWER(c.category)=LOWER('$cat') THEN r.final_3 ELSE NULL END AS finale_3,
+                                CASE WHEN LOWER(c.category)=LOWER('$cat') THEN r.points ELSE r.points-COALESCE(r.final_1,0)-COALESCE(r.final_2,0)-COALESCE(r.final_3,0) END AS points,
+                                u.user_id, c.category,  p.disqualified, t.tournament_id, u.first_name, u.last_name, n.*
+                                FROM statistics_tournaments t,  statistics_categories c, statistics_results r, statistics_user_profiles u, statistics_players_has_tournaments p, 
+                                statistics_number_of_baskets n
+                                WHERE p.tournament_id = $tournament_id AND u.user_id = p.user_id AND t.tournament_id = p.tournament_id AND
+                                     p.category_id = c.category_id AND r.tournament_id = p.tournament_id AND p.user_id = r.user_id 
+                                     AND r.result_id = n.result_id AND LOWER(c.category) LIKE '%$cat%' AND p.disqualified IS NULL
+                                ORDER BY 
+                                    CASE WHEN (finale_3 IS NULL) THEN 9999 END,
+                                    CASE WHEN (finale_2 IS NULL) THEN 99999 END,
+                                    CASE WHEN (finale_1 IS NULL) THEN 999999 END,
+                                    (case when p.disqualified is null then 1 else 0 end) DESC, points
                                 ");
         if ($query->num_rows()>0)
         {
+            
             return $query->result_array();
         }
         return NULL;
@@ -944,7 +958,8 @@ function get_score_actual_slovak($player_id, $category)
    $nmbr_accept_tourn=$select->row_array('nmbr_accept_tourn'); 
    $nmbr_accept_tourn=$nmbr_accept_tourn['nmbr_accept_tourn'];
   
-   $select=$this->db->query("SELECT p.score, t.slovak_champ, t.name, p.user_id FROM statistics_players_has_tournaments p, statistics_tournaments t, statistics_categories c
+   $select=$this->db->query("SELECT p.score, t.slovak_champ, t.name, p.user_id
+                             FROM statistics_players_has_tournaments p, statistics_tournaments t, statistics_categories c
                               WHERE p.user_id='$player_id' AND p.tournament_id=t.tournament_id AND YEAR(t.date) = YEAR(CURDATE()) AND LOWER(c.category) LIKE '%$category%' AND p.category_id=c.category_id
                                ORDER BY p.score DESC
                               LIMIT 0, $nmbr_accept_tourn" );

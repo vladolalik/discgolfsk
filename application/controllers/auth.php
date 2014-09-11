@@ -243,7 +243,7 @@ class Auth extends CI_Controller
 
 	/**
 	* Function for provide changes in auto created profiles
-	*
+	* 4/9/2014 edit function allow admin to update all profiles
 	* @return boolean
 	*/
 	function admin_update_auto_profile()
@@ -253,7 +253,7 @@ class Auth extends CI_Controller
 		{
 			redirect();
 		}
-		if (!($this->help_functions->is_admin()) || !($this->help_functions->is_auto_profile($id)))
+		if (!($this->help_functions->is_admin()))  //|| !($this->help_functions->is_auto_profile($id))) 
 		{
 			redirect();
 		}
@@ -276,6 +276,10 @@ class Auth extends CI_Controller
 				);
 			$this->users->update_profile($id, $data);
 			$this->session->set_flashdata('message', '<p class="success">Update was succesfull</p>');
+			if ($this->session->flashdata('previous_uri'))
+			{
+				redirect($this->session->flashdata('previous_uri'));
+			}
 			redirect('auth/admin_get_autocreated_profile');
 
 		} else {
@@ -441,7 +445,7 @@ class Auth extends CI_Controller
 		{
 			$number= $this->uri->segment(3);
 		}
-
+		$this->session->set_flashdata('previous_uri',''.$this->uri->segment(1).'/'.$this->uri->segment(2));
 		$data['players'] = $this->users->__get_all_users($number, $config['per_page']);
 		$this->load->view('auth/admin_all_profiles', $data);
 
@@ -1362,6 +1366,48 @@ class Auth extends CI_Controller
 			return FALSE;
 		}
 		return TRUE;
+	}
+
+	/**
+	*
+	* Function for admin that merge two profiles together 
+	*
+	*/
+
+	function admin_join_profiles()
+	{
+		if (!$this->help_functions->is_admin())
+		{
+			redirect();
+		}
+
+		$this->form_validation->set_rules('main','Main profile','trim|xss_clean|strip_tags|required');
+		$this->form_validation->set_rules('merge','Merge profile','trim|xss_clean|strip_tags|required');
+
+		if ($this->form_validation->run())
+		{
+			$main_id=$this->form_validation->set_value('main');
+			$merge_id=$this->form_validation->set_value('merge');
+
+			if ($main_id===$merge_id)
+			{
+				$this->session->set_flashdata('message', '<p class="fail">You can\'t merge same profile into one.</p>');	
+				redirect('auth/admin_join_profiles');
+			}
+			if ($this->users->merge_profiles($main_id, $merge_id))
+			{
+				$this->session->set_flashdata('message', '<p class="success">Profiles have been successfully merged.</p>');
+			} 
+			else 
+			{
+				$this->session->set_flashdata('message', '<p class="fail">Something went wrong.</p>');
+			}
+			redirect('auth/admin_join_profiles');
+		} else {
+			$data['players'] = $this->users->__get_all_users();
+			$this->load->view('auth/admin_join_profiles', $data);
+		}
+
 	}
 
 }

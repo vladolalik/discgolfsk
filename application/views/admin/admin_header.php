@@ -59,6 +59,7 @@ tinymce.init({
 					<ul> 
 						<li><?php echo anchor('auth/admin_get_inactive_players', '<i class="fa fa-angle-right"></i>Activate new players', 'title="Activate new players"'); ?> </li>
 						<li><?php echo anchor('auth/admin_get_autocreated_profile', '<i class="fa fa-angle-right"></i>Autocreated profiles', 'title="Auto created profiles"'); ?> </li>
+						<li><?php echo anchor('auth/admin_join_profiles', '<i class="fa fa-angle-right"></i>Merge profiles', 'title="Merge profiles"'); ?> </li>
 					</ul>
 				</li>
 				<li><?php echo anchor('tournaments/set_nmbr_acc_tourn', '<i class="fa fa-trophy"></i>Slovak champ options', 'title="Set number of acceptable tournament for Slovak champ"'); ?></li>

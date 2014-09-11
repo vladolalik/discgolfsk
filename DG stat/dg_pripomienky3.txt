@@ -1,0 +1,66 @@
+Tu je vysvetlenie Rankingu a tiez Slovak DG League (teraz zle nazyvanej na stranke Slovak Championships).
+
+Vysvelivky k rankingu
+
+1) Pri vytvarani turnaja je potrebne zadat 2 parametre (teraz je to jeden, ktory sa vola Parameter turnaja):
+Bodove hodnotenie turnaja OPEN (nazvyme ho MaxOPEN)
+Bodove hodnotenie turnaja WOMEN (nazvyme ho MaxWOMEN)
+
+navyse este treba zodpovedat jednu otazku: Majstrovtva Slovenska? (Ano/Nie). Odpoved na tuto otazku (ktora je kladna len pre jeden turnaj za rok) bude mat vplyv na hodnotenie turnaja v ramci DG ligy (vid nizsie).
+
+2) Po zadani vysledkov turnaja sa zoradia vsetci hraci v diviziiach OPEN, OPEN JUNIOR, OPEN MASTER do jedneho poradia nazvaneho OPEN (toto specialne poradie, ka prebehlo viac podkategorii na turnaj, netreba nikde zobrazovat), takisto sa spolu zoradia hracky v diviziach WOMEN (spolu WOMEN, WOMEN JUNIOR, WOMEN MASTER). Za turnaj potom podla umiestnenia v prislusnej divizii dostanu hraci bodove hodnotenie. 
+
+Hrac na k-tom mieste spomedzi N hracov, ktori diviziu dokoncili (t.j. odohrali vsetky kola okrem finale) dostava v OPEN divizii
+maxOPEN*(N-k+1)/N bodov
+
+vo WOMEN divizii 
+maxWOMEN*(N-k+1)/N bodov
+
+3) Body sa zaokruhluju na jedno desatinne miesto. 
+4) Pri rovnosti skore za turnaj si hraci body delia.
+
+Priklad 1
+ak boli vysledke skore hracov 40, 42,43,44,47,49, t.j. spolu bolo 6 hracov a Max je 100 bodov, tak hraci ziskavaju po rade
+100, 83.3, 66.7, 50, 33.3, 16.7 bodov
+
+Priklad 2
+ak boli vysledke skore hracov 40, 42,42,42,43,43, t.j. spolu bolo 6 hracov a Max je 100 bodov, tak hraci ziskavaju po rade
+100, 66.7, 66.7, 66.7, 25, 25 bodov (kedze druhy, treti a stvrty hrac si body delia a taktiez piaty a siesty).
+
+5) do rankingu sa zapocitavaju kazdemu hracovi vsetky bodove vysledky za poslednych 365 dni, t.j. pocita sa jednoduchy aritmeticky sucet za vsetky turnaje, ktore skoncili nanajvys 365 dni (t.j. rozhoduje den skoncenia turnaja) pred dnom vytvarania poradia. Hraci sa potom zoradia do poradia v divizii OPEN a WOMEN podla suctu bodov. Pri rovnosti suctu bodov si delia miesto. 
+
+6) Moze sa stat, ze na niektorom turnaji hra zena v divizii OPEN. V tom pripade sa jej bodovy zisk za tento turnaj rata do divizie OPEN. Teoreticky tak moze ziskat za jeden turnaj body v OPEN a za iny vo WOMEN. V tom priapde figuruje v  dvoch rebrickoch, v kazdom so suctom za turnaje, na ktorych startovala v danej divizii. Stava sa to casto, ci uz z osobnych dovodov, alebo pri nizkej ucasti je divizia WOMEN zrusena a vsetci hraju diviziu OPEN. 
+
+Vysvetlivky k Slovak DG League (na stranke nespravne oznacnej ako Slovak Championships)
+7) Toto funguje v principe velmi podobne. Za domace turnaje su max zisky MaxOPEN a MaxWOMEN, avsak turnaj Majstrovstiev Slovenska je specialne zvyhodneny o 50%, t.j. MaxOPEN sa v pripade odpovede "Ano" na otazku "Majstrovstva Slovenska" pre tento ucel (ale nie pre ucel Rankingu!) zvysi o polovicu (napr. zo 100 na 150 a pod.). 
+
+8) nepocitaju sa vysledky za poslednych 365 dni ale len vysledky podujati v danom kalendarnom roku, t.j. k 1.1. sa vsetko vynuluje. 
+
+9) nepocitaju sa vsetky vysledky ako do Rankingu, ale len sucet 6 navyssich bodovych ziskov za turnaje,
+
+Priklad 3
+ak hrac ziska od 1.1. body za domace turnaje
+60, 91, 100, 50, 140, 92, 83, 50, 75, 84, tak je jeho bodovy zisk v Slovak DG league: 140 + 100 + 92 + 91 + 84 + 83 = 590 bodov, kym v rankingu bude mat uplne na konci roka sucet vsetkych domacich turnajov, t.j. 590 + 60 + 50 + 50 + 75 = 825 bodov. 
+
+10) avsak do vysledkov sa pocitaju aj zahranicne vysledky a to najviac dva. Vysledky tychto turnajov sa vsak do databazy nezadavaju. Preto treba dat adminom pravomoc doplnit priamo este kazdemu hracovi dve bodove skore za zahranicne turnaje. Moze to urobit priamo kazdemu hracovi osobitne do jeho profilu (hrac si tento udaj vsak nemoze menit a taktiez sa nezobrazuje pri prehliadani profilu). 
+
+Priklad 4
+ak hrac ziska od 1.1. body za domace turnaje
+60, 91, 100, 50, 140, 92, 83, 50, 75, 84,  a za zahranicne turnaje este 150 a 120 bodov, 
+tak je jeho bodovy zisk v Slovak DG league: 150 + 140 + 120 + 100 + 92 + 91 = 693 bodov,  t.j. pocita sa mu 6 najlepsich poliziek z domaich turnajov + tych dvoch extra zahranicnych turnajov. V rankingu bude mat uplne na konci roka sucet vsetkych domacich turnajov, t.j. 590 + 60 + 50 + 50 + 75 = 825 bodov, t.j. toto sa vobec nezmeni. 
+
+Ak hrac ale ziskal na zahranicnych utrnajoch malo bodov, tak sa jeho skore nemeni, alebo sa pocita len jeden turnaj. 
+Priklad 5
+ak hrac ziska od 1.1. body za domace turnaje
+60, 91, 100, 50, 140, 92, 83, 50, 75, 84,  a za zahranicne turnaje este 150 a 70 bodov, 
+tak je jeho bodovy zisk v Slovak DG league: 150 + 140 + 100 + 92 + 91 + 84 = 657 bodov,  t.j. pocita sa mu 6 najlepsich poliziek z domacich turnajov + tych dvoch extra zahranicnych turnajov. V rankingu bude mat uplne na konci roka sucet vsetkych domacich turnajov, t.j. 590 + 60 + 50 + 50 + 75 = 825 bodov, t.j. toto sa vobec nezmeni. 
+
+11) opat mozu mat niektore zeny body az za WOMEN aj za OPEN, .t.j budu figurovat v oboch rebrickoch. 
+
+12) k 1.1. sa mozu vsetky udaje v ramci Slovak DG League vynulovat, vratane tych dvoch poloziek za zahranicne turnaje pre hracov, treba vsak koncorocne poradie zazalohovat. T.j. 31.1.2 by mala prebehnut archivacia dynamicky vytvorenej stranky poradia Slovak DG League a ulozit sa ako staticka pod nazvom 
+Final Results of 20xx Slovak DG League. Link by mal mat nejaku standarnu podobu. Mohlo by byt na (momentalne Slovak Championships) hore pull down menu, Previous results a v pull down menu by boli predchadzajuce roky. AK to viete riesit lepsie, mozete to urobit inak. 
+
+13) Zobrazovanie vysledkov - malo by tam byt aspon tri stlpce za menom: Slovak Tournaments, Tournaments Abroad, Total, kde sa urobia sucty podla tychto poloziek. 
+
+
+

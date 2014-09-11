@@ -1,7 +1,7 @@
 <?php
 
 $this->load->view('admin/admin_header', array('title'=>'Edit auto-created profile', 'caption'=>'Edit auto-created profile'));
-
+$this->session->keep_flashdata('previous_uri');
 $first_name = array(
 	'name' => 'first_name',
 	'id'   => 'first_name',

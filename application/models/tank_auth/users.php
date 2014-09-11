@@ -137,6 +137,17 @@ class Users extends CI_Model
 
 	function __get_all_users($from = 0, $count = 0)
 	{
+		if ($from===0 && $count===0)
+		{
+			$query = $this->db->query( "SELECT u.id as user_id, 
+									p.first_name, p.thumb, p.photo, p.last_name, p.club, p.gender, p.birth_date, u.email, u.activated, 
+									u.created
+									FROM statistics_users u, statistics_user_profiles p 
+									WHERE u.id = p.user_id /*AND users.role!='admin'*/
+									ORDER BY LOWER(p.last_name)");  /*, users.activated*/
+			if ($query->num_rows() > 0) return $query->result_array();
+			
+		}
 		$query = $this->db->query( "SELECT u.id as user_id, 
 									p.first_name, p.thumb, p.photo, p.last_name, p.club, p.gender, p.birth_date, u.email, u.activated, 
 									u.created
@@ -735,66 +746,149 @@ class Users extends CI_Model
 		return FALSE;
 	}
   
-  /*
-  function get_users() {
-    $u = $this -> db -> order_by('username')
-                     -> where('activated', 1) 
-					           -> get('users');
-	
-	return $u -> result_array();
-}
-
-    function get_match($tournament_id, $users_id) {
-    if (($tournament_id == '0') and ($users_id == '0')) {
-   //      $d = $this-> db -> order_by('tournament_id')
-  //                       -> get('players_has_tournaments');
-                         
-                         $d = $this->db->query( "SELECT users.username as username, categories.category as category
-									FROM players_has_tournaments, users, categories 
-									WHERE players_has_tournaments.user_id = users.id AND players_has_tournaments.category_id = categories.category_id AND players_has_tournaments.tournamet_id = tournaments.tournament_id 
-									ORDER BY username");
-                     
-                         
-         } 
-         
-    if (($tournament_id == '0') and ($users_id <> '0')) {
-   //      $d = $this-> db -> order_by('tournament_id')
-   //                      -> where('user_id', $users_id)
-   //                      -> get('players_has_tournaments');
-                        $d = $this->db->query( "SELECT users.username as username, categories.category as category
-									FROM players_has_tournaments, users, categories 
-									WHERE $users_id = users.id AND players_has_tournaments.category_id = categories.category_id AND players_has_tournaments.tournamet_id = tournaments.tournament_id 
-									ORDER BY username");
-   
-                              
-         } 
-    if (($tournament_id <> '0') and ($users_id == '0')) {
-   //     $d = $this-> db -> order_by('tournament_id')
-   //                      -> where('tournament_id', $tournament_id)
-   //                      -> get('players_has_tournaments');   
-                        $d = $this->db->query( "SELECT users.username as username, categories.category as category
-									FROM players_has_tournaments, users, categories 
-									WHERE players_has_tournaments.user_id = users.id AND players_has_tournaments.category_id = categories.category_id AND $tournament_id = tournaments.tournament_id 
-									ORDER BY username"); 
-   
-          
-          }  else {
-  //        $d = $this-> db -> order_by('tournament_id')
-  //                        -> where('user_id', $users_id)
-	//                        -> where('tournament_id', $tournament_id)
-  //                        -> get('players_has_tournaments'); 
-                         $d = $this->db->query( "SELECT users.username as username, categories.category as category
-									FROM players_has_tournaments, users, categories 
-									WHERE $users_id = users.id AND players_has_tournaments.category_id = categories.category_id AND $tournament_id = tournaments.tournament_id 
-									ORDER BY username");
-         
-         }
-	return $d -> result();  
-}
-  
-  
+  /** 
+  * Function merge two profiles into one, if main profile have same records from one tournament with the second one. 
+  * Records of second profile will be deleted and then profiles will be merge together.
+  * @param int
+  * @param int 
+  * @return boolean
   */
-  
+  function merge_profiles($main_id, $merge_id)
+  {
+  	$this->db->delete('user_autologin', array('user_id'=>$merge_id));
+
+  	$data = array(
+  		'user_id'=>$main_id
+  	);
+
+  	$this->db->where('user_id', $merge_id);
+  	$this->db->update('foreign_tournaments', $data);
+
+  	$this->db->query("DELETE FROM statistics_number_of_baskets 
+  					  WHERE result_id IN 
+  					  			(SELECT result_id 
+  					  			 FROM statistics_results 
+  					  			 WHERE user_id='$merge_id' AND tournament_id IN (
+  					  			 	SELECT tournament_id
+  					  			 	FROM statistics_players_has_tournaments 
+  					  			 	WHERE user_id='$merge_id' AND tournament_id IN (
+  					  			 		SELECT tournament_id 
+  					  			 		FROM statistics_players_has_tournaments
+  					  			 		WHERE user_id='$main_id'
+  					  			 		)
+  									)
+  								)"
+  	);
+
+  	$this->db->query("DELETE FROM statistics_results 
+  					  WHERE user_id='$merge_id' AND tournament_id IN (
+  					  	SELECT tournament_id
+  					    FROM statistics_players_has_tournaments 
+  						WHERE user_id='$merge_id' AND tournament_id IN (
+  					  		SELECT tournament_id 
+  					  		FROM statistics_players_has_tournaments
+  					  		WHERE user_id='$main_id'
+  					  		)
+  						)"
+	);
+
+	$this->db->query("DELETE FROM statistics_basket 
+					  WHERE lap_id IN (
+					  		SELECT lap_id 
+					  		FROM statistics_lap 
+					  		WHERE user_id='$merge_id' AND tournament_id IN (
+					  			SELECT tournament_id
+  							    FROM statistics_players_has_tournaments 
+  								WHERE user_id='$merge_id' AND tournament_id IN (
+  							  		SELECT tournament_id 
+  							  		FROM statistics_players_has_tournaments
+  					  				WHERE user_id='$main_id'
+  					  				) 
+					  			)
+							)"
+	);
+
+	$this->db->query("DELETE FROM statistics_lap 
+  					  WHERE user_id='$merge_id' AND tournament_id IN (
+  					  	SELECT tournament_id
+  					    FROM statistics_players_has_tournaments 
+  						WHERE user_id='$merge_id' AND tournament_id IN (
+  					  		SELECT tournament_id
+  					  		FROM statistics_players_has_tournaments 
+  					  		WHERE user_id='$main_id'
+  					  		)
+  						)"
+	);
+
+	$select=$this->db->query("SELECT tournament_id
+  					    FROM statistics_players_has_tournaments 
+  						WHERE user_id='$merge_id' AND tournament_id IN (
+  					  		SELECT tournament_id
+  					  		FROM statistics_players_has_tournaments 
+  					  		WHERE user_id='$main_id'
+  					  		)"
+  	);
+
+  	$same_tournament_id = $select->result_array();
+  	$oneDimensionalArray = array_map('current', $same_tournament_id);
+
+
+	if (!empty($oneDimensionalArray))
+  	{ 	
+		$del=$this->db->where_in('tournament_id', $oneDimensionalArray)
+				 ->where('user_id', $merge_id)
+				 ->delete('players_has_tournaments');
+	}
+
+	unset($same_tournament_id);
+	unset($oneDimensionalArray);
+
+	$select=$this->db->query("SELECT tournament_id
+  					    	FROM statistics_registered_players 
+  							WHERE user_id='$merge_id' AND tournament_id IN (
+  					  			SELECT tournament_id 
+  					  			FROM statistics_registered_players 
+  					  			WHERE user_id='$main_id'
+  					  			)"
+  	);
+
+  	$same_tournament_id = $select->result_array();
+	$oneDimensionalArray = array_map('current', $same_tournament_id);
+	
+  	if (!empty($oneDimensionalArray))
+  	{
+  		$this->db->where_in('tournament_id', $oneDimensionalArray)
+			 ->where_in('user_id', $merge_id)
+			 ->delete('registered_players');
+	
+  	}
+	
+
+  	$this->db->where('user_id', $merge_id);
+  	$this->db->update('ranking', $data);
+
+  	$this->db->where('user_id', $merge_id);
+  	$this->db->update('lap', $data);
+
+  	$this->db->where('user_id', $merge_id);
+  	$this->db->update('registered_players', $data);
+
+  	$this->db->where('user_id', $merge_id);
+  	$this->db->update('results', $data);
+
+  	$this->db->where('user_id', $merge_id);
+  	$this->db->update('players_has_tournaments', $data);
+
+  	$this->db->delete('user_profiles', array('user_id'=>$merge_id));
+
+  	$this->db->delete('users', array('id'=>$merge_id));
+
+  	if ($this->db->affected_rows() > 0) {	
+		return TRUE;
+	}
+	return FALSE;
+
+  }
 }
 
 /* End of file users.php */

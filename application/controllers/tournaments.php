@@ -1812,52 +1812,8 @@ function __admin_set_par_lap_gender()
 }
 
 
-
 /**
-* Function that compute score of players by category
-*
-* @author Vladimir Lalik
-*
-*/
-
-/*function __compute_year_rank()
-{
-	$tournaments = $this->tournament->get_tournaments();
-	$categories = $this->tournament->get_categories();
-	foreach ($tournaments as $key => $tournament) {
-		// ziskat vsetkych nediskvalifikovanych hracov
-		foreach ($categories as $category) {
-			var_dump($tournament['tournament_id']);
-			var_dump($category['category_id']);
-			$players = $this->tournament->get_not_disq_players($tournament['tournament_id'], $category['category_id']);
-			var_dump($players);
-			if ($tournament['par'] != NULL)
-			{
-				$count = count($players); // pocet zucastnenych hracov
-				if ($players!=NULL)
-				{
-					foreach ($players as $player) {
-						$rank = $this->compute_rank($player['user_id'], $tournament['tournament_id'], $category['category_id']); // poradie hraca
-						$score = (($count-$rank+1)/$count)*$tournament['par'];
-						var_dump($rank);
-						$this->tournament->update_score($tournament['tournament_id'], $player['user_id'], $score);
-					}
-				}
-			}
-		}
-	}
-
-	// vypocitam score za rok pre kazdeho hraca
-	$players = $this->tournament->get_all_players();
-	foreach ($players as $player) {
-		$sum = $this->tournament->get_score_actual_year($player['user_id']);
-		print_r($sum['sum']);
-		$this->tournament->update_year_score($player['user_id'], $sum['sum']);
-	}
-	redirect('tournaments/admin_view_tournaments');
-}*/
-/**
-* rank list compute score for category male and female
+* rank list compute score for category open and women
 * @author Vladimir Lalik
 */
 
@@ -1870,9 +1826,14 @@ function compute_year_rank_open_women()
 			'0'=>'max_open',
 			'1'=>'max_women'
 		);
+		
 		for ($i=0; $i<2; $i++) { // vypocet skore pre dve hlvane kategorie open a women 0 znamena OPEN a 1 znamena WOMEN
 			
-			$players = $this->tournament->get_not_disq_players_open_women($tournament['tournament_id'], $i);	
+			$players = $this->tournament-> get_not_disq_players_open_women($tournament['tournament_id'], $i);	
+			if ($tournament['tournament_id']==21) {
+				var_dump($players);
+				die();
+			}
 			$total_same_players=0;  //celkovy pocet hracov s rovnakym skore
 			$last_score=-9999; 
 			$num_similar_score=0; // pocet-1 za sebou iducich hracov
@@ -2129,9 +2090,7 @@ function admin_delete_individual_foreign_score()
 */
 function __compute_rank_open_women($player_id, $tournament_id, $category)
 {
-	 $results = $this->tournament->get_all_results_open_women($tournament_id,'ALL',$category);
-	 //print_r($results);
-	 //die();
+	 $results = $this->tournament-> get_not_disq_players_open_women($tournament_id, $category);
 	 $rank = 0;
 	 foreach ($results as $key => $row)
 	 {

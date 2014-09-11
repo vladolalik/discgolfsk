@@ -1,0 +1,23 @@
+
+www.discgolf.sk/administrator
+username : 7lunes
+psw :  Grouper9-
+
+
+ftp
+ftp host: discgolf.sk
+ftp port: 21
+Username: vx600000
+Password: wocavjow
+ftp root: /www_root
+
+rk.
+
+
+http://marcus.webhostingy.net/phpMyAdmin/user_password.php?&old_usr=vx600000
+
+username:       vx600000
+password:       yefsephfo
+
+
+DG04stat
