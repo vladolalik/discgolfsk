@@ -82,7 +82,14 @@
 
 			?>
 			</ul>
+			<div id="calendar">
+				<?php 
+					$data['tournaments'] = $this->help_functions->tournament_calendar();
+					$this->load->view('calendar', $data); 
+				?>
+			</div>
 		</nav>
+
 
 		<section id="content">
 		<h1><?php echo $caption; ?></h1>

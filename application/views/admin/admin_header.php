@@ -16,7 +16,7 @@
   <!-- Date picker Vladimir Lalik -->
 <script>
 	$(function() {
-	    $( "#date, #birth_date, #date_to" ).datepicker({
+	    $( "#date, #birth_date, #date_to, #reg_date").datepicker({
 	      dateFormat: 'yy-mm-dd',
 	      changeMonth: true,
 	      changeYear: true

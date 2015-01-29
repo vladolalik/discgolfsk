@@ -159,6 +159,7 @@ class Users extends CI_Model
 		return NULL;
 	}
 
+
 	/**
 	* Function return all profiles, activated, inactivated, auto-created
 	*
@@ -712,7 +713,10 @@ class Users extends CI_Model
 	 */
 	private function __delete_profile($user_id)
 	{
-
+		if (!($this->help_functions->is_admin()) || !($this->help_functions->is_auto_profile($id)))
+		{
+			redirect();
+		}
 		$data = $this->get_all_user_by_id($user_id);
 		if ($data!=NULL && $data->role != 'admin') 
 		{	
@@ -753,8 +757,12 @@ class Users extends CI_Model
   * @param int 
   * @return boolean
   */
-  function merge_profiles($main_id, $merge_id)
-  {
+  function merge_profiles($main_id, $merge_id){
+
+  	if (!($this->help_functions->is_admin()))
+	{
+		redirect();
+	}
   	$this->db->delete('user_autologin', array('user_id'=>$merge_id));
 
   	$data = array(
@@ -863,6 +871,7 @@ class Users extends CI_Model
 	
   	}
 	
+
   	$this->db->where('user_id', $merge_id);
   	$this->db->update('lap', $data);
 
@@ -885,7 +894,18 @@ class Users extends CI_Model
 	return FALSE;
 
   }
+
+  function __update_email($id, $email){
+  	if (!($this->help_functions->is_admin())){
+		redirect();
+	}
+  	$this->db->where('id', $id)
+  			 ->update('users', array('email' => $email));
+  }
 }
+
+
+
 
 /* End of file users.php */
 /* Location: ./application/models/auth/users.php */

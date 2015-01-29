@@ -262,6 +262,7 @@ class Auth extends CI_Controller
 		$this->form_validation->set_rules('gender', 'Gender', 'trim|xss_clean|strip_tags');
 		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('last_name', 'Last name', 'trim|required|xss_clean|strip_tags');
+		$this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email|strip_tags');
 		$this->form_validation->set_rules('birth_date', 'Day of birth', 'trim|xss_clean|strip_tags');
 		$this->form_validation->set_rules('country', 'Country', 'trim|xss_clean|strip_tags');
 
@@ -274,6 +275,17 @@ class Auth extends CI_Controller
 					'birth_date' => $this->form_validation->set_value('birth_date'),
 					'country' => $this->form_validation->set_value('country')
 				);
+			$email = $this->form_validation->set_value('email');
+			
+			// check email 
+			$user = $this->users->get_all_user_by_id($id);
+			if ($user->email != $email && $this->users->is_email_available($email) ){
+				$this->users->__update_email($id, $email);
+			} else {
+				$this->session->set_flashdata('message', '<p class="fail">User with email '.$email.' already exists.</p>');
+				redirect('auth/admin_update_auto_profile/'.$user->id);
+			}
+
 			$this->users->update_profile($id, $data);
 			$this->session->set_flashdata('message', '<p class="success">Update was succesfull</p>');
 			if ($this->session->flashdata('previous_uri'))
@@ -283,8 +295,9 @@ class Auth extends CI_Controller
 			redirect('auth/admin_get_autocreated_profile');
 
 		} else {
-	
+			$user = $this->users->get_all_user_by_id($id);
 			$data = $this->users->get_user_profile($id);
+			$data['email'] = $user->email;
 			$this->load->view('auth/update_auto_profile', $data);
 		}
 	}

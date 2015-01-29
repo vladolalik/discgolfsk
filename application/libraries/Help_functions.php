@@ -101,4 +101,10 @@ class Help_functions{
 		return FALSE;
 	}
 
+	function tournament_calendar(){
+		$this->ci = & get_instance();
+		$this->ci->load->model('tournament');
+		return $this->ci->tournament->get_next_tournaments();
+	}
+
 }

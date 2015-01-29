@@ -75,6 +75,32 @@
 		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
 	?>
 	</tr>
+	<tr>
+	<?php 
+		echo '<td>'.form_label('Registration date: ','reg_date').'</td>';
+		$options=array(
+			'name'	=>'reg_date',
+			'id'	=>'reg_date',
+			'type'	=>'text',
+			'value' => set_value('reg_date')
+		);
+		echo '<td>'.form_input($options).'</td>'; 
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
+			'name'	=>'sanction',
+			'id'	=>'sanction',
+			'type'	=>'text',
+			'value' =>set_value('sanction')
+		); 
+		echo '<td>'.form_label('Sanction: ','sanction').'</td>';
+		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
 	<tr><td> <h3>Permitted categories for registration</h3></td></tr>
 	<?php 
 		foreach ($categories as $key => $category) {

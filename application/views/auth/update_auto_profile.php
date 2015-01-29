@@ -16,6 +16,13 @@ $last_name = array(
 	'max_length'=> 45,
 	'size' => 30,
 );
+$email = array(
+	'name' => 'email',
+	'id'   => 'email',
+	'value'=> set_value('email', $email),
+	'max_length'=> 300,
+	'size' => 30,
+);
 $birth = array(
 	'name' => 'birth_date',
 	'id'   => 'birth_date',
@@ -56,6 +63,11 @@ $country = array(
 		<td><?php echo form_label('Last Name', $last_name['id']); ?></td>
 		<td><?php echo form_input($last_name); ?></td>
 		<td style="color: red;"><?php echo form_error($last_name['name']); ?><?php echo isset($errors[$last_name['name']])?$errors[$last_name['name']]:''; ?></td>
+	</tr>
+	<tr>
+		<td><?php echo form_label('Email', $email['id']); ?></td>
+		<td><?php echo form_input($email); ?></td>
+		<td style="color: red;"><?php echo form_error($email['name']); ?><?php echo isset($errors[$email['name']])?$errors[$email['name']]:''; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo form_label('Day of birth', $birth['id']); ?></td>

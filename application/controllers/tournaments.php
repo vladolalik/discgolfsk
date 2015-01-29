@@ -111,6 +111,9 @@ class Tournaments extends CI_Controller {
 		$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 		$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');
 		$this->form_validation->set_rules('dir_email','Director\'s email','trim|required|valid_email|xss_clean|strip_tags');
+		$this->form_validation->set_rules('reg_date','Registration date','xss_clean');
+		$this->form_validation->set_rules('sanction','Sanction','trim|xss_clean|strip_tags');
+
 		foreach ($data['categories'] as $key => $category) 
 		{
 			$this->form_validation->set_rules($category['category_id'], $category['category'], 'trim|xss_clean|strip_tags');
@@ -137,24 +140,26 @@ class Tournaments extends CI_Controller {
 			//print_r($allowed_reg_categories);
 			//die();
 			$tournament_data = array(
-					'name'			=>	$this->form_validation->set_value('name'),
-					'date'			=>	$this->form_validation->set_value('date'),
-					'date_to'			=>	$this->form_validation->set_value('date_to'),
-					'location'		=>	$this->form_validation->set_value('location'),
-					'nmbr_of_round'		=>	$this->form_validation->set_value('rounds'),
-					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
-					'about' => $this->form_validation->set_value('about'),
-					'allow_registration' => $allow_registration,
-					'slovak_champ' => $slovak_champ,
-					'lat'=>$this->form_validation->set_value('lat'),
-					'lng'=>$this->form_validation->set_value('lng'),
-					'max_open'=>$this->form_validation->set_value('max_open'),
-					'max_women'=>$this->form_validation->set_value('max_women'),
-					'capacity'=>$this->form_validation->set_value('capacity'),
-					'dir_name'=>$this->form_validation->set_value('dir_name'),
-					'dir_phone'=>$this->form_validation->set_value('dir_phone'),
-					'dir_email'=>$this->form_validation->set_value('dir_email'),
-					'allowed_reg_categories'=>$allowed_reg_categories
+					'name'					=>	$this->form_validation->set_value('name'),
+					'date'					=>	$this->form_validation->set_value('date'),
+					'date_to'				=>	$this->form_validation->set_value('date_to'),
+					'location'				=>	$this->form_validation->set_value('location'),
+					'nmbr_of_round'			=>	$this->form_validation->set_value('rounds'),
+					'nmbr_of_fnl_laps'		=>	$this->form_validation->set_value('rounds_final'),
+					'about'				 	=>  $this->form_validation->set_value('about'),
+					'allow_registration' 	=>  $allow_registration,
+					'sanction'				=>	$this->form_validation->set_value('sanction'),
+					'reg_date'				=>	$this->form_validation->set_value('reg_date'),
+					'slovak_champ' 			=>  $slovak_champ,
+					'lat'					=>  $this->form_validation->set_value('lat'),
+					'lng'					=>  $this->form_validation->set_value('lng'),
+					'max_open'				=>	$this->form_validation->set_value('max_open'),
+					'max_women'				=>	$this->form_validation->set_value('max_women'),
+					'capacity'				=>	$this->form_validation->set_value('capacity'),
+					'dir_name'				=>	$this->form_validation->set_value('dir_name'),
+					'dir_phone'				=>	$this->form_validation->set_value('dir_phone'),
+					'dir_email'				=>	$this->form_validation->set_value('dir_email'),
+					'allowed_reg_categories'=>	$allowed_reg_categories
 				);
 			
 				
@@ -738,8 +743,7 @@ class Tournaments extends CI_Controller {
   
   	if ($this->form_validation->run())
   	{
-  		
-	   	 $data['tournaments'] = $this->tournament->get_tournaments();
+	   	$data['tournaments'] = $this->tournament->get_tournaments_finished();
 		// $data['users'] = $this->tournament->get_all_players();
 		 $data['categories'] = $this->tournament->get_categories();
 
@@ -804,7 +808,7 @@ class Tournaments extends CI_Controller {
   	else 
   	{
 
-	  	 $data['tournaments'] = $this->tournament->get_tournaments();
+	  	 $data['tournaments'] = $this->tournament->get_tournaments_finished();
 	  	 $data['users'] = $this->tournament->get_all_players();
 	  	 $data['categories'] = $this->tournament->get_categories();
 	  	 $last_tournament_id = $data['tournaments']['0']['tournament_id'];
@@ -1078,6 +1082,8 @@ function view_individual_results()
 	$this->form_validation->set_rules('dir_name','Director\'s Name','trim|required|xss_clean|strip_tags');
 	$this->form_validation->set_rules('dir_phone','Director\'s phone','trim|numeric|xss_clean|strip_tags');	
 	$this->form_validation->set_rules('dir_email','Director\'s email','trim|valid_email|xss_clean|strip_tags');
+	$this->form_validation->set_rules('reg_date','Registration date','xss_clean');
+	$this->form_validation->set_rules('sanction','Sanction','trim|xss_clean|strip_tags');
 	foreach ($data['categories'] as $key => $category) 
 	{
 		$this->form_validation->set_rules($category['category_id'], $category['category'], 'trim|xss_clean|strip_tags');
@@ -1112,6 +1118,8 @@ function view_individual_results()
 					'nmbr_of_fnl_laps'	=>	$this->form_validation->set_value('rounds_final'),
 					'about' => $this->form_validation->set_value('about'),
 					'allow_registration' => $allow_registration,
+					'sanction'				=>	$this->form_validation->set_value('sanction'),
+					'reg_date'				=>	$this->form_validation->set_value('reg_date'),
 					'slovak_champ' => $slovak_champ,
 					'lat'=>$this->form_validation->set_value('lat'),
 					'lng'=>$this->form_validation->set_value('lng'),

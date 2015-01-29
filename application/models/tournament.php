@@ -2,6 +2,7 @@
 
 class Tournament extends CI_Model{
     function __construct(){
+        $this->load->helper('date');
         // Call the Model constructor
         parent::__construct();
     }
@@ -116,6 +117,38 @@ class Tournament extends CI_Model{
         }
         return null;
     }
+
+    /**
+    * Function return all tournaments which were held ordered by date DESC
+    *
+    * @author Vladimir Lalik
+    * @return array
+    *
+    */
+    function get_tournaments_finished() 
+    {
+        $query = $this->db->order_by('date DESC')
+                          ->where('date < NOW()')
+                          ->get('tournaments');
+    
+        if ($query->num_rows() > 0){
+            return $query->result_array(); 
+        }
+        return null;
+    }
+
+    function get_next_tournaments(){
+        $query = $this->db->order_by('date ASC')
+                          ->where('date > NOW()')
+                          ->get('tournaments');
+    
+        if ($query->num_rows() > 0){
+            return $query->result_array(); 
+        }
+        return null;
+    }
+
+
 
     /**
     * Function return all tournaments ordered by date DESC for pagination

@@ -65,6 +65,32 @@
 		echo '<td>'.form_label('Allow registration ','allow_registraion').'</td>';?>
 		<td><input type="checkbox" value="1" name="allow_registration" id="allow_registration" <?php if($allow_registration=='1') echo 'checked="checked"';?> ></td> 
 	</tr>
+	<tr>
+	<?php 
+		echo '<td>'.form_label('Registration date: ','reg_date').'</td>';
+		$options=array(
+			'name'	=>'reg_date',
+			'id'	=>'reg_date',
+			'type'	=>'text',
+			'value' => set_value('reg_date', $reg_date)
+		);
+		echo '<td>'.form_input($options).'</td>'; 
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
+	<tr>
+	<?php
+		$options=array(
+			'name'	=>'sanction',
+			'id'	=>'sanction',
+			'type'	=>'text',
+			'value' =>set_value('sanction', $sanction)
+		); 
+		echo '<td>'.form_label('Sanction: ','sanction').'</td>';
+		echo '<td>'.form_input($options).'</td>';
+		echo '<td style="color: red;">'.form_error($options['name']).'</td>';
+	?>
+	</tr>
 	<tr><td> <h3>Permitted categories for registration</h3></td></tr>
 	<?php 
 		$checked_categories=explode(';', $allowed_reg_categories);

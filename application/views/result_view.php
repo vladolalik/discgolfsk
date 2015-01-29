@@ -15,17 +15,7 @@
    endforeach; ?>
 </select>
 
-<!--<select name="players" id="result-players" size="5">
-  <option value='ALL' <?php //echo set_select('players', 'ALL', TRUE);?>> ALL PLAYERS </option>
-  <?php
-  	//foreach($users as $key=>$row): 
-  	//	echo '<option value="'.$row['user_id'].'"'. set_select('players', $row['user_id']).'>'.$row['last_name'].' '.$row['first_name'].'</option>';
-  	//endforeach;
-  ?>
-</select>-->
-
-
-<input id="results-submit" type="submit" value="show">
+<input id="results-submit" type="submit" value="Show">
 <br class="clear"/>
 <div class="content-simple-line">&nbsp;</div>
 <?php echo form_close(); ?>

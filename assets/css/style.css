@@ -165,6 +165,59 @@ div.clear{
 	font-size: 14px;
 	color: #00AFAF;
 }
+/* CALENDAR */
+#calendar {
+	margin-top: 25px;
+	float: left;
+	position: relative;
+	min-width: 200px;
+	max-width: 200px;
+	background-color: #F0FFFF;
+	text-transform: uppercase;
+	font-size: 0.75em; 
+}
+
+#calendar ul {
+	background-color: #F0FFFF;
+}
+
+#calendar ul li {
+	height: 100%;
+}
+
+#calendar ul .items {
+	padding: 10px;
+	font-size: 1.5em;
+}
+
+#calendar ul li a{
+	color: #2F4F4F;
+	border: 0px;
+	line-height: 1.5em;
+	padding: 5px;
+	margin: 0px;
+	height: 100%;
+}
+
+#calendar ul li a:hover{
+	border: 0px;
+	padding: 5px;
+	margin: 0px;
+	color: #008F8F;
+}
+
+#calendar #calendar-header{
+	background-color: #00AFAF;	
+	height: 50px;
+	line-height: 50px;
+	color: #ffffff;
+	border: none;
+	text-align: center;
+	border-bottom: 2px solid #008F8F;
+	padding-left: 0px;
+	font-size: 1.5em;
+}
+
 /* NAVIGATION
 ------------------------------------------------------------*/
 nav i{
@@ -175,12 +228,13 @@ nav{
 	margin-top: 10px;
 	float: left;
 	min-width: 200px;
-	background-color: #F1F1F1;
+	
 	text-transform: uppercase;
 	font-size: 0.75em;
 	margin-right: 25px; 
 }
 nav ul{
+	background-color: #F1F1F1;
 	list-style: none;
 }
 nav ul #navigation-header{
@@ -257,7 +311,7 @@ nav ul ul {
 }
 
 .container{
-	width:  960px;
+	width:  980px;
 	margin: auto;
 }
 /* CONTENT
@@ -296,6 +350,7 @@ nav ul ul {
 	height: 0px;
 }
 #results-submit{
+	margin-left: 40px; 
 	margin-top: 60px;
 	margin-bottom: 25px;
 	float: left;
