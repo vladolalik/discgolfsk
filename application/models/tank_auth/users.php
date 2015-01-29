@@ -863,10 +863,6 @@ class Users extends CI_Model
 	
   	}
 	
-
-  	$this->db->where('user_id', $merge_id);
-  	$this->db->update('ranking', $data);
-
   	$this->db->where('user_id', $merge_id);
   	$this->db->update('lap', $data);
 

@@ -1830,10 +1830,7 @@ function compute_year_rank_open_women()
 		for ($i=0; $i<2; $i++) { // vypocet skore pre dve hlvane kategorie open a women 0 znamena OPEN a 1 znamena WOMEN
 			
 			$players = $this->tournament-> get_not_disq_players_open_women($tournament['tournament_id'], $i);	
-			if ($tournament['tournament_id']==21) {
-				var_dump($players);
-				die();
-			}
+			
 			$total_same_players=0;  //celkovy pocet hracov s rovnakym skore
 			$last_score=-9999; 
 			$num_similar_score=0; // pocet-1 za sebou iducich hracov
