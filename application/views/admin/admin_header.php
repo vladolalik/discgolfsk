@@ -11,12 +11,15 @@
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <script type="text/javascript" src="<?= base_url() ?>tinymce/tinymce.min.js"></script>	
-<script type="text/javascript" src="<?= base_url() ?>assets/js/scripts.js"></script>	
+<script type="text/javascript" src="<?= base_url() ?>assets/js/scripts.js"></script>
+
+<script src="<?= base_url() ?>assets/datetimepicker-master/jquery.datetimepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/datetimepicker-master/jquery.datetimepicker.css"/ >	
 
   <!-- Date picker Vladimir Lalik -->
 <script>
 	$(function() {
-	    $( "#date, #birth_date, #date_to, #reg_date").datepicker({
+	    $( "#date, #birth_date, #date_to").datepicker({
 	      dateFormat: 'yy-mm-dd',
 	      changeMonth: true,
 	      changeYear: true
@@ -26,6 +29,10 @@
  
 		// setter
 		$( "#birth_date" ).datepicker( "option", "yearRange", "c-50:+1" );
+
+		$('#reg_date').datetimepicker({
+    		dformat: "yy-mm-dd hh:mm:ss"
+		});
 	});
 </script>
 <script>

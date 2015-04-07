@@ -55,5 +55,7 @@ define('AUTO_CREATED_PROFILE','2');
 define('ACTIVE_PROFILE','1');
 define('NOT_ACTIVE_PROFILE','0');
 
+define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

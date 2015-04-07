@@ -1,8 +1,10 @@
 <?php $this->load->view('header', array('title' => 'My profile', 'caption' => 'My profile')); ?>
-<div id="my-profile">
+
+<div id="my-profile" class="row">
+	<div class="col-md-10">
 	<h2> <?php echo $first_name.' '.$last_name; ?> </h2>
-	<div id="my-profile-image"><?php echo '<img src="'.PATH_TO_USERS_AVATAR.$thumb.'"title="profile_picture_'.$last_name.'" />'; ?> </div>
-	<div id="my-profile-info">
+	<div class="col-md-3"><?php echo '<img class="img-thumbnail" src="'.PATH_TO_USERS_AVATAR.$thumb.'"title="profile_picture_'.$last_name.'" />'; ?> </div>
+	<div id="my-profile-info" class="col-md-8">
 		<table >
 			<tr>
 				<th>Country</th>

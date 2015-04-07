@@ -9,7 +9,7 @@
 		}
 	}
 
-	for($i=1; $i<5;$i++){
+	for($i=1; $i<11;$i++){
 	  $option_food[$i]=array (
 	  	'type'=>'text',
 		'name'=>'food_'.$i,
@@ -42,7 +42,7 @@
 
 <?php //print_r($tournaments); 
 	echo form_open('/tournaments/admin_set_reg_option/'.$tournament['tournament_id']);
-	for($i=1; $i<5;$i++){
+	for($i=1; $i<11;$i++){
 		echo '<tr><td>'.form_label('Food option '.$i, 'food_'.$i).'</td>';
 		echo '<td>'.form_input($option_food[$i]).'</td>';
 		echo '<td style="color: red;">'.form_error($option_food[$i]['name']).'</td></tr>';
@@ -50,7 +50,7 @@
 ?>
 
 <?php //print_r($tournaments); 
-	for($i=1; $i<5;$i++){
+	for($i=1; $i<11;$i++){
 		echo '<tr><td>'.form_label('Accommodation option '.$i, 'accom_'.$i).'</td>';
 		echo '<td>'.form_input($option_accom[$i]).'</td>';
 		echo '<td style="color: red;">'.form_error($option_accom[$i]['name']).'</td></tr>';

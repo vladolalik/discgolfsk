@@ -28,10 +28,10 @@ table,th, td{
 	border-bottom: 1px solid #BDBDBD;
 }
 legend{
-	padding: 5px;
-	color: #ffffff;
-	background-color: #00AFAF;
-	border: 1px solid #008F8F;
+	padding: 5px!important;
+	color: #ffffff!important;
+	background-color: #00AFAF!important;
+	border: 1px solid #008F8F!important;
 /*	-webkit-box-shadow: 1px 2px 10px 0px #444444;
 	-moz-box-shadow: 1px 2px 10px 0px #444444;
 	box-shadow: 1px 2px 10px 0px #444444;*/
@@ -45,7 +45,6 @@ fieldset{
 }
 input[type=text], input[type=date], input[type=password]{
 	border: 1px solid #00AFAF;
-	height: 25px;
 	line-height: 25px;
 }
 input[type=submit]{
@@ -268,6 +267,8 @@ nav li a{
 }
 nav ul li a:hover{
 	/*background-color: #5A8EB6;*/
+	color: #000000;	
+	text-decoration: none;
 	border-left: 1px solid #33cccc;
 }
 nav li ul a{
@@ -373,6 +374,11 @@ nav ul ul {
 	color: #ffffff;
 	padding: 5px;
 }
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #00AFAF;
+  color: #FFFFFF;
+}
 #results-table{
 	width: 100%;
 }
@@ -390,7 +396,7 @@ nav ul ul {
 	/*color: #474747;*/
 }
 #results-table  ,#results-table  th, #results-table td{
-	border: 1px solid #CCCCCC;;
+	border: 1px solid #CCCCCC; text-align: center;
 }
 #results-table a{
 	border: 0px;
@@ -493,7 +499,13 @@ nav ul ul {
 .tournament-review .tournament-info span{
 	color: #474747;
 	font-size: 14px;
+	font-weight: bold;
 }
+
+.tournament-review .tournament-info p {
+	margin: 0px;
+}
+
 #content .tournament-review .tournament-detail{
 	display: block; 
 	width: 60px;
@@ -547,7 +559,6 @@ nav ul ul {
 #my-profile-info{
 	float: left;
 	margin-left: 20px;
-	width: 520px;
 	text-align: left;
 }
 #my-profile-info table td{

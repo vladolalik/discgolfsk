@@ -749,7 +749,8 @@ class Tournaments extends CI_Controller {
 
 		 $tournament_id = $this->input->post('tournaments');
 		 //$player_id = $this->input->post('players');
-		 
+		
+
 		 if ($tournament_id!=NULL && $data['categories']!=NULL)
 		 {
 		 	 foreach ($data['categories'] as $key => $category) {
@@ -797,10 +798,13 @@ class Tournaments extends CI_Controller {
 					//}
 				}
 			}
-			//print_r($data['results']);
-			// die();
 		}
-		$this->load->view('result_view', $data);
+		if (IS_AJAX){
+			$this->load->view('tournament/results_ajax_view', $data);
+		} else {
+			$this->load->view('result_view', $data);	
+		}
+		
 		   
 		  
 
@@ -1277,12 +1281,12 @@ function tournament_details()
 
 		if ($this->tournament->register_player($registration_data))
 		{
-			$this->session->set_flashdata('message', '<p class="success">You are register in tournament '.$data['name'].' ('.$data['date'].')</p>');
+			$this->session->set_flashdata('message', '<p class="bg-success">You are register in tournament '.$data['name'].' ('.$data['date'].')</p>');
 			redirect('tournaments/tournament_details/'.$data['tournament_id']);
 		} 
 		else 
 		{
-			$this->session->set_flashdata('message', '<p class="fail"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
+			$this->session->set_flashdata('message', '<p class="bg-danger"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
 			redirect('tournaments/tournament_details/'.$data['tournament_id']);
 		}
 		//print_r($registration_data);
@@ -1363,12 +1367,12 @@ function tournament_details_unregistered()
 
 		if ($this->tournament->register_unregistered_player($user_data, $registration_data))
 		{
-			$this->session->set_flashdata('message', '<p class="success">You are register in tournament '.$data['name'].' ('.$data['date'].')</p>');
+			$this->session->set_flashdata('message', '<p class="bg-success">You are register in tournament '.$data['name'].' ('.$data['date'].')</p>');
 			redirect('tournaments/tournament_details/'.$data['tournament_id']);
 		} 
 		else 
 		{
-			$this->session->set_flashdata('message', '<p class="fail"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
+			$this->session->set_flashdata('message', '<p class="bg-danger"> You are already registered in tournament '.$data['name'].' ('.$data['date'].'). If not contact administrator.</p>');
 			redirect('tournaments/tournament_details/'.$data['tournament_id']);
 		}
 		//print_r($registration_data);
@@ -1397,7 +1401,9 @@ function registered_players()
 	
 	$this->form_validation->set_rules('tournament_id','Tournament','trim|required|xss_clean|strip_tags');
 	$data['tournaments']=$this->tournament->get_tournaments();
-	$tournament_id = $this->uri->segment(3);
+	$tournament_id = $this->input->post('tournaments') ? $this->input->post('tournaments') : $this->uri->segment(3);
+	
+	
 
 	if ($this->form_validation->run())
 	{
@@ -1406,19 +1412,19 @@ function registered_players()
 		);
 		$data['registered_players']=$this->tournament->get_registerd_players($this->form_validation->set_value('tournament_id'));
 		$data['tournament']=$this->tournament->get_tournament_by_id($tournament['tournament_id']);
-
-		$this->load->view('tournament/registered_players_view', $data);
 	} 
 	else if ($tournament_id!=NULL)
 	{
 		$data['registered_players']=$this->tournament->get_registerd_players($tournament_id);
 		$data['tournament']=$this->tournament->get_tournament_by_id($tournament_id);
+	}
+	$data['data'] = $data;
+	if (IS_AJAX){
+		$this->load->view('tournament/registered_players_ajax_view', $data);
+	} else {
 		$this->load->view('tournament/registered_players_view', $data);
 	}
-	else 
-	{
-		$this->load->view('tournament/registered_players_view', $data);
-	}
+	
 }
 
 
@@ -2207,14 +2213,14 @@ function admin_set_reg_option()
 	$data['options']=$this->tournament->get_options_tournament($tournament_id);
 	$data['tournament']=$this->tournament->get_tournament_by_id($tournament_id);
 
-	for($i=1; $i<5;$i++){
+	for($i=1; $i<11;$i++){
 		$this->form_validation->set_rules('food_'.$i, 'Food '.$i, 'trim|min_length[2]|xss_clean');
 		$this->form_validation->set_rules('accom_'.$i, 'Accommodation '.$i, 'trim|min_length[2]|xss_clean');
 	}
 	
 	if ($this->form_validation->run())
 	{
-		for($i=1; $i<5;$i++){
+		for($i=1; $i<11;$i++){
 			if ($this->form_validation->set_value('food_'.$i)!=NULL){
 				$this->tournament->insert_option($this->form_validation->set_value('food_'.$i), $i, 'food', $tournament_id);
 			} else {

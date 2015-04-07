@@ -1,24 +1,68 @@
 <!-- autor Vlado Lalik -->
 <?php $this->load->view('header', array('title' => 'Results', 'caption' => 'Results')); ?>
- <?php echo form_open('tournaments/view_results'); ?>
-<select name="tournaments" id="result-tournaments" size="5">
+ <?php echo form_open('tournaments/view_results', array('class' => 'ajax-form form-horizontal')); ?>
+ <div class="form-group">
+<select name="tournaments" id="result-tournaments" size="5" class="form-control">
   <?php foreach($tournaments as $key=>$row):
   	if ($key == 0)
   	{
-  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id'], TRUE).'>'.$row['name'].' ('.date('F d, Y', strtotime($row['date'])).'), '.$row['location'].'</option>';
+  		echo '<option class="result-option" value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id'], TRUE).'>'.$row['name'].' ('.date('F d, Y', strtotime($row['date'])).'), '.$row['location'].'</option>';
   	} 
   	else 
   	{
-  		echo '<option value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.date('F d, Y', strtotime($row['date'])).'), '.$row['location'].'</option>';	
+  		echo '<option class="result-option" value="'.$row['tournament_id'].'"'. set_select('tournaments', $row['tournament_id']).'>'.$row['name'].' ('.date('F d, Y', strtotime($row['date'])).'), '.$row['location'].'</option>';	
   	}
  	
    endforeach; ?>
 </select>
+</div>
 
-<input id="results-submit" type="submit" value="Show">
+<!-- <input id="results-submit" type="submit" value="Show"> -->
 <br class="clear"/>
 <div class="content-simple-line">&nbsp;</div>
 <?php echo form_close(); ?>
+
+<!-- AJAX script -->
+<script>
+	$(document).ready(function () {
+
+		$('#result-tournaments').change(function() {
+  			$('form.ajax-form').submit();
+		});
+
+	 	$('form.ajax-form').on('submit', function() {
+			  var obj = $(this), // (*) references the current object/form each time
+			  url = obj.attr('action'),
+			  method = obj.attr('method'),
+			  data = {};
+			  
+
+			  obj.find('[name]').each(function(index, value) {
+			   	   console.log(value);
+				   var obj = $(this),
+				   name = obj.attr('name'),
+				   value = obj.val();
+
+				   data[name] = value;
+			  });
+
+			  $.ajax({
+				   // see the (*)
+				   url: url,
+				   type: method,
+				   data: data,
+				   success: function(response) {
+				    	console.log(response);
+				    	console.log(data);
+				        $("#content-ajax-response").html(response);
+				   }
+		  	  });
+		  	  return false; //disable refresh
+	 	});
+	
+    }); 
+</script>
+<div id="content-ajax-response">
 <?php 
 	$first=TRUE;
 	if (isset($results) && $results != NULL)
@@ -108,5 +152,5 @@
 	}
 	//print_r($results); ?>
   
-  
+</div>
 <?php $this->load->view('footer'); ?>
